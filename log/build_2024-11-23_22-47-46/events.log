@@ -1,0 +1,140 @@
+[0.000000] (-) TimerEvent: {}
+[0.000891] (dog_robot) JobQueued: {'identifier': 'dog_robot', 'dependencies': OrderedDict()}
+[0.000944] (dog_robot) JobStarted: {'identifier': 'dog_robot'}
+[0.017947] (dog_robot) JobProgress: {'identifier': 'dog_robot', 'progress': 'cmake'}
+[0.018993] (dog_robot) JobProgress: {'identifier': 'dog_robot', 'progress': 'build'}
+[0.019035] (dog_robot) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/ros2/dog_robot_ws/src/dog-robot-ros2/build/dog_robot', '--', '-j4', '-l4'], 'cwd': '/home/ros2/dog_robot_ws/src/dog-robot-ros2/build/dog_robot', 'env': OrderedDict({'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'ros2', 'GZ_CONFIG_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor/share/gz:/opt/ros/jazzy/opt/sdformat_vendor/share/gz:/opt/ros/jazzy/opt/gz_gui_vendor/share/gz:/opt/ros/jazzy/opt/gz_transport_vendor/share/gz:/opt/ros/jazzy/opt/gz_rendering_vendor/share/gz:/opt/ros/jazzy/opt/gz_plugin_vendor/share/gz:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/share/gz:/opt/ros/jazzy/opt/gz_msgs_vendor/share/gz:/opt/ros/jazzy/opt/gz_common_vendor/share/gz', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor/lib:/opt/ros/jazzy/opt/gz_sensors_vendor/lib:/opt/ros/jazzy/opt/gz_physics_vendor/lib:/opt/ros/jazzy/opt/sdformat_vendor/lib:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/aarch64-linux-gnu:/opt/ros/jazzy/opt/gz_gui_vendor/lib:/opt/ros/jazzy/opt/gz_transport_vendor/lib:/opt/ros/jazzy/opt/gz_rendering_vendor/lib:/opt/ros/jazzy/opt/gz_plugin_vendor/lib:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/lib:/opt/ros/jazzy/opt/gz_msgs_vendor/lib:/opt/ros/jazzy/opt/gz_common_vendor/lib:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_tools_vendor/lib:/opt/ros/jazzy/opt/gz_ogre_next_vendor/lib:/opt/ros/jazzy/opt/gz_dartsim_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib', 'HOME': '/home/ros2', 'OLDPWD': '/home/ros2/dog_robot_ws/src/dog-robot-ros2/src', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'SYSTEMD_EXEC_PID': '1831', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'jazzy', 'LOGNAME': 'ros2', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/org.gnome.Shell@wayland.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'ros2', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'PATH': '/opt/ros/jazzy/opt/gz_msgs_vendor/bin:/opt/ros/jazzy/opt/gz_tools_vendor/bin:/opt/ros/jazzy/opt/gz_ogre_next_vendor/bin:/opt/ros/jazzy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/josiahros:@/tmp/.ICE-unix/1798,unix/josiahros:/tmp/.ICE-unix/1798', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/44d1d132_a256_4e17_8402_331983e6a753', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.14Z0X2', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'GNOME_TERMINAL_SERVICE': ':1.124', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'AMENT_PREFIX_PATH': '/opt/ros/jazzy', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/ros2/dog_robot_ws/src/dog-robot-ros2/build/dog_robot', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'VTE_VERSION': '7600', 'CMAKE_PREFIX_PATH': '/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy'}), 'shell': False}
+[0.099696] (-) TimerEvent: {}
+[0.100664] (dog_robot) StdoutLine: {'line': b'[ 33%] \x1b[32mBuilding CXX object CMakeFiles/environment_test.dir/src/main.cpp.o\x1b[0m\n'}
+[0.100904] (dog_robot) StdoutLine: {'line': b'[ 66%] \x1b[32mBuilding CXX object CMakeFiles/environment_test.dir/src/Environment.cpp.o\x1b[0m\n'}
+[0.200540] (-) TimerEvent: {}
+[0.256456] (dog_robot) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:1\x1b[m\x1b[K:\n'}
+[0.256813] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:1:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kunterminated #ifndef\n'}
+[0.256895] (dog_robot) StderrLine: {'line': b'    1 | #ifndef ENVIRONMENT_H\n'}
+[0.256948] (dog_robot) StderrLine: {'line': b'      | \n'}
+[0.301614] (-) TimerEvent: {}
+[0.401999] (-) TimerEvent: {}
+[0.432243] (dog_robot) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/main.cpp:2\x1b[m\x1b[K:\n'}
+[0.432501] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:1:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kunterminated #ifndef\n'}
+[0.432613] (dog_robot) StderrLine: {'line': b'    1 | #ifndef ENVIRONMENT_H\n'}
+[0.432683] (dog_robot) StderrLine: {'line': b'      | \n'}
+[0.502711] (-) TimerEvent: {}
+[0.603802] (-) TimerEvent: {}
+[0.687770] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:18:9:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krclcpp\x1b[m\x1b[K\xe2\x80\x99 does not name a type\n'}
+[0.687947] (dog_robot) StderrLine: {'line': b'   18 |         \x1b[01;31m\x1b[Krclcpp\x1b[m\x1b[K::Node::SharedPtr node_; //Ros2 node\n'}
+[0.688026] (dog_robot) StderrLine: {'line': b'      |         \x1b[01;31m\x1b[K^~~~~~\x1b[m\x1b[K\n'}
+[0.691675] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:19:20:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krclcpp\x1b[m\x1b[K\xe2\x80\x99 was not declared in this scope\n'}
+[0.691763] (dog_robot) StderrLine: {'line': b'   19 |         shared_ptr<\x1b[01;31m\x1b[Krclcpp\x1b[m\x1b[K::Client<turtlesim::srv::SetPen>> pen_client_; //Set pen client\n'}
+[0.691983] (dog_robot) StderrLine: {'line': b'      |                    \x1b[01;31m\x1b[K^~~~~~\x1b[m\x1b[K\n'}
+[0.692091] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:19:57:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Ktemplate argument 1 is invalid\n'}
+[0.692149] (dog_robot) StderrLine: {'line': b'   19 |         shared_ptr<rclcpp::Client<turtlesim::srv::SetPen\x1b[01;31m\x1b[K>>\x1b[m\x1b[K pen_client_; //Set pen client\n'}
+[0.692195] (dog_robot) StderrLine: {'line': b'      |                                                         \x1b[01;31m\x1b[K^~\x1b[m\x1b[K\n'}
+[0.692248] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:24:21:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krclcpp\x1b[m\x1b[K\xe2\x80\x99 has not been declared\n'}
+[0.692402] (dog_robot) StderrLine: {'line': b'   24 |         Environment(\x1b[01;31m\x1b[Krclcpp\x1b[m\x1b[K::Node::SharedPtr node);\n'}
+[0.692467] (dog_robot) StderrLine: {'line': b'      |                     \x1b[01;31m\x1b[K^~~~~~\x1b[m\x1b[K\n'}
+[0.692516] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:24:44:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kexpected \xe2\x80\x98\x1b[01m\x1b[K)\x1b[m\x1b[K\xe2\x80\x99 before \xe2\x80\x98\x1b[01m\x1b[Knode\x1b[m\x1b[K\xe2\x80\x99\n'}
+[0.692627] (dog_robot) StderrLine: {'line': b'   24 |         Environment\x1b[34m\x1b[K(\x1b[m\x1b[Krclcpp::Node::SharedPtr\x1b[01;31m\x1b[K \x1b[m\x1b[K\x1b[32m\x1b[Knode\x1b[m\x1b[K);\n'}
+[0.692702] (dog_robot) StderrLine: {'line': b'      |                    \x1b[34m\x1b[K~\x1b[m\x1b[K                       \x1b[01;31m\x1b[K^\x1b[m\x1b[K\x1b[32m\x1b[K~~~~\x1b[m\x1b[K\n'}
+[0.692746] (dog_robot) StderrLine: {'line': b'      |                                            \x1b[32m\x1b[K)\x1b[m\x1b[K\n'}
+[0.692790] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:47:21:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krclcpp\x1b[m\x1b[K\xe2\x80\x99 has not been declared\n'}
+[0.692834] (dog_robot) StderrLine: {'line': b'   47 |     RectangularRoom(\x1b[01;31m\x1b[Krclcpp\x1b[m\x1b[K::Node::SharedPtr node);\n'}
+[0.692877] (dog_robot) StderrLine: {'line': b'      |                     \x1b[01;31m\x1b[K^~~~~~\x1b[m\x1b[K\n'}
+[0.692920] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:47:44:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kexpected \xe2\x80\x98\x1b[01m\x1b[K)\x1b[m\x1b[K\xe2\x80\x99 before \xe2\x80\x98\x1b[01m\x1b[Knode\x1b[m\x1b[K\xe2\x80\x99\n'}
+[0.692964] (dog_robot) StderrLine: {'line': b'   47 |     RectangularRoom\x1b[34m\x1b[K(\x1b[m\x1b[Krclcpp::Node::SharedPtr\x1b[01;31m\x1b[K \x1b[m\x1b[K\x1b[32m\x1b[Knode\x1b[m\x1b[K);\n'}
+[0.693006] (dog_robot) StderrLine: {'line': b'      |                    \x1b[34m\x1b[K~\x1b[m\x1b[K                       \x1b[01;31m\x1b[K^\x1b[m\x1b[K\x1b[32m\x1b[K~~~~\x1b[m\x1b[K\n'}
+[0.693066] (dog_robot) StderrLine: {'line': b'      |                                            \x1b[32m\x1b[K)\x1b[m\x1b[K\n'}
+[0.693108] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:8:25:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kexpected constructor, destructor, or type conversion before \xe2\x80\x98\x1b[01m\x1b[K(\x1b[m\x1b[K\xe2\x80\x99 token\n'}
+[0.693152] (dog_robot) StderrLine: {'line': b'    8 | Environment::Environment\x1b[01;31m\x1b[K(\x1b[m\x1b[Krclcpp::Node::SharedPtr node) : node_(node) {\n'}
+[0.693194] (dog_robot) StderrLine: {'line': b'      |                         \x1b[01;31m\x1b[K^\x1b[m\x1b[K\n'}
+[0.693236] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:13:6:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kno declaration matches \xe2\x80\x98\x1b[01m\x1b[Kvoid Environment::\x1b[01;32m\x1b[KsetExit\x1b[m\x1b[K(double, double, std::string&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[0.693300] (dog_robot) StderrLine: {'line': b'   13 | void \x1b[01;31m\x1b[KEnvironment\x1b[m\x1b[K::setExit(double x,double y, string& direction){\n'}
+[0.693351] (dog_robot) StderrLine: {'line': b'      |      \x1b[01;31m\x1b[K^~~~~~~~~~~\x1b[m\x1b[K\n'}
+[0.693394] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:30:22:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kcandidate is: \xe2\x80\x98\x1b[01m\x1b[Kvirtual void Environment::\x1b[01;32m\x1b[KsetExit\x1b[m\x1b[K(double, double, const std::string&)\x1b[m\x1b[K\xe2\x80\x99\n'}
+[0.693439] (dog_robot) StderrLine: {'line': b'   30 |         virtual void \x1b[01;36m\x1b[KsetExit\x1b[m\x1b[K(double x, double y, const string& direction);\n'}
+[0.693514] (dog_robot) StderrLine: {'line': b'      |                      \x1b[01;36m\x1b[K^~~~~~~\x1b[m\x1b[K\n'}
+[0.693610] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:15:7:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Kclass Environment\x1b[m\x1b[K\xe2\x80\x99 defined here\n'}
+[0.693665] (dog_robot) StderrLine: {'line': b'   15 | class \x1b[01;36m\x1b[KEnvironment\x1b[m\x1b[K\n'}
+[0.693709] (dog_robot) StderrLine: {'line': b'      |       \x1b[01;36m\x1b[K^~~~~~~~~~~\x1b[m\x1b[K\n'}
+[0.695848] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid Environment::\x1b[01;32m\x1b[KdrawLine\x1b[m\x1b[K(Point, Point)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[0.695930] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:22:28:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Knode_\x1b[m\x1b[K\xe2\x80\x99 was not declared in this scope; did you mean \xe2\x80\x98\x1b[01m\x1b[Kmode_t\x1b[m\x1b[K\xe2\x80\x99?\n'}
+[0.695977] (dog_robot) StderrLine: {'line': b'   22 |     auto teleport_client = \x1b[01;31m\x1b[Knode_\x1b[m\x1b[K->create_client<turtlesim::srv::TeleportAbsolute>("/turtle1/teleport_absolute");\n'}
+[0.696021] (dog_robot) StderrLine: {'line': b'      |                            \x1b[01;31m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[0.696066] (dog_robot) StderrLine: {'line': b'      |                            \x1b[32m\x1b[Kmode_t\x1b[m\x1b[K\n'}
+[0.696110] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:22:81:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kexpected primary-expression before \xe2\x80\x98\x1b[01m\x1b[K>\x1b[m\x1b[K\xe2\x80\x99 token\n'}
+[0.696168] (dog_robot) StderrLine: {'line': b'   22 |     auto teleport_client = node_->create_client<turtlesim::srv::TeleportAbsolute\x1b[01;31m\x1b[K>\x1b[m\x1b[K("/turtle1/teleport_absolute");\n'}
+[0.696214] (dog_robot) StderrLine: {'line': b'      |                                                                                 \x1b[01;31m\x1b[K^\x1b[m\x1b[K\n'}
+[0.701222] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:30:31:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Katan2\x1b[m\x1b[K\xe2\x80\x99 was not declared in this scope\n'}
+[0.701364] (dog_robot) StderrLine: {'line': b'   30 |     teleport_request->theta = \x1b[01;31m\x1b[Katan2\x1b[m\x1b[K(end.y - start.y, end.x - start.x);\n'}
+[0.701423] (dog_robot) StderrLine: {'line': b'      |                               \x1b[01;31m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[0.701497] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:33:9:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krclcpp\x1b[m\x1b[K\xe2\x80\x99 has not been declared\n'}
+[0.701701] (dog_robot) StderrLine: {'line': b'   33 |     if (\x1b[01;31m\x1b[Krclcpp\x1b[m\x1b[K::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {\n'}
+[0.701810] (dog_robot) StderrLine: {'line': b'      |         \x1b[01;31m\x1b[K^~~~~~\x1b[m\x1b[K\n'}
+[0.701867] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:33:62:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krclcpp\x1b[m\x1b[K\xe2\x80\x99 has not been declared\n'}
+[0.701939] (dog_robot) StderrLine: {'line': b'   33 |     if (rclcpp::spin_until_future_complete(node_, result) != \x1b[01;31m\x1b[Krclcpp\x1b[m\x1b[K::FutureReturnCode::SUCCESS) {\n'}
+[0.702070] (dog_robot) StderrLine: {'line': b'      |                                                              \x1b[01;31m\x1b[K^~~~~~\x1b[m\x1b[K\n'}
+[0.702118] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:43:9:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krclcpp\x1b[m\x1b[K\xe2\x80\x99 has not been declared\n'}
+[0.702162] (dog_robot) StderrLine: {'line': b'   43 |     if (\x1b[01;31m\x1b[Krclcpp\x1b[m\x1b[K::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {\n'}
+[0.702205] (dog_robot) StderrLine: {'line': b'      |         \x1b[01;31m\x1b[K^~~~~~\x1b[m\x1b[K\n'}
+[0.702248] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:43:62:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krclcpp\x1b[m\x1b[K\xe2\x80\x99 has not been declared\n'}
+[0.702291] (dog_robot) StderrLine: {'line': b'   43 |     if (rclcpp::spin_until_future_complete(node_, result) != \x1b[01;31m\x1b[Krclcpp\x1b[m\x1b[K::FutureReturnCode::SUCCESS) {\n'}
+[0.702333] (dog_robot) StderrLine: {'line': b'      |                                                              \x1b[01;31m\x1b[K^~~~~~\x1b[m\x1b[K\n'}
+[0.702376] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:\x1b[m\x1b[K At global scope:\n'}
+[0.702437] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:51:33:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kexpected constructor, destructor, or type conversion before \xe2\x80\x98\x1b[01m\x1b[K(\x1b[m\x1b[K\xe2\x80\x99 token\n'}
+[0.702482] (dog_robot) StderrLine: {'line': b'   51 | RectangularRoom::RectangularRoom\x1b[01;31m\x1b[K(\x1b[m\x1b[Krclcpp::Node::SharedPtr node) : Environment(node) {}\n'}
+[0.702525] (dog_robot) StderrLine: {'line': b'      |                                 \x1b[01;31m\x1b[K^\x1b[m\x1b[K\n'}
+[0.703889] (-) TimerEvent: {}
+[0.705483] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvirtual void RectangularRoom::\x1b[01;32m\x1b[KdrawWalls\x1b[m\x1b[K()\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[0.705710] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:65:17:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Knode_\x1b[m\x1b[K\xe2\x80\x99 was not declared in this scope; did you mean \xe2\x80\x98\x1b[01m\x1b[Kmode_t\x1b[m\x1b[K\xe2\x80\x99?\n'}
+[0.705793] (dog_robot) StderrLine: {'line': b'   65 |     RCLCPP_INFO(\x1b[01;31m\x1b[Knode_\x1b[m\x1b[K->get_logger(), "Room walls drawn successfully");\n'}
+[0.705839] (dog_robot) StderrLine: {'line': b'      |                 \x1b[01;31m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[0.705884] (dog_robot) StderrLine: {'line': b'      |                 \x1b[32m\x1b[Kmode_t\x1b[m\x1b[K\n'}
+[0.714291] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:65:5:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[KRCLCPP_INFO\x1b[m\x1b[K\xe2\x80\x99 was not declared in this scope\n'}
+[0.714465] (dog_robot) StderrLine: {'line': b'   65 |     \x1b[01;31m\x1b[KRCLCPP_INFO\x1b[m\x1b[K(node_->get_logger(), "Room walls drawn successfully");\n'}
+[0.714531] (dog_robot) StderrLine: {'line': b'      |     \x1b[01;31m\x1b[K^~~~~~~~~~~\x1b[m\x1b[K\n'}
+[0.716232] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid Environment::\x1b[01;32m\x1b[KsetPen\x1b[m\x1b[K(bool)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[0.716315] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:86:30:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[Kbase operand of \xe2\x80\x98\x1b[01m\x1b[K->\x1b[m\x1b[K\xe2\x80\x99 is not a pointer\n'}
+[0.716364] (dog_robot) StderrLine: {'line': b'   86 |     auto result = pen_client_\x1b[01;31m\x1b[K->\x1b[m\x1b[Kasync_send_request(request);\n'}
+[0.716410] (dog_robot) StderrLine: {'line': b'      |                              \x1b[01;31m\x1b[K^~\x1b[m\x1b[K\n'}
+[0.716454] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:89:9:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krclcpp\x1b[m\x1b[K\xe2\x80\x99 has not been declared\n'}
+[0.716499] (dog_robot) StderrLine: {'line': b'   89 |     if (\x1b[01;31m\x1b[Krclcpp\x1b[m\x1b[K::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {\n'}
+[0.716543] (dog_robot) StderrLine: {'line': b'      |         \x1b[01;31m\x1b[K^~~~~~\x1b[m\x1b[K\n'}
+[0.720085] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:89:44:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Knode_\x1b[m\x1b[K\xe2\x80\x99 was not declared in this scope; did you mean \xe2\x80\x98\x1b[01m\x1b[Kmode_t\x1b[m\x1b[K\xe2\x80\x99?\n'}
+[0.720179] (dog_robot) StderrLine: {'line': b'   89 |     if (rclcpp::spin_until_future_complete(\x1b[01;31m\x1b[Knode_\x1b[m\x1b[K, result) != rclcpp::FutureReturnCode::SUCCESS) {\n'}
+[0.720227] (dog_robot) StderrLine: {'line': b'      |                                            \x1b[01;31m\x1b[K^~~~~\x1b[m\x1b[K\n'}
+[0.720271] (dog_robot) StderrLine: {'line': b'      |                                            \x1b[32m\x1b[Kmode_t\x1b[m\x1b[K\n'}
+[0.720314] (dog_robot) StderrLine: {'line': b'\x1b[01m\x1b[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:89:62:\x1b[m\x1b[K \x1b[01;31m\x1b[Kerror: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Krclcpp\x1b[m\x1b[K\xe2\x80\x99 has not been declared\n'}
+[0.720432] (dog_robot) StderrLine: {'line': b'   89 |     if (rclcpp::spin_until_future_complete(node_, result) != \x1b[01;31m\x1b[Krclcpp\x1b[m\x1b[K::FutureReturnCode::SUCCESS) {\n'}
+[0.720477] (dog_robot) StderrLine: {'line': b'      |                                                              \x1b[01;31m\x1b[K^~~~~~\x1b[m\x1b[K\n'}
+[0.799369] (dog_robot) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/environment_test.dir/build.make:90: CMakeFiles/environment_test.dir/src/Environment.cpp.o] Error 1\n'}
+[0.799521] (dog_robot) StderrLine: {'line': b'gmake[2]: *** Waiting for unfinished jobs....\n'}
+[0.803989] (-) TimerEvent: {}
+[0.908077] (-) TimerEvent: {}
+[1.009836] (-) TimerEvent: {}
+[1.114301] (-) TimerEvent: {}
+[1.214871] (-) TimerEvent: {}
+[1.319075] (-) TimerEvent: {}
+[1.423650] (-) TimerEvent: {}
+[1.527528] (-) TimerEvent: {}
+[1.629532] (-) TimerEvent: {}
+[1.733395] (-) TimerEvent: {}
+[1.837475] (-) TimerEvent: {}
+[1.941966] (-) TimerEvent: {}
+[2.042272] (-) TimerEvent: {}
+[2.146208] (-) TimerEvent: {}
+[2.250058] (-) TimerEvent: {}
+[2.353961] (-) TimerEvent: {}
+[2.454287] (-) TimerEvent: {}
+[2.556475] (-) TimerEvent: {}
+[2.660532] (-) TimerEvent: {}
+[2.763291] (-) TimerEvent: {}
+[2.863650] (-) TimerEvent: {}
+[2.967458] (-) TimerEvent: {}
+[3.070340] (-) TimerEvent: {}
+[3.170714] (-) TimerEvent: {}
+[3.275677] (-) TimerEvent: {}
+[3.310940] (dog_robot) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/environment_test.dir/build.make:76: CMakeFiles/environment_test.dir/src/main.cpp.o] Error 1\n'}
+[3.311453] (dog_robot) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/environment_test.dir/all] Error 2\n'}
+[3.311947] (dog_robot) StderrLine: {'line': b'gmake: *** [Makefile:146: all] Error 2\n'}
+[3.317226] (dog_robot) CommandEnded: {'returncode': 2}
+[3.359050] (dog_robot) JobEnded: {'identifier': 'dog_robot', 'rc': 2}
+[3.369640] (-) EventReactorShutdown: {}

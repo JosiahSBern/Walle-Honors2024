@@ -1,22 +1,25 @@
 #include "Environment.h"
 #include "turtlesim/srv/teleport_absolute.hpp"
+#include <rclcpp/rclcpp.hpp> 
 #include <iostream>
+#include <cmath>  // Include for atan2
 
 using namespace std;
 
-//Constructor
+// Constructor
 Environment::Environment(rclcpp::Node::SharedPtr node) : node_(node) {
     // Initialize the pen client
     pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/turtle1/set_pen");
 }
 
-void Environment::setExit(double x,double y, string& direction){
+void Environment::setExit(double x, double y, const string& direction) {
     exit.x = x;
     exit.y = y;
     this->direction = direction;
 }
 
-//Draw line between two points
+
+// Draw line between two points
 void Environment::drawLine(Point start, Point end) {
     // Create teleport client
     auto teleport_client = node_->create_client<turtlesim::srv::TeleportAbsolute>("/turtle1/teleport_absolute");
@@ -47,24 +50,23 @@ void Environment::drawLine(Point start, Point end) {
     setPen(false);
 }
 
-
 RectangularRoom::RectangularRoom(rclcpp::Node::SharedPtr node) : Environment(node) {}
 
 void RectangularRoom::drawWalls() {
- // Define room corners
+    // Define room corners
     Point bottomLeft = {1.0, 1.0};
     Point bottomRight = {10.0, 1.0};
     Point topLeft = {1.0, 10.0};
     Point topRight = {10.0, 10.0};
 
-// Draw the walls
+    // Draw the walls
     drawLine(bottomLeft, bottomRight);  // Bottom wall
     drawLine(bottomRight, topRight);    // Right wall
     drawLine(topRight, topLeft);        // Top wall
     drawLine(topLeft, bottomLeft);      // Left wall
+    
     RCLCPP_INFO(node_->get_logger(), "Room walls drawn successfully");
 }
-
 
 Point Environment::getExitPosition() {
     return exit;

@@ -1,0 +1,2 @@
+Invoking command in '/home/ros2/dog_robot_ws/src/dog-robot-ros2/build/dog_robot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/ros2/dog_robot_ws/src/dog-robot-ros2/build/dog_robot -- -j4 -l4
+Invoked command in '/home/ros2/dog_robot_ws/src/dog-robot-ros2/build/dog_robot' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/ros2/dog_robot_ws/src/dog-robot-ros2/build/dog_robot -- -j4 -l4

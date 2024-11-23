@@ -1,0 +1,22 @@
+[ 33%] [32mBuilding CXX object CMakeFiles/environment_test.dir/src/Environment.cpp.o[0m
+[ 66%] [32mBuilding CXX object CMakeFiles/environment_test.dir/src/main.cpp.o[0m
+[100%] [32m[1mLinking CXX executable environment_test[0m
+[100%] Built target environment_test
+-- Install configuration: ""
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/lib/dog_robot/environment_test
+-- Set non-toolchain portion of runtime path of "/home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/lib/dog_robot/environment_test" to ""
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/ament_index/resource_index/package_run_dependencies/dog_robot
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/ament_index/resource_index/parent_prefix_path/dog_robot
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/dog_robot/environment/ament_prefix_path.sh
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/dog_robot/environment/ament_prefix_path.dsv
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/dog_robot/environment/path.sh
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/dog_robot/environment/path.dsv
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/dog_robot/local_setup.bash
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/dog_robot/local_setup.sh
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/dog_robot/local_setup.zsh
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/dog_robot/local_setup.dsv
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/dog_robot/package.dsv
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/ament_index/resource_index/packages/dog_robot
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/dog_robot/cmake/dog_robotConfig.cmake
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/dog_robot/cmake/dog_robotConfig-version.cmake
+-- Installing: /home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot/share/dog_robot/package.xml

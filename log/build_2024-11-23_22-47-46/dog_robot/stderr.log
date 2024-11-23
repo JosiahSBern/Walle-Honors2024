@@ -1,0 +1,97 @@
+In file included from [01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:1[m[K:
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:1:[m[K [01;31m[Kerror: [m[Kunterminated #ifndef
+    1 | #ifndef ENVIRONMENT_H
+      | 
+In file included from [01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/main.cpp:2[m[K:
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:1:[m[K [01;31m[Kerror: [m[Kunterminated #ifndef
+    1 | #ifndef ENVIRONMENT_H
+      | 
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:18:9:[m[K [01;31m[Kerror: [m[K‘[01m[Krclcpp[m[K’ does not name a type
+   18 |         [01;31m[Krclcpp[m[K::Node::SharedPtr node_; //Ros2 node
+      |         [01;31m[K^~~~~~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:19:20:[m[K [01;31m[Kerror: [m[K‘[01m[Krclcpp[m[K’ was not declared in this scope
+   19 |         shared_ptr<[01;31m[Krclcpp[m[K::Client<turtlesim::srv::SetPen>> pen_client_; //Set pen client
+      |                    [01;31m[K^~~~~~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:19:57:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+   19 |         shared_ptr<rclcpp::Client<turtlesim::srv::SetPen[01;31m[K>>[m[K pen_client_; //Set pen client
+      |                                                         [01;31m[K^~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:24:21:[m[K [01;31m[Kerror: [m[K‘[01m[Krclcpp[m[K’ has not been declared
+   24 |         Environment([01;31m[Krclcpp[m[K::Node::SharedPtr node);
+      |                     [01;31m[K^~~~~~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:24:44:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K)[m[K’ before ‘[01m[Knode[m[K’
+   24 |         Environment[34m[K([m[Krclcpp::Node::SharedPtr[01;31m[K [m[K[32m[Knode[m[K);
+      |                    [34m[K~[m[K                       [01;31m[K^[m[K[32m[K~~~~[m[K
+      |                                            [32m[K)[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:47:21:[m[K [01;31m[Kerror: [m[K‘[01m[Krclcpp[m[K’ has not been declared
+   47 |     RectangularRoom([01;31m[Krclcpp[m[K::Node::SharedPtr node);
+      |                     [01;31m[K^~~~~~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:47:44:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K)[m[K’ before ‘[01m[Knode[m[K’
+   47 |     RectangularRoom[34m[K([m[Krclcpp::Node::SharedPtr[01;31m[K [m[K[32m[Knode[m[K);
+      |                    [34m[K~[m[K                       [01;31m[K^[m[K[32m[K~~~~[m[K
+      |                                            [32m[K)[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:8:25:[m[K [01;31m[Kerror: [m[Kexpected constructor, destructor, or type conversion before ‘[01m[K([m[K’ token
+    8 | Environment::Environment[01;31m[K([m[Krclcpp::Node::SharedPtr node) : node_(node) {
+      |                         [01;31m[K^[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:13:6:[m[K [01;31m[Kerror: [m[Kno declaration matches ‘[01m[Kvoid Environment::[01;32m[KsetExit[m[K(double, double, std::string&)[m[K’
+   13 | void [01;31m[KEnvironment[m[K::setExit(double x,double y, string& direction){
+      |      [01;31m[K^~~~~~~~~~~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:30:22:[m[K [01;36m[Knote: [m[Kcandidate is: ‘[01m[Kvirtual void Environment::[01;32m[KsetExit[m[K(double, double, const std::string&)[m[K’
+   30 |         virtual void [01;36m[KsetExit[m[K(double x, double y, const string& direction);
+      |                      [01;36m[K^~~~~~~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/include/Environment.h:15:7:[m[K [01;36m[Knote: [m[K‘[01m[Kclass Environment[m[K’ defined here
+   15 | class [01;36m[KEnvironment[m[K
+      |       [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:[m[K In member function ‘[01m[Kvoid Environment::[01;32m[KdrawLine[m[K(Point, Point)[m[K’:
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:22:28:[m[K [01;31m[Kerror: [m[K‘[01m[Knode_[m[K’ was not declared in this scope; did you mean ‘[01m[Kmode_t[m[K’?
+   22 |     auto teleport_client = [01;31m[Knode_[m[K->create_client<turtlesim::srv::TeleportAbsolute>("/turtle1/teleport_absolute");
+      |                            [01;31m[K^~~~~[m[K
+      |                            [32m[Kmode_t[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:22:81:[m[K [01;31m[Kerror: [m[Kexpected primary-expression before ‘[01m[K>[m[K’ token
+   22 |     auto teleport_client = node_->create_client<turtlesim::srv::TeleportAbsolute[01;31m[K>[m[K("/turtle1/teleport_absolute");
+      |                                                                                 [01;31m[K^[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:30:31:[m[K [01;31m[Kerror: [m[K‘[01m[Katan2[m[K’ was not declared in this scope
+   30 |     teleport_request->theta = [01;31m[Katan2[m[K(end.y - start.y, end.x - start.x);
+      |                               [01;31m[K^~~~~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:33:9:[m[K [01;31m[Kerror: [m[K‘[01m[Krclcpp[m[K’ has not been declared
+   33 |     if ([01;31m[Krclcpp[m[K::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
+      |         [01;31m[K^~~~~~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:33:62:[m[K [01;31m[Kerror: [m[K‘[01m[Krclcpp[m[K’ has not been declared
+   33 |     if (rclcpp::spin_until_future_complete(node_, result) != [01;31m[Krclcpp[m[K::FutureReturnCode::SUCCESS) {
+      |                                                              [01;31m[K^~~~~~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:43:9:[m[K [01;31m[Kerror: [m[K‘[01m[Krclcpp[m[K’ has not been declared
+   43 |     if ([01;31m[Krclcpp[m[K::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
+      |         [01;31m[K^~~~~~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:43:62:[m[K [01;31m[Kerror: [m[K‘[01m[Krclcpp[m[K’ has not been declared
+   43 |     if (rclcpp::spin_until_future_complete(node_, result) != [01;31m[Krclcpp[m[K::FutureReturnCode::SUCCESS) {
+      |                                                              [01;31m[K^~~~~~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:[m[K At global scope:
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:51:33:[m[K [01;31m[Kerror: [m[Kexpected constructor, destructor, or type conversion before ‘[01m[K([m[K’ token
+   51 | RectangularRoom::RectangularRoom[01;31m[K([m[Krclcpp::Node::SharedPtr node) : Environment(node) {}
+      |                                 [01;31m[K^[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:[m[K In member function ‘[01m[Kvirtual void RectangularRoom::[01;32m[KdrawWalls[m[K()[m[K’:
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:65:17:[m[K [01;31m[Kerror: [m[K‘[01m[Knode_[m[K’ was not declared in this scope; did you mean ‘[01m[Kmode_t[m[K’?
+   65 |     RCLCPP_INFO([01;31m[Knode_[m[K->get_logger(), "Room walls drawn successfully");
+      |                 [01;31m[K^~~~~[m[K
+      |                 [32m[Kmode_t[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:65:5:[m[K [01;31m[Kerror: [m[K‘[01m[KRCLCPP_INFO[m[K’ was not declared in this scope
+   65 |     [01;31m[KRCLCPP_INFO[m[K(node_->get_logger(), "Room walls drawn successfully");
+      |     [01;31m[K^~~~~~~~~~~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:[m[K In member function ‘[01m[Kvoid Environment::[01;32m[KsetPen[m[K(bool)[m[K’:
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:86:30:[m[K [01;31m[Kerror: [m[Kbase operand of ‘[01m[K->[m[K’ is not a pointer
+   86 |     auto result = pen_client_[01;31m[K->[m[Kasync_send_request(request);
+      |                              [01;31m[K^~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:89:9:[m[K [01;31m[Kerror: [m[K‘[01m[Krclcpp[m[K’ has not been declared
+   89 |     if ([01;31m[Krclcpp[m[K::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
+      |         [01;31m[K^~~~~~[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:89:44:[m[K [01;31m[Kerror: [m[K‘[01m[Knode_[m[K’ was not declared in this scope; did you mean ‘[01m[Kmode_t[m[K’?
+   89 |     if (rclcpp::spin_until_future_complete([01;31m[Knode_[m[K, result) != rclcpp::FutureReturnCode::SUCCESS) {
+      |                                            [01;31m[K^~~~~[m[K
+      |                                            [32m[Kmode_t[m[K
+[01m[K/home/ros2/dog_robot_ws/src/dog-robot-ros2/src/Environment.cpp:89:62:[m[K [01;31m[Kerror: [m[K‘[01m[Krclcpp[m[K’ has not been declared
+   89 |     if (rclcpp::spin_until_future_complete(node_, result) != [01;31m[Krclcpp[m[K::FutureReturnCode::SUCCESS) {
+      |                                                              [01;31m[K^~~~~~[m[K
+gmake[2]: *** [CMakeFiles/environment_test.dir/build.make:90: CMakeFiles/environment_test.dir/src/Environment.cpp.o] Error 1
+gmake[2]: *** Waiting for unfinished jobs....
+gmake[2]: *** [CMakeFiles/environment_test.dir/build.make:76: CMakeFiles/environment_test.dir/src/main.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/environment_test.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

@@ -1,0 +1,43 @@
+[0.012s] Invoking command in '/home/ros2/dog_robot_ws/src/dog-robot-ros2/build/dog_robot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/ros2/dog_robot_ws/src/dog-robot-ros2 -DCMAKE_INSTALL_PREFIX=/home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot
+[0.069s] -- The C compiler identification is GNU 13.2.0
+[0.133s] -- The CXX compiler identification is GNU 13.2.0
+[0.149s] -- Detecting C compiler ABI info
+[0.235s] -- Detecting C compiler ABI info - done
+[0.247s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.248s] -- Detecting C compile features
+[0.248s] -- Detecting C compile features - done
+[0.257s] -- Detecting CXX compiler ABI info
+[0.357s] -- Detecting CXX compiler ABI info - done
+[0.369s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.370s] -- Detecting CXX compile features
+[0.370s] -- Detecting CXX compile features - done
+[0.374s] -- Found ament_cmake: 2.5.2 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.527s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[0.645s] -- Found rclcpp: 28.1.5 (/opt/ros/jazzy/share/rclcpp/cmake)
+[0.704s] -- Found rosidl_generator_c: 4.6.4 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)
+[0.726s] -- Found rosidl_generator_cpp: 4.6.4 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)
+[0.748s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.772s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.872s] -- Found rmw_implementation_cmake: 7.3.1 (/opt/ros/jazzy/share/rmw_implementation_cmake/cmake)
+[0.878s] -- Found rmw_fastrtps_cpp: 8.4.1 (/opt/ros/jazzy/share/rmw_fastrtps_cpp/cmake)
+[0.967s] -- Found OpenSSL: /usr/lib/aarch64-linux-gnu/libcrypto.so (found version "3.0.13")  
+[0.988s] -- Found FastRTPS: /opt/ros/jazzy/include (Required is at least version "2.13") 
+[1.015s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.103s] -- Found turtlesim: 1.8.3 (/opt/ros/jazzy/share/turtlesim/cmake)
+[1.249s] -- Configuring done (1.2s)
+[1.252s] [31mCMake Error at CMakeLists.txt:14 (add_executable):
+[1.252s]   Cannot find source file:
+[1.252s] 
+[1.252s]     src/Environment.cpp
+[1.252s] 
+[1.252s]   Tried extensions .c .C .c++ .cc .cpp .cxx .cu .mpp .m .M .mm .ixx .cppm
+[1.252s]   .ccm .cxxm .c++m .h .hh .h++ .hm .hpp .hxx .in .txx .f .F .for .f77 .f90
+[1.252s]   .f95 .f03 .hip .ispc
+[1.252s] 
+[1.252s] [0m
+[1.255s] [31mCMake Error at CMakeLists.txt:14 (add_executable):
+[1.255s]   No SOURCES given to target: environment_test
+[1.255s] 
+[1.255s] [0m
+[1.255s] [0mCMake Generate step failed.  Build files cannot be regenerated correctly.[0m
+[1.264s] Invoked command in '/home/ros2/dog_robot_ws/src/dog-robot-ros2/build/dog_robot' returned '1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/ros2/dog_robot_ws/src/dog-robot-ros2 -DCMAKE_INSTALL_PREFIX=/home/ros2/dog_robot_ws/src/dog-robot-ros2/install/dog_robot
