@@ -13,7 +13,6 @@ int main(int argc, char** argv) {
         // Draw the classroom
         classroom.drawClassroom();
 
-        
         // Keep the node running
         rclcpp::spin(node);
         rclcpp::shutdown();
