@@ -18,6 +18,7 @@ protected:
     rclcpp::Node::SharedPtr node_;  // ROS2 node
     std::shared_ptr<rclcpp::Client<turtlesim::srv::SetPen>> pen_client_;  // Set pen client
     std::shared_ptr<rclcpp::Client<turtlesim::srv::TeleportAbsolute>> teleport_client_;  // Teleport client
+    rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr spawn_client_;
     Point exit;  // Exit point
     string direction;  // Direction of exit
 public:
@@ -57,6 +58,7 @@ class ClassroomEnvironment : public Environment {
         void drawExit();
         void drawDesk();
         void drawClassroom();
+        void spawnStartingTurtle();
 };
 
 
