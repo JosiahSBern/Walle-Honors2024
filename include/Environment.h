@@ -8,7 +8,6 @@
 #include "turtlesim/srv/teleport_absolute.hpp"
 
 using namespace std;
-
 struct Point {
     double x;
     double y;
@@ -20,8 +19,7 @@ protected:
     std::shared_ptr<rclcpp::Client<turtlesim::srv::SetPen>> pen_client_;  // Set pen client
     std::shared_ptr<rclcpp::Client<turtlesim::srv::TeleportAbsolute>> teleport_client_;  // Teleport client
     Point exit;  // Exit point
-    std::string direction;  // Direction of exit
-
+    string direction;  // Direction of exit
 public:
     // Constructor
     Environment(rclcpp::Node::SharedPtr node);
@@ -33,21 +31,47 @@ public:
     virtual void setExit(double x, double y, const std::string& direction);
 
     // Get exit position
-    Point getExitPosition();
+    Point getExit();
 
     // Draw line between two points
     void drawLine(Point start, Point end);
+    void drawRectangle(Point topLeft, Point bottomRight); 
 
     // Function to set pen on or off
     void setPen(bool on);
+    //Set the color of the pen
+    void setColor(int r, int g, int b);
 
+    // Quit function to end the drawing session
     void quit();
 };
 
-class RectangularRoom : public Environment {
-public:
-    RectangularRoom(rclcpp::Node::SharedPtr node);
-    void drawWalls() override;
+// Derived class: ClassroomEnvironment
+class ClassroomEnvironment : public Environment {
+    private:
+        double roomLength = 10.0;
+        double roomWidth = 10.0;
+    public:
+        ClassroomEnvironment(rclcpp::Node::SharedPtr node);
+        void drawWalls();
+        void drawExit();
+        void drawDesk();
+        void drawClassroom();
 };
+#endif  // ENVIRONMENT_H
+
+
+
+
+// class RectangularRoom : public Environment {
+// public:
+//     RectangularRoom(rclcpp::Node::SharedPtr node);
+//     void drawWalls() override;
+// };
+
+
+
+
+
 
 #endif  // ENVIRONMENT_H
