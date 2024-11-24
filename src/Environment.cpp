@@ -193,7 +193,7 @@ void ClassroomEnvironment::drawDesk() {
     // Set the pen color to brown
     setColor(139, 69, 19);
     
-    double desk_width = 2.0;
+    double desk_width = 1.0;
     double desk_height = 0.5;
     double desk_spacing = 1.0;
 
