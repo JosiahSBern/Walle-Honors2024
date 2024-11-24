@@ -43,7 +43,7 @@ void Environment::drawLine(Point start, Point end) {
         setPen(true);
 
         //Calculate the total distance and determine how many steps to take
-        double step_size = 0.2;
+        double step_size = 0.5;
         double distance = sqrt(pow(end.x - start.x, 2) + pow(end.y - start.y, 2));
         int steps = distance / step_size;
 
@@ -57,7 +57,7 @@ void Environment::drawLine(Point start, Point end) {
             }
 
             //Sleep for a short duration to slow down the drawing
-            rclcpp::Rate rate(5);
+            rclcpp::Rate rate(2.5);
             rate.sleep();
         }
 
