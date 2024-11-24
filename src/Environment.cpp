@@ -14,7 +14,7 @@ Environment::Environment(rclcpp::Node::SharedPtr node) : node_(node) {
     teleport_client_ = node_->create_client<turtlesim::srv::TeleportAbsolute>("/turtle1/teleport_absolute");
 
     // Initialize the spawn client for new turtle
-    spawn_client_ = node_->create_client<turtlesim::srv::Spawn>("/spawn");
+    // spawn_client_ = node_->create_client<turtlesim::srv::Spawn>("/spawn");
 }
 
 void Environment::setExit(double x, double y, const string& direction) {
@@ -214,28 +214,28 @@ void ClassroomEnvironment::drawDesk() {
 
 
 
-void ClassroomEnvironment::spawnStartingTurtle() {
-    auto request = std::make_shared<turtlesim::srv::Spawn::Request>();
+// void ClassroomEnvironment::spawnStartingTurtle() {
+//     auto request = std::make_shared<turtlesim::srv::Spawn::Request>();
     
-    // Position the new turtle at bottom right
-    request->x = roomWidth - 1.0;  // Slightly off from the wall
-    request->y = 1.5;              // Slightly above the bottom wall
-    request->theta = M_PI / 2;     // Facing up (90 degrees)
-    request->name = "turtle2";
+//     // Position the new turtle at bottom right
+//     request->x = roomWidth - 1.0;  // Slightly off from the wall
+//     request->y = 1.5;              // Slightly above the bottom wall
+//     request->theta = M_PI / 2;     // Facing up (90 degrees)
+//     request->name = "turtle2";
 
-    auto result = spawn_client_->async_send_request(request);
+//     auto result = spawn_client_->async_send_request(request);
     
-    if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
-        RCLCPP_INFO(node_->get_logger(), "Successfully spawned turtle2 at starting position");
-    } else {
-        RCLCPP_ERROR(node_->get_logger(), "Failed to spawn turtle2");
-    }
-}
+//     if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+//         RCLCPP_INFO(node_->get_logger(), "Successfully spawned turtle2 at starting position");
+//     } else {
+//         RCLCPP_ERROR(node_->get_logger(), "Failed to spawn turtle2");
+//     }
+// }
 
 void ClassroomEnvironment::drawClassroom(){
     drawWalls();
     drawExit();
     drawDesk();
-    spawnStartingTurtle();
+    // spawnStartingTurtle();
     quit();
 }
