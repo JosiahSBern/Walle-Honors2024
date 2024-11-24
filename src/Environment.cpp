@@ -190,4 +190,4 @@ void ClassroomEnvironment::drawClassroom(){
     drawExit();
     drawDesk();
     quit();
-}s
+}
