@@ -88,6 +88,10 @@ void Environment::setPen(bool on) {
         throw std::runtime_error("Failed to set pen");
     }
 }
+void Environment::quit() {
+    std::cout << "Shutting down..." << std::endl;
+    rclcpp::shutdown();  // Shutdown ROS2
+}
 
 RectangularRoom::RectangularRoom(rclcpp::Node::SharedPtr node) : Environment(node) {}
 
@@ -105,6 +109,7 @@ void RectangularRoom::drawWalls() {
     drawLine(topLeft, bottomLeft);      // Left wall
     
     RCLCPP_INFO(node_->get_logger(), "Room walls drawn successfully");
+    quit();
 }
 
 Point Environment::getExitPosition() {

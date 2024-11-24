@@ -40,6 +40,8 @@ public:
 
     // Function to set pen on or off
     void setPen(bool on);
+
+    void quit();
 };
 
 class RectangularRoom : public Environment {
