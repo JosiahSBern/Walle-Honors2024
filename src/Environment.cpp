@@ -9,7 +9,7 @@ using namespace std;
 // Constructor
 Environment::Environment(rclcpp::Node::SharedPtr node) : node_(node) {
     // Initialize the pen client
-    pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/turtle1/set_pen");
+    auto pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/turtle1/set_pen");
 }
 
 void Environment::setExit(double x, double y, const string& direction) {
@@ -21,34 +21,61 @@ void Environment::setExit(double x, double y, const string& direction) {
 
 // Draw line between two points
 void Environment::drawLine(Point start, Point end) {
-    // Create teleport client
-    auto teleport_client = node_->create_client<turtlesim::srv::TeleportAbsolute>("/turtle1/teleport_absolute");
-    
-    // Move to start position with pen up
-    auto teleport_request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
-    setPen(false);
-    
-    teleport_request->x = start.x;
-    teleport_request->y = start.y;
-    teleport_request->theta = atan2(end.y - start.y, end.x - start.x);
-    
-    auto result = teleport_client->async_send_request(teleport_request);
-    if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
-        throw std::runtime_error("Failed to teleport to start position");
-    }
+    try {
+        // Create teleport client
+        static auto teleport_client = node_->create_client<turtlesim::srv::TeleportAbsolute>("/turtle1/teleport_absolute");
 
-    // Put pen down and move to end position
-    setPen(true);
-    teleport_request->x = end.x;
-    teleport_request->y = end.y;
-    
-    result = teleport_client->async_send_request(teleport_request);
-    if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
-        throw std::runtime_error("Failed to draw line");
+        // Move to start position with pen up
+        auto teleport_request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
+        setPen(false);
+
+        teleport_request->x = start.x;
+        teleport_request->y = start.y;
+        teleport_request->theta = atan2(end.y - start.y, end.x - start.x); // Calculate theta to point towards the end position
+
+        // Send teleport request to move the turtle to the start position
+        auto result = teleport_client->async_send_request(teleport_request);
+        if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
+            throw std::runtime_error("Failed to teleport to start position");
+        }
+
+        // Set the pen down to start drawing
+        setPen(true);
+
+        // Calculate the total distance and determine how many steps to take
+        double step_size = 0.1;
+        double distance = sqrt(pow(end.x - start.x, 2) + pow(end.y - start.y, 2)); // Euclidean distance
+        int steps = distance / step_size;
+
+        for (int i = 0; i < steps; i++) {
+            teleport_request->x = start.x + (end.x - start.x) * i / steps;
+            teleport_request->y = start.y + (end.y - start.y) * i / steps;
+
+            result = teleport_client->async_send_request(teleport_request);
+            if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
+                throw std::runtime_error("Failed to draw line");
+            }
+
+            // Sleep for a short duration to slow down the drawing
+            rclcpp::Rate rate(10); 
+            rate.sleep();
+        }
+
+        // Move the turtle to the final endpoint
+        teleport_request->x = end.x;
+        teleport_request->y = end.y;
+        result = teleport_client->async_send_request(teleport_request);
+        if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
+            throw std::runtime_error("Failed to teleport to end position");
+        }
+
+        // Lift the pen
+        setPen(false);
+    } catch (const std::exception& e) {
+        std::cout << "Error drawing line: " << e.what() << std::endl;
     }
-    
-    setPen(false);
 }
+
 
 RectangularRoom::RectangularRoom(rclcpp::Node::SharedPtr node) : Environment(node) {}
 
@@ -70,25 +97,4 @@ void RectangularRoom::drawWalls() {
 
 Point Environment::getExitPosition() {
     return exit;
-}
-
-void Environment::setPen(bool on) {
-    auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
-    
-    if (on) {
-        request->r = 0;    // Black color
-        request->g = 0;
-        request->b = 0;
-        request->width = 2;
-        request->off = 0;  // Pen on
-    } else {
-        request->off = 1;  // Pen off
-    }
-
-    auto result = pen_client_->async_send_request(request);
-    
-    // Wait for the result
-    if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
-        throw std::runtime_error("Failed to set pen state");
-    }
 }
