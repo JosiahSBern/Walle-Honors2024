@@ -2,22 +2,20 @@
 #include "Environment.h"
 
 int main(int argc, char** argv) {
-    // Initialize ROS2
-    rclcpp::init(argc, argv);
+        // Initialize ROS2
+        rclcpp::init(argc, argv);
     
-    // Create node
-    auto node = std::make_shared<rclcpp::Node>("environment_test");
+        // Create node
+        auto node = std::make_shared<rclcpp::Node>("classroom_environment");
         // Create rectangular room
-        RectangularRoom room(node);
+        ClassroomEnvironment classroom(node);
         
-        // Set exit at the top (north)
-        room.setExit(5.0, 10.0, "north");
-        
-        // Draw the room
-        room.drawWalls();
+        // Draw the classroom
+        classroom.drawClassroom();
+
         
         // Keep the node running
         rclcpp::spin(node);
-    rclcpp::shutdown();
-    return 0;
+        rclcpp::shutdown();
+        return 0;
 }
