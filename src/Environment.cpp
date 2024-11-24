@@ -7,11 +7,14 @@ using namespace std;
 
 // Constructor
 Environment::Environment(rclcpp::Node::SharedPtr node) : node_(node) {
-    //Initialize the pen client (make sure this is a member)
+    // Initialize the pen client
     pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/turtle1/set_pen");
 
-    //Initialize the teleport client (make sure this is a member)
+    // Initialize the teleport client
     teleport_client_ = node_->create_client<turtlesim::srv::TeleportAbsolute>("/turtle1/teleport_absolute");
+
+    // Initialize the spawn client for new turtle
+    spawn_client_ = node_->create_client<turtlesim::srv::Spawn>("/spawn");
 }
 
 void Environment::setExit(double x, double y, const string& direction) {
@@ -153,35 +156,84 @@ void ClassroomEnvironment::drawWalls() {
     drawLine(topLeft, bottomLeft);// Left wall
 }
 
-void ClassroomEnvironment::drawExit(){
-    setColor(0,255,0); //Set the pen color to RGB -green
-    setPen(true);  
-    Point exitPosition = {roomWidth, roomLength};
-    drawLine(exitPosition, {exitPosition.x + 0.5, exitPosition.y});  
+void ClassroomEnvironment::drawExit() {
+    // Make sure to wait for the pen service to be available
+    while (!pen_client_->wait_for_service(std::chrono::seconds(1))) {
+        if (!rclcpp::ok()) {
+            RCLCPP_ERROR(node_->get_logger(), "Interrupted while waiting for pen service");
+            return;
+        }
+        RCLCPP_INFO(node_->get_logger(), "Waiting for pen service...");
+    }
 
-    //Set the exit corordinates
+    // Set the pen color to green with full opacity
+    setColor(0, 255, 0);
+    
+    // Ensure the pen is down
+    setPen(true);
+    
+    Point exitPosition = {roomWidth, roomLength};
+    drawLine(exitPosition, {exitPosition.x + 0.5, exitPosition.y});
+    
+    // Set the exit coordinates
     setExit(exitPosition.x + 0.5, exitPosition.y, "north");
     RCLCPP_INFO(node_->get_logger(), "Exit position set at: (%f, %f)", exitPosition.x + 0.5, exitPosition.y);
 }
 
-void ClassroomEnvironment::drawDesk(){
+void ClassroomEnvironment::drawDesk() {
+    // Make sure to wait for the pen service to be available
+    while (!pen_client_->wait_for_service(std::chrono::seconds(1))) {
+        if (!rclcpp::ok()) {
+            RCLCPP_ERROR(node_->get_logger(), "Interrupted while waiting for pen service");
+            return;
+        }
+        RCLCPP_INFO(node_->get_logger(), "Waiting for pen service...");
+    }
 
-    //Set the pen color to RGB - brown
-    setColor(139,69,19);
+    // Set the pen color to brown
+    setColor(139, 69, 19);
+    
     double desk_width = 2.0;
     double desk_height = 0.5;
     double desk_spacing = 1.0;
 
-    int desksPerRow = (roomWidth - 2) / (desk_width + desk_spacing); // Room width minus wall spacing
+    int desksPerRow = (roomWidth - 2) / (desk_width + desk_spacing);
     int desksPerColumn = (roomLength - 2) / (desk_height + desk_spacing);
 
-    for(int row;row < desksPerColumn; row++){
-        for(int col; col < desksPerRow; col++){
-            Point topLeft = {1.0 + col * (desk_width + desk_spacing), 1.0 + row * (desk_height + desk_spacing)};
-            Point bottomRight = {topLeft.x + desk_width, topLeft.y + desk_height};
+    // Fix the loop initialization
+    for(int row = 0; row < desksPerColumn; row++) {
+        for(int col = 0; col < desksPerRow; col++) {
+            Point topLeft = {
+                1.0 + col * (desk_width + desk_spacing),
+                1.0 + row * (desk_height + desk_spacing)
+            };
+            Point bottomRight = {
+                topLeft.x + desk_width,
+                topLeft.y + desk_height
+            };
 
             drawRectangle(topLeft, bottomRight);
         }
+    }
+}
+
+
+
+void ClassroomEnvironment::spawnStartingTurtle() {
+    auto request = std::make_shared<turtlesim::srv::Spawn::Request>();
+    
+    // Position the new turtle at bottom right
+    request->x = roomWidth - 1.0;  // Slightly off from the wall
+    request->y = 1.5;              // Slightly above the bottom wall
+    request->theta = M_PI / 2;     // Facing up (90 degrees)
+    request->name = "turtle2";
+
+    auto result = spawn_client_->async_send_request(request);
+    
+    if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+        RCLCPP_INFO(node_->get_logger(), "Successfully spawned turtle2 at starting position");
+    } else {
+        RCLCPP_ERROR(node_->get_logger(), "Failed to spawn turtle2");
     }
 }
 
@@ -189,5 +241,6 @@ void ClassroomEnvironment::drawClassroom(){
     drawWalls();
     drawExit();
     drawDesk();
+    spawnStartingTurtle();
     quit();
 }
