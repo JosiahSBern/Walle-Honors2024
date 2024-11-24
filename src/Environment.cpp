@@ -91,7 +91,7 @@ void Environment::setPen(bool on) {
     }
 }
 
-void Environment::setPenColor(int r, int g, int b) {
+void Environment::setColor(int r, int g, int b) {
     auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
     request->r = r; 
     request->g = g; 
@@ -154,7 +154,7 @@ void ClassroomEnvironment::drawWalls() {
 }
 
 void ClassroomEnvironment::drawExit(){
-    setPenColor(0,255,0); //Set the pen color to RGB -green
+    setColor(0,255,0); //Set the pen color to RGB -green
     setPen(true);  
     Point exitPosition = {roomWidth, roomLength};
     drawLine(exitPosition, {exitPosition.x + 0.5, exitPosition.y});  
@@ -167,7 +167,7 @@ void ClassroomEnvironment::drawExit(){
 void ClassroomEnvironment::drawDesk(){
 
     //Set the pen color to RGB - brown
-    setPenColor(139,69,19);
+    setColor(139,69,19);
     double desk_width = 2.0;
     double desk_height = 0.5;
     double desk_spacing = 1.0;
