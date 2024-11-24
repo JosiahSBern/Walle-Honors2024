@@ -172,13 +172,13 @@ void ClassroomEnvironment::drawDesk(){
     double desk_height = 0.5;
     double desk_spacing = 1.0;
 
-    int desksPerRow = (roomWidth - 2) / (deskWidth + deskSpacing); // Room width minus wall spacing
-    int desksPerColumn = (roomLength - 2) / (deskHeight + deskSpacing);
+    int desksPerRow = (roomWidth - 2) / (desk_width + desk_spacing); // Room width minus wall spacing
+    int desksPerColumn = (roomLength - 2) / (desk_height + desk_spacing);
 
     for(int row;row < desksPerColumn; row++){
         for(int col; col < desksPerRow; col++){
-            Point topLeft = {1.0 + col * (deskWidth + deskSpacing), 1.0 + row * (deskHeight + deskSpacing)};
-            Point bottomRight = {topLeft.x + deskWidth, topLeft.y + deskHeight};
+            Point topLeft = {1.0 + col * (desk_width + desk_spacing), 1.0 + row * (desk_height + desk_spacing)};
+            Point bottomRight = {topLeft.x + desk_width, topLeft.y + desk_height};
 
             drawRectangle(topLeft, bottomRight);
         }
