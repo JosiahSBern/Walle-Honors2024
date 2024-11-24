@@ -1,18 +1,19 @@
 cmake_minimum_required(VERSION 3.8)
 project(dog_robot)
 
+# Compiler options for better warnings
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# Find dependencies
+# Find necessary packages
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(turtlesim REQUIRED)
 
-# Add executable
+# Add the executable
 add_executable(environment_test
-  src/main.cpp
+  src/main.cpp       # Ensure main.cpp contains a 'main' function
   src/Environment.cpp
 )
 
@@ -22,13 +23,13 @@ target_include_directories(environment_test PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-# Link libraries
+# Link necessary dependencies
 ament_target_dependencies(environment_test
   rclcpp
   turtlesim
 )
 
-# Install
+# Install the executable
 install(TARGETS environment_test
   DESTINATION lib/${PROJECT_NAME}
 )
