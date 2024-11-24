@@ -77,6 +77,21 @@ void Environment::drawLine(Point start, Point end) {
 }
 
 
+// Function to set pen on or off
+void Environment::setPen(bool on) {
+    auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
+    request->r = 255;
+    request->g = 255;
+    request->b = 255;
+    request->width = 2;
+    request->off = !on;
+
+    auto result = pen_client_->async_send_request(request);
+    if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
+        throw std::runtime_error("Failed to set pen");
+    }
+}
+
 RectangularRoom::RectangularRoom(rclcpp::Node::SharedPtr node) : Environment(node) {}
 
 void RectangularRoom::drawWalls() {
