@@ -58,7 +58,7 @@ class ClassroomEnvironment : public Environment {
         void drawDesk();
         void drawClassroom();
 };
-#endif  // ENVIRONMENT_H
+
 
 
 
@@ -68,10 +68,5 @@ class ClassroomEnvironment : public Environment {
 //     RectangularRoom(rclcpp::Node::SharedPtr node);
 //     void drawWalls() override;
 // };
-
-
-
-
-
-
 #endif  // ENVIRONMENT_H
+
