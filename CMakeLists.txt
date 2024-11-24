@@ -12,7 +12,7 @@ find_package(rclcpp REQUIRED)
 find_package(turtlesim REQUIRED)
 
 # Add the executable
-add_executable(environment_test
+add_executable(classroom_environment
   src/main.cpp       # Ensure main.cpp contains a 'main' function
   src/Environment.cpp
 )
