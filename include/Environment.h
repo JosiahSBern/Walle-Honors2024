@@ -18,6 +18,7 @@ class Environment {
 protected:
     rclcpp::Node::SharedPtr node_;  // ROS2 node
     std::shared_ptr<rclcpp::Client<turtlesim::srv::SetPen>> pen_client_;  // Set pen client
+    std::shared_ptr<rclcpp::Client<turtlesim::srv::TeleportAbsolute>> teleport_client_;  // Teleport client
     Point exit;  // Exit point
     std::string direction;  // Direction of exit
 
