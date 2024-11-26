@@ -3,15 +3,14 @@
 <package format="3">
   <name>robot_dog</name>
   <version>0.0.1</version>
-  <description>A ROS2 package for a dog robot that helps guide blind people</description>
-  <maintainer email="your-email@example.com">Your Name</maintainer>
-  <license>TODO: License declaration</license>
-
-  <buildtool_depend>ament_cmake</buildtool_depend>
+  <description>Robot dog simulation environment</description>
+  <maintainer email="you@example.com">Your Name</maintainer>
+  <license>Apache License 2.0</license>
 
   <depend>rclcpp</depend>
   <depend>turtlesim</depend>
-  <depend>geometry_msgs</depend>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

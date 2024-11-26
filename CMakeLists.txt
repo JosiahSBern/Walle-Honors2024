@@ -10,10 +10,6 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(turtlesim REQUIRED)
 
-# Add include directory
-include_directories(include)
-
-
 # Add executable
 add_executable(robot_dog 
   src/Environment.cpp 
