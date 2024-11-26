@@ -5,23 +5,25 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+# find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(turtlesim REQUIRED)
 
 # Add executable
-add_executable(classroom_node 
+add_executable(robot_dog 
+  src/Environment.cpp 
   src/main.cpp
-  src/Environment.cpp
 )
 
-ament_target_dependencies(classroom_node
-  rclcpp
+# Link libraries
+ament_target_dependencies(robot_dog 
+  rclcpp 
   turtlesim
 )
 
-install(TARGETS
-  classroom_node
+# Install targets
+install(TARGETS robot_dog
   DESTINATION lib/${PROJECT_NAME}
 )
 

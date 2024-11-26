@@ -1,20 +1,20 @@
 #include <rclcpp/rclcpp.hpp>
 #include "Environment.h"
 
-int main(int argc, char** argv) {
-        // Initialize ROS2
-        rclcpp::init(argc, argv);
-    
-        // Create node
-        auto node = std::make_shared<rclcpp::Node>("classroom_environment");
-        // Create rectangular room
-        ClassroomEnvironment classroom(node);
-        
-        // Draw the classroom
-        classroom.drawClassroom();
+#include <rclcpp/rclcpp.hpp>
+#include "Environment.h"
 
-        // Keep the node running
-        rclcpp::spin(node);
-        rclcpp::shutdown();
-        return 0;
+int main(int argc, char** argv) {
+    rclcpp::init(argc, argv);
+    auto node = std::make_shared<rclcpp::Node>("robot_dog_node");
+
+    // Create classroom environment
+    ClassroomEnvironment classroom(node);
+    
+    // Draw the classroom
+    classroom.drawClassroom();
+
+    rclcpp::spin(node);
+    rclcpp::shutdown();
+    return 0;
 }
