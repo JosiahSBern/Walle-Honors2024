@@ -80,33 +80,20 @@ void Environment::drawLine(Point start, Point end) {
 }
 
 // Function to set pen on or off
-void Environment::setPen(bool on) {
-    auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
-    request->r = 255;
-    request->g = 255;
-    request->b = 255;
+void Environment::setPen(bool on, int r = 0, int g = 0, int b = 0) {
+    auto pen_request = std::make_shared<turtlesim::srv::SetPen::Request>();
+    request->r = r;
+    request->g = g;
+    request->b = b;
     request->width = 2;
     request->off = !on;
 
-    auto result = pen_client_->async_send_request(request);
-    if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
+    // Send pen request
+    auto pen_result = pen_client_->async_send_request(request);
+    if (rclcpp::spin_until_future_complete(node_, pen_result) != rclcpp::FutureReturnCode::SUCCESS) {
         throw std::runtime_error("Failed to set pen");
     }
-}
 
-void Environment::setColor(int r, int g, int b) {
-    // auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
-    // request->r = r; 
-    // request->g = g; 
-    // request->b = b;
-    // request->width = 2;  
-    // request->off = false;
-
-    auto result = pen_client_->async_send_request(request);
-    if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
-        throw std::runtime_error("Failed to set pen color");
-    }
-}
 
 void Environment::drawRectangle(Point topLeft, Point bottomRight) {
     Point topRight = {bottomRight.x, topLeft.y};
@@ -173,7 +160,7 @@ void ClassroomEnvironment::drawExit() {
     }
 
     // Set the pen color to green with full opacity
-    setColor(0, 255, 0);
+    setPen(true, 0, 255, 0);
       
     Point exitPosition = {roomWidth, roomLength};
     drawLine(exitPosition, {exitPosition.x + 0.5, exitPosition.y});
@@ -194,7 +181,7 @@ void ClassroomEnvironment::drawDesk() {
     }
 
     // Set the pen color to brown
-    setColor(139, 69, 19);
+    setPen(true, 139, 69, 19);
     
     int desksPerRow = (roomWidth - 2) / (desk_width + desk_spacing);
     // int desksPerColumn = (roomLength - 2) / (desk_height + desk_spacing);
