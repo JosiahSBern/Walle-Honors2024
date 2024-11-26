@@ -22,7 +22,15 @@ ClassroomEnvironment::ClassroomEnvironment(rclcpp::Node::SharedPtr node)
     desk_height = (roomLength - (desksPerColumn + 1) * desk_spacing) / (desksPerColumn * 2)
 }
 
-void ClassroomEnvironment::drawWalls() {
+vvoid ClassroomEnvironment::drawWalls() {
+    // Draw white background first
+    setPen(true, 255, 255, 255, 20);  // White pen
+    
+    // Cover the entire TurtleSim window with a white rectangle
+    Point backgroundTopLeft = {0, 0};
+    Point backgroundBottomRight = {TURTLESIM_WINDOW_WIDTH, TURTLESIM_WINDOW_HEIGHT};
+    drawRectangle(backgroundTopLeft, backgroundBottomRight);
+
     // Define the corners of the classroom precisely
     Point bottomLeft = {0.5, 0.5};
     Point bottomRight = {roomWidth + 0.5, 0.5};
@@ -38,17 +46,6 @@ void ClassroomEnvironment::drawWalls() {
     drawLine(topRight, topLeft);        // Top wall
     drawLine(topLeft, bottomLeft);      // Left wall
 }
-
-void ClassroomEnvironment::drawExit() {
-    // Make sure to wait for the pen service to be available
-    while (!pen_client_->wait_for_service(std::chrono::seconds(1))) {
-        if (!rclcpp::ok()) {
-            RCLCPP_ERROR(node_->get_logger(), "Interrupted while waiting for pen service");
-            return;
-        }
-        RCLCPP_INFO(node_->get_logger(), "Waiting for pen service...");
-    }
-
     // Set the pen color to green with full opacity
     setPen(true, 0, 255, 0, 2);
       
