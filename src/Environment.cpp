@@ -69,7 +69,7 @@ void Environment::setPen(bool on, int r, int g, int b, int width) {
     request->r = r;  // Red value (0-255)
     request->g = g;    // Green value (0-255)
     request->b = b;    // Blue value (0-255)
-    request->width = w;  // Optional: pen width
+    request->width = width;  // Optional: pen width
     request->off = on;   // Optional: 0 means pen is on
 
     // Send the request
