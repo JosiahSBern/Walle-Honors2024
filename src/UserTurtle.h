@@ -11,12 +11,12 @@ class UserTurtle
         UserTurtle();
         void keyLoop();
         void quit();
-
     private:
         std::shared_ptr<rclcpp::Node> nh_;
-        double linear_, angular_, l_scale_, a_scale_;
+        double linear_;
+        double angular_;
+        double l_scale_;
+        double a_scale_;
         rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub_;
-
-
 };
 #endif

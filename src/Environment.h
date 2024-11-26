@@ -6,6 +6,7 @@
 #include <rclcpp/rclcpp.hpp>  
 #include "turtlesim/srv/set_pen.hpp"
 #include "turtlesim/srv/teleport_absolute.hpp"
+                                                                         #include 
 
 using namespace std;
 struct Point {
@@ -15,14 +16,14 @@ struct Point {
 
 class Environment {
 protected:
-    rclcpp::Node::SharedPtr node_;  // ROS2 node
+    rclcpp::Node::SharedPtr node_;  //ROS2 node
     std::shared_ptr<rclcpp::Client<turtlesim::srv::SetPen>> pen_client_;  // Set pen client
     std::shared_ptr<rclcpp::Client<turtlesim::srv::TeleportAbsolute>> teleport_client_;  // Teleport client
     // rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr spawn_client_;
-    Point exit;  // Exit point
-    string direction;  // Direction of exit
+    Point exit;  //Exit point
+    string direction;  //Direction of exit
 public:
-    // Constructor
+    //Constructor
     Environment(rclcpp::Node::SharedPtr node);
     // Virtual drawWalls function
     virtual void drawWalls() = 0;
@@ -33,8 +34,9 @@ public:
     // Get exit position
     Point getExit();
 
-    // Draw line between two points
+    //Draw line between two points
     void drawLine(Point start, Point end);
+    //Draw Rectangles
     void drawRectangle(Point topLeft, Point bottomRight); 
 
     // Function to set pen on or off

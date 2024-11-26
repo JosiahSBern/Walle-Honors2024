@@ -113,6 +113,7 @@ void Environment::quit() {
     rclcpp::shutdown(); 
 }
 
+
 // RectangularRoom::RectangularRoom(rclcpp::Node::SharedPtr node) : Environment(node) {}
 
 // void RectangularRoom::drawWalls() {
