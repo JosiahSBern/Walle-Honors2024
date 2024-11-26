@@ -140,8 +140,8 @@ void Environment::quit() {
 //     quit();
 // }
 
-ClassroomEnvironment::ClassroomEnvironment(rclcpp::Node::SharedPtr node){
-    Environment(node);
+ClassroomEnvironment::ClassroomEnvironment(rclcpp::Node::SharedPtr node)
+    : Environment(node) {
      roomLength = 11.0;
      roomWidth = 8.0;
      desk_width = (roomWidth - 4) / 5;;
@@ -196,8 +196,8 @@ void ClassroomEnvironment::drawDesk() {
     // Set the pen color to brown
     setColor(139, 69, 19);
     
-    int desksPerRow = (roomWidth - 2) / (desk_width + desk_spacing);
-    int desksPerColumn = (roomLength - 2) / (desk_height + desk_spacing);
+    // int desksPerRow = (roomWidth - 2) / (desk_width + desk_spacing);
+    // int desksPerColumn = (roomLength - 2) / (desk_height + desk_spacing);
     for (int row = 0; row < 3; ++row) {
     double y_position;
     
