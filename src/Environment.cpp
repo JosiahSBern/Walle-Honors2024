@@ -73,7 +73,7 @@ void Environment::setPen(bool on, int r, int g, int b, int width) {
     request->off = on;   // Optional: 0 means pen is on
 
     // Send the request
-    pen_client->async_send_request(request);
+    pen_client_->async_send_request(request);
     if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
         throw std::runtime_error("Failed to set pen");
     }
