@@ -50,8 +50,11 @@ public:
 // Derived class: ClassroomEnvironment
 class ClassroomEnvironment : public Environment {
     private:
-        double roomLength = 10.0;
-        double roomWidth = 10.0;
+        double roomLength;
+        double roomWidth;
+        double desk_width;
+        double desk_height;
+        double desk_spacing ;
     public:
         ClassroomEnvironment(rclcpp::Node::SharedPtr node);
         void drawWalls();
