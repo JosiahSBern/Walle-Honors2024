@@ -18,8 +18,8 @@ ClassroomEnvironment::ClassroomEnvironment(rclcpp::Node::SharedPtr node)
     roomLength = TURTLESIM_WINDOW_HEIGHT - 1.0;
     
     desk_spacing = 0.5;
-    desk_width = (roomWidth - (desksPerRow + 1) * desk_spacing) / desksPerRow;
-    desk_height = (roomLength - (desksPerColumn + 1) * desk_spacing) / desksPerColumn;
+    desk_width = (roomWidth - (desksPerRow + 1) * desk_spacing) / (desksPerRow * 2)    desk_height = (roomLength - (desksPerColumn + 1) * desk_spacing) / desksPerColumn;
+    desk_height = (roomLength - (desksPerColumn + 1) * desk_spacing) / (desksPerColumn * 2)
 }
 
 void ClassroomEnvironment::drawWalls() {
@@ -75,10 +75,10 @@ void ClassroomEnvironment::drawDesk() {
     for (int row = 0; row < desksPerColumn; ++row) {
         for (int col = 0; col < desksPerRow; ++col) {
             // Calculate x and y positions with even spacing
-            double x_position = 0.5 + desk_spacing + col * (desk_width + desk_spacing);
-            double y_position = 0.5 + desk_spacing + row * (desk_height + desk_spacing);
+            double x_position = 0.5 + desk_spacing + col * (desk_width * 2 + desk_spacing)
+            double y_position = 0.5 + desk_spacing + row * (desk_height * 2 + desk_spacing)
             
-            // Draw the desk as a rectangle
+            // Draw the desk as sa rectangle
             Point topLeft = {x_position, y_position};
             Point bottomRight = {topLeft.x + desk_width, topLeft.y + desk_height};
             drawRectangle(topLeft, bottomRight);
