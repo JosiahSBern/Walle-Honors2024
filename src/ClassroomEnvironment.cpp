@@ -10,16 +10,17 @@ const double TURTLESIM_WINDOW_WIDTH = 11.0;
 const double TURTLESIM_WINDOW_HEIGHT = 11.0;
 
 ClassroomEnvironment::ClassroomEnvironment(rclcpp::Node::SharedPtr node)
-    : Environment(node) {
-    // Calculate room dimensions based on TurtleSim window
-    roomWidth = TURTLESIM_WINDOW_WIDTH - 1.0;  // Leave 0.5 margin on each side
+    : Environment(node),
+      desksPerRow(3),  // Example: 3 desks per row
+      desksPerColumn(3) // Example: 3 desks per column
+{
+    roomWidth = TURTLESIM_WINDOW_WIDTH - 1.0;
     roomLength = TURTLESIM_WINDOW_HEIGHT - 1.0;
     
-    // Calculate desk dimensions to fill the room evenly
-    desk_spacing = 0.5;  // Consistent spacing
+    desk_spacing = 0.5;
     desk_width = (roomWidth - (desksPerRow + 1) * desk_spacing) / desksPerRow;
     desk_height = (roomLength - (desksPerColumn + 1) * desk_spacing) / desksPerColumn;
-} 
+}
 ClassroomEnvironment::~ClassroomEnvironment() {
 }
 
@@ -73,10 +74,6 @@ void ClassroomEnvironment::drawDesk() {
 
     // Set the pen color to brown
     setPen(true, 139, 69, 19, 2);
-    
-    int desksPerRow = 3;
-    int desksPerColumn = 3;
-
     for (int row = 0; row < desksPerColumn; ++row) {
         for (int col = 0; col < desksPerRow; ++col) {
             // Calculate x and y positions with even spacing

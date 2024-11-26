@@ -53,6 +53,8 @@ class ClassroomEnvironment : public Environment {
         double desk_width;
         double desk_height;
         double desk_spacing ;
+        int desksPerRow;
+        int desksPerColumn;
     public:
         ClassroomEnvironment(rclcpp::Node::SharedPtr node);
         void drawWalls();
