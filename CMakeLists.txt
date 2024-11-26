@@ -15,6 +15,7 @@ find_package(turtlesim REQUIRED)
 add_executable(robot_dog 
   src/Environment.cpp 
   src/main.cpp
+  src/ClassroomEnvironment.cpp 
 )
 
 # Link libraries
