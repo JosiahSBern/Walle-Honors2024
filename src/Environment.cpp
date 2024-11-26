@@ -64,18 +64,38 @@ void Environment::drawLine(Point start, Point end) {
 
 
 // Function to set pen on or off
-void Environment::setPen(bool on, int r, int g, int b, int width) {
-    auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
-    request->r = r;  // Red value (0-255)
-    request->g = g;    // Green value (0-255)
-    request->b = b;    // Blue value (0-255)
-    request->width = width;  // Optional: pen width
-    request->off = on;   // Optional: 0 means pen is on
+void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
+    // Create the service client
+    auto pen_client = node_->create_client<turtlesim::srv::SetPen>("turtle1/set_pen");
 
-    // Send the request
-    pen_client_->async_send_request(request);
-    if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
-        throw std::runtime_error("Failed to set pen");
+    // Wait for the service to be available
+    while (!pen_client->wait_for_service(std::chrono::seconds(1))) {
+        if (!rclcpp::ok()) {
+            RCLCPP_ERROR(node_->get_logger(), "Interrupted while waiting for the service. Exiting.");
+            return;
+        }
+        RCLCPP_INFO(node_->get_logger(), "Service not available, waiting again...");
+    }
+
+    // Prepare the request
+    auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
+    request->r = r;
+    request->g = g;
+    request->b = b;
+    request->width = width;
+    request->off = !pen_state;
+
+    // Send the request and get the result future
+    auto future = pen_client->async_send_request(request);
+
+    // Wait for the result
+    auto result = rclcpp::spin_until_future_complete(node_, future);
+
+    // Check the result
+    if (result == rclcpp::FutureReturnCode::SUCCESS) {
+        RCLCPP_INFO(node_->get_logger(), "Pen settings updated successfully");
+    } else {
+        RCLCPP_ERROR(node_->get_logger(), "Failed to set pen");
     }
 }
 
