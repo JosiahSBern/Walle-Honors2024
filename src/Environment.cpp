@@ -1,6 +1,7 @@
 #include "Environment.h"
 #include "turtlesim/srv/teleport_absolute.hpp"
 #include <rclcpp/rclcpp.hpp>
+#include <turtlesim/srv/set_pen.hpp>
 #include <iostream>
 #include <cmath>  
 using namespace std;
@@ -65,13 +66,14 @@ void Environment::drawLine(Point start, Point end) {
 // Function to set pen on or off
 void Environment::setPen(bool on, int r, int g, int b, int width) {
     auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
-    request->r = r;
-    request->g = g;
-    request->b = b;
-    request->width = width;
-    request->off = !on;
+    request->r = 255;  // Red value (0-255)
+    request->g = 0;    // Green value (0-255)
+    request->b = 0;    // Blue value (0-255)
+    request->width = 3;  // Optional: pen width
+    request->off = 0;   // Optional: 0 means pen is on
 
-    auto result = pen_client_->async_send_request(request);
+    // Send the request
+    pen_client->async_send_request(request);
     if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
         throw std::runtime_error("Failed to set pen");
     }
