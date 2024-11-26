@@ -46,7 +46,7 @@ void Environment::drawLine(Point start, Point end) {
         setPen(true);
 
         //Calculate the total distance and determine how many steps to take
-        double step_size = 1;
+        double step_size = 5;
         double distance = sqrt(pow(end.x - start.x, 2) + pow(end.y - start.y, 2));
         int steps = distance / step_size;
 
@@ -60,7 +60,7 @@ void Environment::drawLine(Point start, Point end) {
             }
 
             //Sleep for a short duration to slow down the drawing
-            rclcpp::Rate rate(2.5);
+            rclcpp::Rate rate(10);
             rate.sleep();
         }
 
@@ -95,12 +95,12 @@ void Environment::setPen(bool on) {
 }
 
 void Environment::setColor(int r, int g, int b) {
-    auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
-    request->r = r; 
-    request->g = g; 
-    request->b = b;
-    request->width = 2;  
-    request->off = false;
+    // auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
+    // request->r = r; 
+    // request->g = g; 
+    // request->b = b;
+    // request->width = 2;  
+    // request->off = false;
 
     auto result = pen_client_->async_send_request(request);
     if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
@@ -140,9 +140,16 @@ void Environment::quit() {
 //     quit();
 // }
 
+ClassroomEnvironment::ClassroomEnvironment(rclcpp::Node::SharedPtr node){
+    Environment(node);
+     roomLength = 11.0;
+     roomWidth = 8.0;
+     desk_width = (roomWidth - 4) / 5;;
+     desk_height= 1.0;
+     desk_spacing = 0.5;
 
-ClassroomEnvironment::ClassroomEnvironment(rclcpp::Node::SharedPtr node) : Environment(node) {}
-void ClassroomEnvironment::drawWalls() {
+} 
+    void ClassroomEnvironment::drawWalls() {
     //Define the corners of the classroom
     Point bottomLeft = {1.0, 1.0};
     Point bottomRight = {roomWidth, 1.0};
@@ -155,7 +162,6 @@ void ClassroomEnvironment::drawWalls() {
     drawLine(topRight, topLeft);// Top wall
     drawLine(topLeft, bottomLeft);// Left wall
 }
-
 void ClassroomEnvironment::drawExit() {
     // Make sure to wait for the pen service to be available
     while (!pen_client_->wait_for_service(std::chrono::seconds(1))) {
@@ -168,10 +174,7 @@ void ClassroomEnvironment::drawExit() {
 
     // Set the pen color to green with full opacity
     setColor(0, 255, 0);
-    
-    // Ensure the pen is down
-    setPen(true);
-    
+      
     Point exitPosition = {roomWidth, roomLength};
     drawLine(exitPosition, {exitPosition.x + 0.5, exitPosition.y});
     
@@ -193,23 +196,30 @@ void ClassroomEnvironment::drawDesk() {
     // Set the pen color to brown
     setColor(139, 69, 19);
     
-    double desk_width = 1.0;
-    double desk_height = 0.5;
-    double desk_spacing = 1.0;
-
     int desksPerRow = (roomWidth - 2) / (desk_width + desk_spacing);
     int desksPerColumn = (roomLength - 2) / (desk_height + desk_spacing);
-
-    for (int row = 0; row < desksPerColumn; row++) {
-        for (int col = 0; col < desksPerRow; col++) {
-            Point topLeft = {1.0 + col * (desk_width + desk_spacing), 1.0 + row * (desk_height + desk_spacing)};
-            Point bottomRight = {topLeft.x + desk_width, topLeft.y + desk_height};
-            
-            drawRectangle(topLeft, bottomRight);
-            RCLCPP_INFO(node_->get_logger(), "Desk drawn at row %d, column %d", row, col);
+    for (int row = 0; row < 3; ++row) {
+    double y_position;
+    
+    // Determine y_position based on row index:
+    if (row == 0) { 
+        y_position = 1.0;  // Row 1 touches the left wall
+    } else if (row == 2) { 
+        y_position = roomLength - desk_height - 1.0;  // Row 3 near the right wall
+    } else {
+        y_position = roomLength / 2 - (desk_height / 2);  // Center row
+    }
+    
+    // Loop through each column in the row
+    for (int col = 0; col < desksPerRow; ++col) {
+        double x_position = 1.0 + col * (desk_width + desk_spacing);
+        
+        // Draw the desk as a rectangle from (x_position, y_position)
+        Point topLeft = {x_position, y_position};
+        Point bottomRight = {topLeft.x + desk_width, topLeft.y + desk_height};
+        drawRectangle(topLeft, bottomRight);
     }
 }
-
 }
 
 
