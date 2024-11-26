@@ -8,54 +8,54 @@ using namespace std;
 
 // Constructor
 Environment::Environment(rclcpp::Node::SharedPtr node) : node_(node) {
-    // Initialize the pen client
+    //Initialize the pen client
     pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/turtle1/set_pen");
 
     // Initialize the teleport client
     teleport_client_ = node_->create_client<turtlesim::srv::TeleportAbsolute>("/turtle1/teleport_absolute");
-
-    // Initialize the spawn client for new turtle
-    // spawn_client_ = node_->create_client<turtlesim::srv::Spawn>("/spawn");
 }
 
+//Set exit point
 void Environment::setExit(double x, double y, const string& direction) {
     exit.x = x;
     exit.y = y;
     this->direction = direction;
 }
+
 Point Environment::getExit() {
     return exit;
 }
-//Draw line between two points
+
+//Draw line between points
 void Environment::drawLine(Point start, Point end) {
     try {
-        // Create a teleport request to move the turtle to the start position
+        //Create a teleport request to move the turtle to the start position
         auto teleport_request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
-        setPen(false);  // Lift pen before moving to the starting position
+        setPen(false);  //Lift Pen
 
-        // Set start position and angle based on the direction to the end point
+        //Set start position and angle based on the direction to the end point
         teleport_request->x = start.x;
         teleport_request->y = start.y;
         teleport_request->theta = atan2(end.y - start.y, end.x - start.x);
 
-        // Send the teleport request to move the turtle to the start position
+        //Move the turtle to the start position
         auto result = teleport_client_->async_send_request(teleport_request);
         if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
-            throw std::runtime_error("Failed to teleport to start position");
+            throw runtime_error("Failed to teleport to start position");
         }
 
-        // Set the pen down to start drawing
+        //Set the pen down to start drawing
         setPen(true);
 
-        // Move to the final endpoint
+        //Move to the final endpoint
         teleport_request->x = end.x;
         teleport_request->y = end.y;
         result = teleport_client_->async_send_request(teleport_request);
         if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
-            throw std::runtime_error("Failed to teleport to end position");
+            throw runtime_error("Failed to teleport to end position");
         }
 
-        // Lift the pen after drawing the line
+        //Lift the pen after drawing the line
         setPen(false);
     } catch (const std::exception& e) {
         RCLCPP_ERROR(node_->get_logger(), "Error drawing line: %s", e.what());
@@ -65,7 +65,7 @@ void Environment::drawLine(Point start, Point end) {
 
 // Function to set pen on or off
 void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
-    // Create the service client
+    //Create the pen client
     auto pen_client = node_->create_client<turtlesim::srv::SetPen>("turtle1/set_pen");
 
     // Wait for the service to be available
@@ -98,7 +98,7 @@ void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
         RCLCPP_ERROR(node_->get_logger(), "Failed to set pen");
     }
 }
-
+//Draw Rectangles with TurtleSim
 void Environment::drawRectangle(Point topLeft, Point bottomRight) {
     Point topRight = {bottomRight.x, topLeft.y};
     Point bottomLeft = {topLeft.x, bottomRight.y};
@@ -107,10 +107,10 @@ void Environment::drawRectangle(Point topLeft, Point bottomRight) {
     drawLine(bottomRight, bottomLeft);  //Bottom wall
     drawLine(bottomLeft, topLeft);  //Left wall
 }
-
+//Quit Program
 void Environment::quit() {
     std::cout << "Shutting down..." << std::endl;
-    rclcpp::shutdown();  // Shutdown ROS2
+    rclcpp::shutdown(); 
 }
 
 // RectangularRoom::RectangularRoom(rclcpp::Node::SharedPtr node) : Environment(node) {}

@@ -2,8 +2,8 @@
 #define ENVIRONMENT_H
 
 #include <iostream>
-#include <memory>  // For std::shared_ptr
-#include <rclcpp/rclcpp.hpp>  // ROS2 header for rclcpp
+#include <memory>  
+#include <rclcpp/rclcpp.hpp>  
 #include "turtlesim/srv/set_pen.hpp"
 #include "turtlesim/srv/teleport_absolute.hpp"
 
