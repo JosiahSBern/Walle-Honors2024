@@ -196,7 +196,7 @@ void ClassroomEnvironment::drawDesk() {
     // Set the pen color to brown
     setColor(139, 69, 19);
     
-    // int desksPerRow = (roomWidth - 2) / (desk_width + desk_spacing);
+    int desksPerRow = (roomWidth - 2) / (desk_width + desk_spacing);
     // int desksPerColumn = (roomLength - 2) / (desk_height + desk_spacing);
     for (int row = 0; row < 3; ++row) {
     double y_position;
