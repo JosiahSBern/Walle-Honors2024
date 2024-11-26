@@ -24,6 +24,7 @@ protected:
 public:
     // Constructor
     Environment(rclcpp::Node::SharedPtr node);
+    virtual ~Environment() {}
 
     // Virtual drawWalls function
     virtual void drawWalls() = 0;
@@ -58,7 +59,7 @@ class ClassroomEnvironment : public Environment {
         void drawExit();
         void drawDesk();
         void drawClassroom();
-        void spawnStartingTurtle();
+        // void spawnStartingTurtle();
 };
 
 

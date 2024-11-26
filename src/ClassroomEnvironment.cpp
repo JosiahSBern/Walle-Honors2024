@@ -15,15 +15,13 @@ ClassroomEnvironment::ClassroomEnvironment(rclcpp::Node::SharedPtr node)
     roomWidth = TURTLESIM_WINDOW_WIDTH - 1.0;  // Leave 0.5 margin on each side
     roomLength = TURTLESIM_WINDOW_HEIGHT - 1.0;
     
-    // Dynamically calculate desk dimensions
-    int desksPerRow = 3;  // Can be adjusted dynamically
-    int desksPerColumn = 3;  // Can be adjusted dynamically
-    
     // Calculate desk dimensions to fill the room evenly
     desk_spacing = 0.5;  // Consistent spacing
     desk_width = (roomWidth - (desksPerRow + 1) * desk_spacing) / desksPerRow;
     desk_height = (roomLength - (desksPerColumn + 1) * desk_spacing) / desksPerColumn;
 } 
+ClassroomEnvironment::~ClassroomEnvironment() {
+}
 
 void ClassroomEnvironment::drawWalls() {
     // Define the corners of the classroom precisely
@@ -93,35 +91,35 @@ void ClassroomEnvironment::drawDesk() {
     }
 }
 
-void ClassroomEnvironment::spawnStartingTurtle() {
-    // Create spawn client if not already created
-    if (!spawn_client_) {
-        spawn_client_ = node_->create_client<turtlesim::srv::Spawn>("/spawn");
-    }
+// void ClassroomEnvironment::spawnStartingTurtle() {
+//     // Create spawn client if not already created
+//     if (!spawn_client_) {
+//         spawn_client_ = node_->create_client<turtlesim::srv::Spawn>("/spawn");
+//     }
 
-    auto request = std::make_shared<turtlesim::srv::Spawn::Request>();
+//     auto request = std::make_shared<turtlesim::srv::Spawn::Request>();
     
-    // Position the new turtle near the bottom-right corner
-    request->x = roomWidth;  
-    request->y = 1.0;        
-    request->theta = M_PI / 2;  // Facing upward (90 degrees)
-    request->name = "turtle2";  
+//     // Position the new turtle near the bottom-right corner
+//     request->x = roomWidth;  
+//     request->y = 1.0;        
+//     request->theta = M_PI / 2;  // Facing upward (90 degrees)
+//     request->name = "turtle2";  
 
-    // Send the spawn request
-    auto result = spawn_client_->async_send_request(request);
+//     // Send the spawn request
+//     auto result = spawn_client_->async_send_request(request);
     
-    if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
-        RCLCPP_INFO(node_->get_logger(), "Successfully spawned turtle2 at starting position.");
-    } else {
-        RCLCPP_ERROR(node_->get_logger(), "Failed to spawn turtle2.");
-    }
-}
+//     if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+//         RCLCPP_INFO(node_->get_logger(), "Successfully spawned turtle2 at starting position.");
+//     } else {
+//         RCLCPP_ERROR(node_->get_logger(), "Failed to spawn turtle2.");
+//     }
+// }
 
 void ClassroomEnvironment::drawClassroom(){
     drawWalls();
     drawExit();
     drawDesk();
-    spawnStartingTurtle();
+    // spawnStartingTurtle();
     quit();
 }
 
