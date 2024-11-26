@@ -39,7 +39,7 @@ public:
     void drawRectangle(Point topLeft, Point bottomRight); 
 
     // Function to set pen on or off
-    void setPen(bool on,int r = 0, int g = 0, int b = 0);
+    void setPen(bool on,int r = 0, int g = 0, int b = 0,int width = 2);
     // Quit function to end the drawing session
     void quit();
 };

@@ -28,25 +28,25 @@ Point Environment::getExit() {
 //Draw line between two points
 void Environment::drawLine(Point start, Point end) {
     try {
-        //Move to start position with pen up
+        // Create a teleport request to move the turtle to the start position
         auto teleport_request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
-        setPen(false);
+        setPen(false);  // Lift pen before moving to the starting position
 
+        // Set start position and angle based on the direction to the end point
         teleport_request->x = start.x;
         teleport_request->y = start.y;
         teleport_request->theta = atan2(end.y - start.y, end.x - start.x);
 
-        //Send teleport request to move the turtle to the start position
+        // Send the teleport request to move the turtle to the start position
         auto result = teleport_client_->async_send_request(teleport_request);
         if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
             throw std::runtime_error("Failed to teleport to start position");
         }
 
-        //Set the pen down to start drawing
+        // Set the pen down to start drawing
         setPen(true);
-    }
 
-        //Move the turtle to the final endpoint
+        // Move to the final endpoint
         teleport_request->x = end.x;
         teleport_request->y = end.y;
         result = teleport_client_->async_send_request(teleport_request);
@@ -54,12 +54,13 @@ void Environment::drawLine(Point start, Point end) {
             throw std::runtime_error("Failed to teleport to end position");
         }
 
-        // Lift the pen
+        // Lift the pen after drawing the line
         setPen(false);
     } catch (const std::exception& e) {
         RCLCPP_ERROR(node_->get_logger(), "Error drawing line: %s", e.what());
     }
 }
+
 
 // Function to set pen on or off
 void Environment::setPen(bool on, int r, int g, int b, int width) {
