@@ -9,8 +9,6 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(turtlesim REQUIRED)
 
-include_directories(include)
-
 # Add executable
 add_executable(classroom_node 
   src/main.cpp
@@ -25,11 +23,6 @@ ament_target_dependencies(classroom_node
 install(TARGETS
   classroom_node
   DESTINATION lib/${PROJECT_NAME}
-)
-
-install(DIRECTORY
-  include/
-  DESTINATION include/
 )
 
 ament_package()
