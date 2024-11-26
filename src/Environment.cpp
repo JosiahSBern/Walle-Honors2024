@@ -66,11 +66,11 @@ void Environment::drawLine(Point start, Point end) {
 // Function to set pen on or off
 void Environment::setPen(bool on, int r, int g, int b, int width) {
     auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
-    request->r = 255;  // Red value (0-255)
-    request->g = 0;    // Green value (0-255)
-    request->b = 0;    // Blue value (0-255)
-    request->width = 3;  // Optional: pen width
-    request->off = 0;   // Optional: 0 means pen is on
+    request->r = r;  // Red value (0-255)
+    request->g = g;    // Green value (0-255)
+    request->b = b;    // Blue value (0-255)
+    request->width = w;  // Optional: pen width
+    request->off = on;   // Optional: 0 means pen is on
 
     // Send the request
     pen_client->async_send_request(request);
