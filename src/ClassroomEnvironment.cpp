@@ -71,7 +71,7 @@ void ClassroomEnvironment::drawDesk() {
     }
 
     // Set the pen color to brown
-    setPen(true, 139, 69, 19, 2);
+    setPen(true, 255, 0, 255, 2);
     for (int row = 0; row < desksPerColumn; ++row) {
         for (int col = 0; col < desksPerRow; ++col) {
             // Calculate x and y positions with even spacing
