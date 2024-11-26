@@ -21,8 +21,7 @@ ClassroomEnvironment::ClassroomEnvironment(rclcpp::Node::SharedPtr node)
     desk_width = (roomWidth - (desksPerRow + 1) * desk_spacing) / (desksPerRow * 2)    desk_height = (roomLength - (desksPerColumn + 1) * desk_spacing) / desksPerColumn;
     desk_height = (roomLength - (desksPerColumn + 1) * desk_spacing) / (desksPerColumn * 2)
 }
-
-vvoid ClassroomEnvironment::drawWalls() {
+void ClassroomEnvironment::drawWalls() {
     // Draw white background first
     setPen(true, 255, 255, 255, 20);  // White pen
     
@@ -46,6 +45,17 @@ vvoid ClassroomEnvironment::drawWalls() {
     drawLine(topRight, topLeft);        // Top wall
     drawLine(topLeft, bottomLeft);      // Left wall
 }
+
+void ClassroomEnvironment::drawExit() {
+    // Make sure to wait for the pen service to be available
+    while (!pen_client_->wait_for_service(std::chrono::seconds(1))) {
+        if (!rclcpp::ok()) {
+            RCLCPP_ERROR(node_->get_logger(), "Interrupted while waiting for pen service");
+            return;
+        }
+        RCLCPP_INFO(node_->get_logger(), "Waiting for pen service...");
+    }
+
     // Set the pen color to green with full opacity
     setPen(true, 0, 255, 0, 2);
       
