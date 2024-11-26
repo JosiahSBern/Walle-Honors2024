@@ -18,9 +18,11 @@ ClassroomEnvironment::ClassroomEnvironment(rclcpp::Node::SharedPtr node)
     roomLength = TURTLESIM_WINDOW_HEIGHT - 1.0;
     
     desk_spacing = 0.5;
-    desk_width = (roomWidth - (desksPerRow + 1) * desk_spacing) / (desksPerRow * 2)    desk_height = (roomLength - (desksPerColumn + 1) * desk_spacing) / desksPerColumn;
-    desk_height = (roomLength - (desksPerColumn + 1) * desk_spacing) / (desksPerColumn * 2)
+    // Fixed: separate calculation lines, added semicolons
+    desk_width = (roomWidth - (desksPerRow + 1) * desk_spacing) / (desksPerRow * 2);
+    desk_height = (roomLength - (desksPerColumn + 1) * desk_spacing) / (desksPerColumn * 2);
 }
+
 void ClassroomEnvironment::drawWalls() {
     // Draw white background first
     setPen(true, 255, 255, 255, 20);  // White pen
@@ -77,52 +79,28 @@ void ClassroomEnvironment::drawDesk() {
         RCLCPP_INFO(node_->get_logger(), "Waiting for pen service...");
     }
 
-    // Set the pen color to brown
+    // Set the pen color to brown (using magenta as an example)
     setPen(true, 255, 0, 255, 2);
+    
     for (int row = 0; row < desksPerColumn; ++row) {
         for (int col = 0; col < desksPerRow; ++col) {
             // Calculate x and y positions with even spacing
-            double x_position = 0.5 + desk_spacing + col * (desk_width * 2 + desk_spacing)
-            double y_position = 0.5 + desk_spacing + row * (desk_height * 2 + desk_spacing)
+            // Fixed: added missing semicolon, corrected syntax
+            double x_position = 0.5 + desk_spacing + col * (desk_width * 2 + desk_spacing);
+            double y_position = 0.5 + desk_spacing + row * (desk_height * 2 + desk_spacing);
             
-            // Draw the desk as sa rectangle
+            // Draw the desk as a rectangle
+            // Fixed: created explicit Point objects
             Point topLeft = {x_position, y_position};
-            Point bottomRight = {topLeft.x + desk_width, topLeft.y + desk_height};
+            Point bottomRight = {x_position + desk_width, y_position + desk_height};
             drawRectangle(topLeft, bottomRight);
         }
     }
 }
 
-// void ClassroomEnvironment::spawnStartingTurtle() {
-//     // Create spawn client if not already created
-//     if (!spawn_client_) {
-//         spawn_client_ = node_->create_client<turtlesim::srv::Spawn>("/spawn");
-//     }
-
-//     auto request = std::make_shared<turtlesim::srv::Spawn::Request>();
-    
-//     // Position the new turtle near the bottom-right corner
-//     request->x = roomWidth;  
-//     request->y = 1.0;        
-//     request->theta = M_PI / 2;  // Facing upward (90 degrees)
-//     request->name = "turtle2";  
-
-//     // Send the spawn request
-//     auto result = spawn_client_->async_send_request(request);
-    
-//     if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
-//         RCLCPP_INFO(node_->get_logger(), "Successfully spawned turtle2 at starting position.");
-//     } else {
-//         RCLCPP_ERROR(node_->get_logger(), "Failed to spawn turtle2.");
-//     }
-// }
-
 void ClassroomEnvironment::drawClassroom(){
     drawWalls();
     drawExit();
     drawDesk();
-    // spawnStartingTurtle();
     quit();
 }
-
-// Modify setPen to allow line width specification
