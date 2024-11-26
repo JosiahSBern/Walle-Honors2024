@@ -24,8 +24,6 @@ protected:
 public:
     // Constructor
     Environment(rclcpp::Node::SharedPtr node);
-    virtual ~Environment() {}
-
     // Virtual drawWalls function
     virtual void drawWalls() = 0;
 

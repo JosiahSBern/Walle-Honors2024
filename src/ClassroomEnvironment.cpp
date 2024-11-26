@@ -21,8 +21,6 @@ ClassroomEnvironment::ClassroomEnvironment(rclcpp::Node::SharedPtr node)
     desk_width = (roomWidth - (desksPerRow + 1) * desk_spacing) / desksPerRow;
     desk_height = (roomLength - (desksPerColumn + 1) * desk_spacing) / desksPerColumn;
 }
-ClassroomEnvironment::~ClassroomEnvironment() {
-}
 
 void ClassroomEnvironment::drawWalls() {
     // Define the corners of the classroom precisely
