@@ -58,6 +58,7 @@ class ClassroomEnvironment : public Environment {
         void drawExit();
         void drawDesk();
         void drawClassroom();
+        void spawnStartingTurtle();
 };
 
 
