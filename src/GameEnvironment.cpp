@@ -6,10 +6,14 @@
 
 // Constructor
 GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node) : Environment(node) {
+    const double leftWallOffset = 1.5; // Distance from the left wall
+    const double binSpacing = 3.0;    // Spacing between bins
+    const double binTopY = 9.0;       // Fixed Y-coordinate for bins
+
     binPositions = {
-        {1.0, 9.0}, // Top-left corner of the first bin
-        {4.0, 9.0}, // Top-left corner of the second bin
-        {7.0, 9.0}  // Top-left corner of the third bin
+        {leftWallOffset, binTopY},                   // First bin
+        {leftWallOffset + binSpacing, binTopY},      // Second bin
+        {leftWallOffset + 2 * binSpacing, binTopY}   // Third bin
     };
 }
 
@@ -21,21 +25,7 @@ void GameEnvironment::drawBins() {
     drawRectangle(binPositions[2], {9.0, 7.5});
 }
 
-// Populate the assortment box
-void GameEnvironment::populateAssortment() {
-    RCLCPP_INFO(node_->get_logger(), "Populating assortment box...");
-    const double OBJECT_WIDTH = 0.5;
-    const double OBJECT_HEIGHT = 0.5;
 
-    objects = {
-        {Point{2.0, 2.0}, RECYCLING, "Bottle"},
-        {Point{3.0, 2.5}, PAPER, "Newspaper"}
-    };
-
-    for (const auto& obj : objects) {
-        drawRectangle(obj.position, {obj.position.x + OBJECT_WIDTH, obj.position.y + OBJECT_HEIGHT});
-    }
-}
 
 // Handle sorting
 void GameEnvironment::handleSorting() {
@@ -74,7 +64,6 @@ void GameEnvironment::drawGame() {
     RCLCPP_INFO(node_->get_logger(), "Drawing the game environment...");
     drawWalls();
     drawBins();
-    populateAssortment();
 }
 
 // Draw walls
