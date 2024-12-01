@@ -1,91 +1,65 @@
-#include "Environment.h"
+#include "GameEnvironment.h"
+#include "CollisionHandler.h"
+#include "Point.h"
+#include <rclcpp/rclcpp.hpp>
 #include <cmath>
 
-Environment::Environment(rclcpp::Node::SharedPtr node) : node_(node) {
-    pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/turtle1/set_pen");
-    teleport_client_ = node_->create_client<turtlesim::srv::TeleportAbsolute>("/turtle1/teleport_absolute");
+// Constructor
+GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node) : Environment(node) {
+    const double leftWallOffset = 1.5; // Distance from the left wall
+    const double binSpacing = 3.0;    // Spacing between bins
+    const double binTopY = 9.0;       // Fixed Y-coordinate for bins
 
-    if (!pen_client_ || !teleport_client_) {
-        RCLCPP_ERROR(node_->get_logger(), "Failed to initialize service clients.");
-    }
+    binPositions = {
+        {leftWallOffset, binTopY},                   // First bin
+        {leftWallOffset + binSpacing, binTopY},      // Second bin
+        {leftWallOffset + 2 * binSpacing, binTopY}   // Third bin
+    };
 }
 
-void Environment::setExit(double x, double y, const std::string& direction) {
-    exit.x = x;
-    exit.y = y;
-    this->direction = direction;
+// Draw bins
+void GameEnvironment::drawBins() {
+    const double binWidth = 2.0;
+    const double binHeight = 1.5;
+    const double bottomBoxHeight = 2.0;
+
+    RCLCPP_INFO(node_->get_logger(), "Drawing bins...");
+
+    // Draw top bins
+    for (size_t i = 0; i < binPositions.size(); ++i) {
+        Point binBottomRight = {binPositions[i].x + binWidth, binPositions[i].y - binHeight};
+        drawRectangle(binPositions[i], binBottomRight);
+        RCLCPP_INFO(node_->get_logger(), "Bin %zu: TopLeft (%f, %f), BottomRight (%f, %f)", 
+                    i + 1, binPositions[i].x, binPositions[i].y, binBottomRight.x, binBottomRight.y);
+    }
+
+    // Draw the large box at the bottom
+    Point bottomBoxTopLeft = {1.0, 3.0};
+    Point bottomBoxBottomRight = {10.0, 3.0 - bottomBoxHeight};
+    drawRectangle(bottomBoxTopLeft, bottomBoxBottomRight);
+
+    RCLCPP_INFO(node_->get_logger(), "Bottom box: TopLeft (%f, %f), BottomRight (%f, %f)",
+                bottomBoxTopLeft.x, bottomBoxTopLeft.y, bottomBoxBottomRight.x, bottomBoxBottomRight.y);
 }
 
-Point Environment::getExit() {
-    return exit;
+// Draw the game
+void GameEnvironment::drawGame() {
+    RCLCPP_INFO(node_->get_logger(), "Drawing the game environment...");
+    drawWalls();
+    drawBins();
 }
 
-void Environment::drawLine(Point start, Point end) {
-    RCLCPP_INFO(node_->get_logger(), "Drawing line from (%f, %f) to (%f, %f)", start.x, start.y, end.x, end.y);
-    if (!teleport_client_ || !teleport_client_->service_is_ready()) {
-        RCLCPP_ERROR(node_->get_logger(), "Teleport service is unavailable.");
-        return;
-    }
+// Draw walls
+void GameEnvironment::drawWalls() {
+    const double WALL_LEFT = 1.0;
+    const double WALL_RIGHT = 10.0;
+    const double WALL_TOP = 10.0;
+    const double WALL_BOTTOM = 1.0;
 
-    auto teleport_request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
-    setPen(false);
+    Point topLeft = {WALL_LEFT, WALL_TOP};
+    Point bottomRight = {WALL_RIGHT, WALL_BOTTOM};
+    drawRectangle(topLeft, bottomRight);
 
-    teleport_request->x = start.x;
-    teleport_request->y = start.y;
-    teleport_request->theta = atan2(end.y - start.y, end.x - start.x);
-
-    auto result = teleport_client_->async_send_request(teleport_request);
-    if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
-        RCLCPP_ERROR(node_->get_logger(), "Failed to teleport to start position");
-        return;
-    }
-
-    setPen(true);
-    teleport_request->x = end.x;
-    teleport_request->y = end.y;
-
-    result = teleport_client_->async_send_request(teleport_request);
-    if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
-        RCLCPP_ERROR(node_->get_logger(), "Failed to teleport to end position");
-    }
-    setPen(false);
-}
-
-void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
-    if (!pen_client_ || !pen_client_->service_is_ready()) {
-        RCLCPP_ERROR(node_->get_logger(), "Pen service not available.");
-        return;
-    }
-
-    auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
-    request->r = r;
-    request->g = g;
-    request->b = b;
-    request->width = width;
-    request->off = !pen_state;
-
-    auto future = pen_client_->async_send_request(request);
-    if (rclcpp::spin_until_future_complete(node_, future) != rclcpp::FutureReturnCode::SUCCESS) {
-        RCLCPP_ERROR(node_->get_logger(), "Failed to set pen");
-    }
-}
-
-void Environment::drawRectangle(Point topLeft, Point bottomRight) {
-    RCLCPP_INFO(node_->get_logger(), "Drawing rectangle: TopLeft (%f, %f), BottomRight (%f, %f)", 
+    RCLCPP_INFO(node_->get_logger(), "Walls drawn: TopLeft (%f, %f), BottomRight (%f, %f)",
                 topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
-    Point topRight = {bottomRight.x, topLeft.y};
-    Point bottomLeft = {topLeft.x, bottomRight.y};
-    drawLine(topLeft, topRight);
-    drawLine(topRight, bottomRight);
-    drawLine(bottomRight, bottomLeft);
-    drawLine(bottomLeft, topLeft);
-}
-
-void Environment::quit() {
-    if (rclcpp::ok()) {
-        RCLCPP_INFO(node_->get_logger(), "Shutting down...");
-        rclcpp::shutdown();
-    } else {
-        RCLCPP_WARN(node_->get_logger(), "Node is already shut down.");
-    }
 }
