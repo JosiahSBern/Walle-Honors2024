@@ -20,6 +20,29 @@ GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node, const std::string
 void GameEnvironment::drawBins() {
     const double binWidth = 2.0;
     const double binHeight = 1.5;
+
+    RCLCPP_INFO(node_->get_logger(), "Drawing bins...");
+
+    for (size_t i = 0; i < binPositions.size(); ++i) {
+        Point binBottomRight = {binPositions[i].x + binWidth, binPositions[i].y - binHeight};
+        switch (i) {
+            case 0:  // Trash (Green)
+                drawRectangle(binPositions[i], binBottomRight, 0, 255, 0);
+                break;
+            case 1:  // Recycling (Blue)
+                drawRectangle(binPositions[i], binBottomRight, 0, 0, 255);
+                break;
+            case 2:  // Paper (Gray)
+                drawRectangle(binPositions[i], binBottomRight, 128, 128, 128);
+                break;
+            default:
+                drawRectangle(binPositions[i], binBottomRight, 0, 0, 0); // Default Black
+        }
+    }
+}
+
+    const double binWidth = 2.0;
+    const double binHeight = 1.5;
     const double bottomBoxHeight = 2.0;
 
     RCLCPP_INFO(node_->get_logger(), "Drawing bins...");

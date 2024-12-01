@@ -21,10 +21,10 @@ Point Environment::getExit() {
     return exit;
 }
 
-void Environment::drawLine(Point start, Point end) {
+void Environment::drawLine(Point start, Point end, bool pen_state, int r, int g, int b, int width) {
     auto teleport_request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
 
-    // Set the pen to an "off" state while moving
+    // Set the pen off while moving
     setPen(false, 0, 0, 0, 1);
 
     teleport_request->x = start.x;
@@ -37,8 +37,8 @@ void Environment::drawLine(Point start, Point end) {
         return;
     }
 
-    // Enable the pen with a default color (black)
-    setPen(true, 0, 0, 0, 2);
+    // Set the pen to the desired color
+    setPen(pen_state, r, g, b, width);
 
     teleport_request->x = end.x;
     teleport_request->y = end.y;
@@ -48,9 +48,10 @@ void Environment::drawLine(Point start, Point end) {
         RCLCPP_ERROR(node_->get_logger(), "Failed to teleport to end position");
     }
 
-    // Turn off the pen after drawing the line
+    // Turn the pen off after drawing
     setPen(false, 0, 0, 0, 1);
 }
+
 
 
 void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
@@ -79,14 +80,16 @@ void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
 
 
 
-void Environment::drawRectangle(Point topLeft, Point bottomRight) {
+void Environment::drawRectangle(Point topLeft, Point bottomRight, int r, int g, int b) {
     Point topRight = {bottomRight.x, topLeft.y};
     Point bottomLeft = {topLeft.x, bottomRight.y};
-    drawLine(topLeft, topRight);
-    drawLine(topRight, bottomRight);
-    drawLine(bottomRight, bottomLeft);
-    drawLine(bottomLeft, topLeft);
+
+    drawLine(topLeft, topRight, true, r, g, b, 2);     // Top edge
+    drawLine(topRight, bottomRight, true, r, g, b, 2); // Right edge
+    drawLine(bottomRight, bottomLeft, true, r, g, b, 2); // Bottom edge
+    drawLine(bottomLeft, topLeft, true, r, g, b, 2);   // Left edge
 }
+
 
 void Environment::quit() {
     RCLCPP_INFO(node_->get_logger(), "Shutting down...");
