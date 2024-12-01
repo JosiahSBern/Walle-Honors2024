@@ -5,7 +5,6 @@ Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle
     : turtle_name_(turtle_name), node_(node) {
     pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/" + turtle_name_ + "/set_pen");
     teleport_client_ = node_->create_client<turtlesim::srv::TeleportAbsolute>("/" + turtle_name_ + "/teleport_absolute");
-    clear_client_ = node_->create_client<std_srvs::srv::Empty>("/clear");
 }
 
 
