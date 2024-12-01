@@ -47,6 +47,7 @@ void GameEnvironment::drawGame() {
     RCLCPP_INFO(node_->get_logger(), "Drawing the game environment...");
     drawWalls();
     drawBins();
+    quit();
 }
 
 // Draw walls
