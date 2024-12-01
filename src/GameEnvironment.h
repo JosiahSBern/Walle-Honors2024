@@ -13,7 +13,7 @@ public:
     GameEnvironment(rclcpp::Node::SharedPtr node, const std::string& turtle_name);
     void drawGame();
     void drawWalls();
-    void drawBins()
+    void drawBins();
 };
 
 #endif  // GAME_ENVIRONMENT_H
