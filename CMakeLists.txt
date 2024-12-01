@@ -46,4 +46,4 @@ install(TARGETS
 )
 
 # Mark package as complete
-ament_package()s
+ament_package()
