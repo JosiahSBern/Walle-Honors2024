@@ -3,33 +3,16 @@
 
 #include "Environment.h"
 #include <vector>
-
-
-using namespace std;
-// Enum to represent object types
-enum ObjectType {
-    RECYCLING,
-    PAPER,
-    TRASH
-};
-
-// Struct for game objects
-struct GameObject {
-    Point position;  // Current position
-    ObjectType type; // Type of the object
-    string name; // Object name (e.g., "Bottle", "Can")
-};
+#include <string>
 
 class GameEnvironment : public Environment {
 private:
-    std::vector<Point> binPositions;  // Positions of bins (top row)
+    std::vector<Point> binPositions; // Bin positions
 
-    void drawBins();           // Draw the three color-coded bins
-    
 public:
-    GameEnvironment(rclcpp::Node::SharedPtr node);
-    void drawGame();           // Draw the game layout
-    void drawWalls(); // Override drawWalls from Environment
+    GameEnvironment(rclcpp::Node::SharedPtr node, const std::string& turtle_name);
+    void drawGame();
+    void drawWalls() override;
 };
 
 #endif  // GAME_ENVIRONMENT_H

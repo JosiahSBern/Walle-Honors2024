@@ -5,7 +5,8 @@
 #include <cmath>
 
 // Constructor
-GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node) : Environment(node) {
+GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node, const std::string& turtle_name) 
+    : Environment(node, turtle_name) {
     const double leftWallOffset = 1.5; // Distance from the left wall
     const double binSpacing = 3.0;    // Spacing between bins
     const double binTopY = 9.0;       // Fixed Y-coordinate for bins
@@ -16,6 +17,9 @@ GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node) : Environment(nod
         {leftWallOffset + 2 * binSpacing, binTopY}   // Third bin
     };
 }
+
+// Other methods remain unchanged...
+
 
 // Draw bins
 void GameEnvironment::drawBins() {
