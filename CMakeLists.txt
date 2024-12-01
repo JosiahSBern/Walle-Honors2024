@@ -36,7 +36,6 @@ target_link_libraries(environment_building environment_library)
 ament_target_dependencies(environment_building
   rclcpp
   turtlesim
-  std_srvs
 )
 
 # Install executables and library
