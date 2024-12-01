@@ -18,10 +18,6 @@ GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node, const std::string
     };
 }
 
-// Other methods remain unchanged...
-
-
-// Draw bins
 void GameEnvironment::drawBins() {
     const double binWidth = 2.0;
     const double binHeight = 1.5;
@@ -29,15 +25,32 @@ void GameEnvironment::drawBins() {
 
     RCLCPP_INFO(node_->get_logger(), "Drawing bins...");
 
-    // Draw top bins
+    // Draw top bins with specific colors
     for (size_t i = 0; i < binPositions.size(); ++i) {
+        // Set pen color based on bin type
+        switch (i) {
+            case 0:  // Trash (Green)
+                setPen(true, 0, 255, 0, 2);  // Green
+                break;
+            case 1:  // Recycling (Blue)
+                setPen(true, 0, 0, 255, 2);  // Blue
+                break;
+            case 2:  // Paper (Gray)
+                setPen(true, 128, 128, 128, 2);  // Gray
+                break;
+            default:
+                setPen(true, 0, 0, 0, 2);  // Default Black
+                break;
+        }
+
         Point binBottomRight = {binPositions[i].x + binWidth, binPositions[i].y - binHeight};
         drawRectangle(binPositions[i], binBottomRight);
+
         RCLCPP_INFO(node_->get_logger(), "Bin %zu: TopLeft (%f, %f), BottomRight (%f, %f)", 
                     i + 1, binPositions[i].x, binPositions[i].y, binBottomRight.x, binBottomRight.y);
     }
 
-    // Draw the large box at the bottom
+    // Draw the large box at the bottom with a default pen color
     Point bottomBoxTopLeft = {1.0, 3.0};
     Point bottomBoxBottomRight = {10.0, 3.0 - bottomBoxHeight};
     drawRectangle(bottomBoxTopLeft, bottomBoxBottomRight);
@@ -45,6 +58,7 @@ void GameEnvironment::drawBins() {
     RCLCPP_INFO(node_->get_logger(), "Bottom box: TopLeft (%f, %f), BottomRight (%f, %f)",
                 bottomBoxTopLeft.x, bottomBoxTopLeft.y, bottomBoxBottomRight.x, bottomBoxBottomRight.y);
 }
+
 
 // Draw the game
 void GameEnvironment::drawGame() {
