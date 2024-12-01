@@ -1,20 +1,17 @@
+#include "GameEnvironment.h"
+#include "UserTurtle.h"
 #include <rclcpp/rclcpp.hpp>
-#include "Environment.h"
-
-#include <rclcpp/rclcpp.hpp>
-#include "Environment.h"
 
 int main(int argc, char** argv) {
     rclcpp::init(argc, argv);
-    auto node = std::make_shared<rclcpp::Node>("robot_dog_node");
 
-    //Create classroom environment
-    ClassroomEnvironment classroom(node);
-    
-    //Draw the classroom
-    classroom.drawClassroom();
+    auto node = std::make_shared<rclcpp::Node>("game_node");
+    GameEnvironment gameEnv(node);
+    UserTurtle userTurtle(node);
 
-    rclcpp::spin(node);
+    gameEnv.drawGame();
+    userTurtle.keyLoop();
+
     rclcpp::shutdown();
     return 0;
 }

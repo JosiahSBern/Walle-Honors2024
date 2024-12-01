@@ -1,22 +1,30 @@
 //Using teleop_turtle_key.cpp https://github.com/sukha-cn/turtlesim-ros2/blob/master/tutorials/teleop_turtle_key.cpp
-#ifndef ENVIRONMENT_H
-#define ENVIRONMENT_H
-#include <memory.h>
-#include "rclcpp/rclcpp.hpp"
+#ifndef USERTURTLE_H
+#define USERTURTLE_H
 
+#include "Turtle.h"
+#include <termios.h>
+#include <unistd.h>
 
-class UserTurtle
-{
-    public: 
-        UserTurtle();
-        void keyLoop();
-        void quit();
-    private:
-        std::shared_ptr<rclcpp::Node> nh_;
-        double linear_;
-        double angular_;
-        double l_scale_;
-        double a_scale_;
-        rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub_;
+#define KEYCODE_W 0x77
+#define KEYCODE_A 0x61
+#define KEYCODE_S 0x73
+#define KEYCODE_D 0x64
+#define KEYCODE_Q 0x71
+
+class UserTurtle : public Turtle {
+private:
+    double linear_, angular_, l_scale_, a_scale_;
+
+    void setConsoleModeRaw();
+    void resetConsoleMode();
+    void updatePosition(char key);
+
+public:
+    UserTurtle(std::shared_ptr<rclcpp::Node> node);
+    void move() override;
+    void renderTurtle() override;
+    ~UserTurtle() override = default;
 };
+
 #endif

@@ -2,48 +2,38 @@
 #define ENVIRONMENT_H
 
 #include <iostream>
-#include <memory>  
-#include <rclcpp/rclcpp.hpp>  
+#include <memory>
+#include <rclcpp/rclcpp.hpp>
 #include "turtlesim/srv/set_pen.hpp"
 #include "turtlesim/srv/teleport_absolute.hpp"
-                                                                         #include 
-
-using namespace std;
-struct Point {
-    double x;
-    double y;
-};
+#include "Point.h"
 
 class Environment {
 protected:
-    rclcpp::Node::SharedPtr node_;  //ROS2 node
-    std::shared_ptr<rclcpp::Client<turtlesim::srv::SetPen>> pen_client_;  // Set pen client
-    std::shared_ptr<rclcpp::Client<turtlesim::srv::TeleportAbsolute>> teleport_client_;  // Teleport client
-    // rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr spawn_client_;
-    Point exit;  //Exit point
-    string direction;  //Direction of exit
+    rclcpp::Node::SharedPtr node_;  // ROS2 node
+    std::shared_ptr<rclcpp::Client<turtlesim::srv::SetPen>> pen_client_;
+    std::shared_ptr<rclcpp::Client<turtlesim::srv::TeleportAbsolute>> teleport_client_;
+    Point exit;
+    std::string direction;
+
 public:
-    //Constructor
     Environment(rclcpp::Node::SharedPtr node);
-    // Virtual drawWalls function
     virtual void drawWalls() = 0;
-
-    // Virtual setExit function
     virtual void setExit(double x, double y, const std::string& direction);
-
-    // Get exit position
     Point getExit();
-
-    //Draw line between two points
     void drawLine(Point start, Point end);
-    //Draw Rectangles
-    void drawRectangle(Point topLeft, Point bottomRight); 
-
-    // Function to set pen on or off
-    void setPen(bool on,int r = 0, int g = 0, int b = 0,int width = 2);
-    // Quit function to end the drawing session
+    void drawRectangle(Point topLeft, Point bottomRight);
+    void setPen(bool pen_state, int r = 0, int g = 0, int b = 0, int width = 2);
     void quit();
+    virtual ~Environment() = default;
 };
+
+#endif
+
+
+
+
+
 
 // Derived class: ClassroomEnvironment
 class ClassroomEnvironment : public Environment {
