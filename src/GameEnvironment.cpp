@@ -24,52 +24,49 @@ void GameEnvironment::drawBins() {
 
     RCLCPP_INFO(node_->get_logger(), "Drawing bins...");
 
-    // Ensure the pen service is ready before drawing
     if (!pen_client_->wait_for_service(std::chrono::seconds(1))) {
         RCLCPP_ERROR(node_->get_logger(), "Pen service not available.");
         return;
     }
 
-    // Draw top bins with specific colors
+    // Draw bins with individual colors
     for (size_t i = 0; i < binPositions.size(); ++i) {
-        // Set pen color based on bin type
+        // Set pen color
         switch (i) {
             case 0:  // Trash (Green)
-                setPen(true, 0, 255, 0, 2);  // Green
+                setPen(true, 0, 255, 0, 2);
                 break;
             case 1:  // Recycling (Blue)
-                setPen(true, 0, 0, 255, 2);  // Blue
+                setPen(true, 0, 0, 255, 2);
                 break;
             case 2:  // Paper (Gray)
-                setPen(true, 128, 128, 128, 2);  // Gray
+                setPen(true, 128, 128, 128, 2);
                 break;
             default:
-                setPen(true, 0, 0, 0, 2);  // Default Black
-                break;
+                setPen(true, 0, 0, 0, 2); // Default Black
         }
 
-        // Add a short delay to ensure pen settings take effect
+        // Delay to ensure pen updates
         rclcpp::sleep_for(std::chrono::milliseconds(100));
 
+        // Draw the bin
         Point binBottomRight = {binPositions[i].x + binWidth, binPositions[i].y - binHeight};
         drawRectangle(binPositions[i], binBottomRight);
 
-        RCLCPP_INFO(node_->get_logger(), "Bin %zu: TopLeft (%f, %f), BottomRight (%f, %f)", 
-                    i + 1, binPositions[i].x, binPositions[i].y, binBottomRight.x, binBottomRight.y);
+        RCLCPP_INFO(node_->get_logger(), "Bin %zu drawn with color: (%d, %d, %d)", 
+                    i + 1, (i == 0 ? 0 : (i == 1 ? 0 : 128)), 
+                    (i == 0 ? 255 : (i == 1 ? 0 : 128)), 
+                    (i == 0 ? 0 : (i == 1 ? 255 : 128)));
     }
 
-    // Draw the large box at the bottom with a default pen color
-    setPen(true, 255, 255, 255, 2);  // White
+    // Draw the bottom box
+    setPen(true, 255, 255, 255, 2); // White
+    rclcpp::sleep_for(std::chrono::milliseconds(100));
     Point bottomBoxTopLeft = {1.0, 3.0};
     Point bottomBoxBottomRight = {10.0, 3.0 - bottomBoxHeight};
-
-    // Add a short delay for the bottom box
-    rclcpp::sleep_for(std::chrono::milliseconds(100));
-
     drawRectangle(bottomBoxTopLeft, bottomBoxBottomRight);
 
-    RCLCPP_INFO(node_->get_logger(), "Bottom box: TopLeft (%f, %f), BottomRight (%f, %f)",
-                bottomBoxTopLeft.x, bottomBoxTopLeft.y, bottomBoxBottomRight.x, bottomBoxBottomRight.y);
+    RCLCPP_INFO(node_->get_logger(), "Bottom box drawn with color: (255, 255, 255)");
 }
 
 
