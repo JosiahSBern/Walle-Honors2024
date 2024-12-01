@@ -14,9 +14,6 @@ protected:
     rclcpp::Node::SharedPtr node_;                   // ROS2 node for managing the environment
     rclcpp::Client<turtlesim::srv::SetPen>::SharedPtr pen_client_;  // Pen service client
     rclcpp::Client<turtlesim::srv::TeleportAbsolute>::SharedPtr teleport_client_;  // Teleport service client
-    rclcpp::Client<std_srvs::srv::Empty>::SharedPtr clear_client_; // Clear service client
-
-
     Point exit;
     std::string direction;
 
