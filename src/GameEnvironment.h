@@ -25,8 +25,7 @@ private:
     std::vector<Point> binPositions;  // Positions of bins (top row)
 
     void drawBins();           // Draw the three color-coded bins
-    void handleSorting();      // Logic for sorting objects into bins
-
+    
 public:
     GameEnvironment(rclcpp::Node::SharedPtr node);
     void drawGame();           // Draw the game layout
