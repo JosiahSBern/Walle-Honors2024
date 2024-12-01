@@ -1,24 +1,19 @@
 #include <rclcpp/rclcpp.hpp>
 #include "GameEnvironment.h"
+#include <iostream>
 
-int main(int argc, char** argv) {
-    // Initialize ROS 2
+
+int main(int argc, char* argv[]) {
     rclcpp::init(argc, argv);
+    auto node = std::make_shared<rclcpp::Node>("environment_builder");
 
-    // Create a ROS 2 node
-    auto node = rclcpp::Node::make_shared("environment_builder");
+    // Example with dynamic turtle name
+    std::string turtle_name = "turtle1";  // Replace with dynamic name if needed
+    auto environment = std::make_shared<GameEnvironment>(node, turtle_name);
 
-    // Create the game environment
-    auto game_environment = std::make_shared<GameEnvironment>(node);
+    environment->drawGame();
 
-    // Draw the game environment
-    RCLCPP_INFO(node->get_logger(), "Drawing game environment...");
-    game_environment->drawGame();
-
-    // Spin the node to keep it alive and allow visualization
     rclcpp::spin(node);
-
-    // Shutdown ROS 2
     rclcpp::shutdown();
     return 0;
 }

@@ -11,6 +11,7 @@
 // Abstract Base Class: Represents a general environment
 class Environment {
 protected:
+    std::string turtle_name_;  // Name of the turtle
     rclcpp::Node::SharedPtr node_;  // ROS2 node for managing environment
     std::shared_ptr<rclcpp::Client<turtlesim::srv::SetPen>> pen_client_;  // Pen control client
     std::shared_ptr<rclcpp::Client<turtlesim::srv::TeleportAbsolute>> teleport_client_;  // Teleport client
@@ -19,8 +20,7 @@ protected:
 
 public:
     // Constructor: Initializes the ROS2 node
-    Environment(rclcpp::Node::SharedPtr node);
-
+    Environment(rclcpp::Node::SharedPtr node, const std::string& turtle_name);
     // Draw walls of the environment (pure virtual)
     virtual void drawWalls() = 0;
 
