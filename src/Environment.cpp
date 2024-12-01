@@ -8,6 +8,9 @@ Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle
     clear_client_ = node_->create_client<std_srvs::srv::Empty>("/clear");
 }
 
+Environment::~Environment() {
+}
+
 void Environment::clearEnvironment() {
     if (!clear_client_->wait_for_service(std::chrono::seconds(1))) {
         RCLCPP_ERROR(node_->get_logger(), "Clear service not available.");

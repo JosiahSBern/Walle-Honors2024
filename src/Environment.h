@@ -23,6 +23,7 @@ protected:
     std::string direction;
 
 public:
+    virtual ~Environment(); 
     Environment(rclcpp::Node::SharedPtr node, const std::string& turtle_name);
     virtual void drawWalls() = 0;
     void clearEnvironment(); 
