@@ -1,53 +1,42 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.5)
 project(robot_dog)
-
-# Enable compiler warnings
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
 
 # Find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(turtlesim REQUIRED)
+find_package(std_srvs REQUIRED)
 
+# Include directories
+include_directories(include)
 
-# Add a shared library for reusable environment code
-add_library(environment_library
-  src/Environment.cpp
-  src/GameEnvironment.cpp
+# Source files
+set(SOURCES
+    src/Environment.cpp
+    src/GameEnvironment.cpp
+    src/main.cpp
 )
 
-# Link dependencies for the library
-ament_target_dependencies(environment_library
-  rclcpp
-  turtlesim
+# Header files
+set(HEADERS
+    include/Environment.h
+    include/GameEnvironment.h
+    include/Point.h
 )
 
-# Add executable for Environment Building
-add_executable(environment_building
-  src/main.cpp
-)
+# Create the executable
+add_executable(robot_dog ${SOURCES})
 
-# Link the library to the Environment Building executable
-target_link_libraries(environment_building environment_library)
+# Link libraries
+ament_target_dependencies(robot_dog rclcpp turtlesim std_srvs)
 
-ament_target_dependencies(environment_building
-  rclcpp
-  turtlesim
-)
+# Install targets
+install(TARGETS robot_dog
+    DESTINATION lib/${PROJECT_NAME})
 
-# Install executables and library
-install(TARGETS 
-  environment_building 
-  environment_library
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-# Install header files
+# Install include directory
 install(DIRECTORY include/
-  DESTINATION include/${PROJECT_NAME}
-)
+    DESTINATION include)
 
-# Mark package as complete
+# Ament package
 ament_package()
