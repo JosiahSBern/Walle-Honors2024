@@ -72,4 +72,6 @@ void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
 void Environment::drawRectangle(Point topLeft, Point bottomRight, int r, int g, int b) {
     drawLine(topLeft, {bottomRight.x, topLeft.y}, true, r, g, b, 2);
     drawLine({bottomRight.x, topLeft.y}, bottomRight, true, r, g, b, 2);
-    drawLine(bottomRight, {topLeft.
+    drawLine(bottomRight, {topLeft.x, bottomRight.y}, true, r, g, b, 2);
+    drawLine({topLeft.x, bottomRight.y}, topLeft, true, r, g, b, 2);
+}
