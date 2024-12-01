@@ -4,107 +4,57 @@
 #include <rclcpp/rclcpp.hpp>
 #include <cmath>
 
-// Constructor
 GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node, const std::string& turtle_name) 
     : Environment(node, turtle_name) {
-    const double leftWallOffset = 1.5; // Distance from the left wall
-    const double binSpacing = 3.0;    // Spacing between bins
-    const double binTopY = 9.0;       // Fixed Y-coordinate for bins
+    const double leftWallOffset = 1.5;
+    const double binSpacing = 3.0;
+    const double binTopY = 9.0;
 
     binPositions = {
-        {leftWallOffset, binTopY},                   // First bin
-        {leftWallOffset + binSpacing, binTopY},      // Second bin
-        {leftWallOffset + 2 * binSpacing, binTopY}   // Third bin
+        {leftWallOffset, binTopY},
+        {leftWallOffset + binSpacing, binTopY},
+        {leftWallOffset + 2 * binSpacing, binTopY}
     };
 }
+
 void GameEnvironment::drawBins() {
     const double binWidth = 2.0;
     const double binHeight = 1.5;
 
     RCLCPP_INFO(node_->get_logger(), "Drawing bins...");
-
     for (size_t i = 0; i < binPositions.size(); ++i) {
         Point binBottomRight = {binPositions[i].x + binWidth, binPositions[i].y - binHeight};
+        
+        // Set the pen color and draw the bin
+        int r, g, b;
         switch (i) {
-            case 0:  // Trash (Green)
-                drawRectangle(binPositions[i], binBottomRight, 0, 255, 0);
-                break;
-            case 1:  // Recycling (Blue)
-                drawRectangle(binPositions[i], binBottomRight, 0, 0, 255);
-                break;
-            case 2:  // Paper (Gray)
-                drawRectangle(binPositions[i], binBottomRight, 128, 128, 128);
-                break;
-            default:
-                drawRectangle(binPositions[i], binBottomRight, 0, 0, 0); // Default Black
-        }
-    }
-}
-
-    const double binWidth = 2.0;
-    const double binHeight = 1.5;
-    const double bottomBoxHeight = 2.0;
-
-    RCLCPP_INFO(node_->get_logger(), "Drawing bins...");
-
-    if (!pen_client_->wait_for_service(std::chrono::seconds(1))) {
-        RCLCPP_ERROR(node_->get_logger(), "Pen service not available.");
-        return;
-    }
-
-    // Draw bins with individual colors
-    for (size_t i = 0; i < binPositions.size(); ++i) {
-        // Set pen color
-        switch (i) {
-            case 0:  // Trash (Green)
-                setPen(true, 0, 255, 0, 2);
-                break;
-            case 1:  // Recycling (Blue)
-                setPen(true, 0, 0, 255, 2);
-                break;
-            case 2:  // Paper (Gray)
-                setPen(true, 128, 128, 128, 2);
-                break;
-            default:
-                setPen(true, 0, 0, 0, 2); // Default Black
+            case 0: r = 0; g = 255; b = 0; break;       // Green (Trash)
+            case 1: r = 0; g = 0; b = 255; break;       // Blue (Recycling)
+            case 2: r = 128; g = 128; b = 128; break;   // Gray (Paper)
+            default: r = g = b = 0;                    // Default Black
         }
 
-        // Delay to ensure pen updates
-        rclcpp::sleep_for(std::chrono::milliseconds(100));
-
-        // Draw the bin
-        Point binBottomRight = {binPositions[i].x + binWidth, binPositions[i].y - binHeight};
-        drawRectangle(binPositions[i], binBottomRight);
-
-        RCLCPP_INFO(node_->get_logger(), "Bin %zu drawn with color: (%d, %d, %d)", 
-                    i + 1, (i == 0 ? 0 : (i == 1 ? 0 : 128)), 
-                    (i == 0 ? 255 : (i == 1 ? 0 : 128)), 
-                    (i == 0 ? 0 : (i == 1 ? 255 : 128)));
+        drawRectangle(binPositions[i], binBottomRight, r, g, b);
+        RCLCPP_INFO(node_->get_logger(), "Bin %zu drawn: TopLeft (%f, %f), BottomRight (%f, %f), Color (%d, %d, %d)",
+                    i + 1, binPositions[i].x, binPositions[i].y, binBottomRight.x, binBottomRight.y, r, g, b);
     }
 
     // Draw the bottom box
-    setPen(true, 255, 255, 255, 2); // White
-    rclcpp::sleep_for(std::chrono::milliseconds(100));
     Point bottomBoxTopLeft = {1.0, 3.0};
-    Point bottomBoxBottomRight = {10.0, 3.0 - bottomBoxHeight};
-    drawRectangle(bottomBoxTopLeft, bottomBoxBottomRight);
-
-    RCLCPP_INFO(node_->get_logger(), "Bottom box drawn with color: (255, 255, 255)");
+    Point bottomBoxBottomRight = {10.0, 1.0};
+    drawRectangle(bottomBoxTopLeft, bottomBoxBottomRight, 255, 255, 255); // White
+    RCLCPP_INFO(node_->get_logger(), "Bottom box drawn: TopLeft (%f, %f), BottomRight (%f, %f), Color (255, 255, 255)",
+                bottomBoxTopLeft.x, bottomBoxTopLeft.y, bottomBoxBottomRight.x, bottomBoxBottomRight.y);
 }
 
-
-
-// Draw the game
 void GameEnvironment::drawGame() {
     RCLCPP_INFO(node_->get_logger(), "Clearing the environment...");
-    clearEnvironment();  
+    clearEnvironment();
     RCLCPP_INFO(node_->get_logger(), "Drawing the game environment...");
     drawWalls();
     drawBins();
 }
 
-
-// Draw walls
 void GameEnvironment::drawWalls() {
     const double WALL_LEFT = 1.0;
     const double WALL_RIGHT = 10.0;
@@ -113,7 +63,7 @@ void GameEnvironment::drawWalls() {
 
     Point topLeft = {WALL_LEFT, WALL_TOP};
     Point bottomRight = {WALL_RIGHT, WALL_BOTTOM};
-    drawRectangle(topLeft, bottomRight);
+    drawRectangle(topLeft, bottomRight, 255, 255, 255); // White
 
     RCLCPP_INFO(node_->get_logger(), "Walls drawn: TopLeft (%f, %f), BottomRight (%f, %f)",
                 topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
