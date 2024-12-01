@@ -27,7 +27,8 @@ public:
     void clearEnvironment(); 
     virtual void setExit(double x, double y, const std::string& direction);
     Point getExit();
-    void drawLine(Point start, Point end, bool pen_state, int r, int g, int b, int width)    void drawRectangle(Point topLeft, Point bottomRight);
+    void drawLine(Point start, Point end, bool pen_state, int r, int g, int b, int width);
+    void drawRectangle(Point topLeft, Point bottomRight);
     void setPen(bool pen_state, int r, int g , int b, int width = 2);
     void quit();
     virtual ~Environment() = default;

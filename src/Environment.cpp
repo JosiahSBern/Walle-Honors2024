@@ -1,6 +1,6 @@
 #include "Environment.h"
 #include <cmath>
-s
+
 
 Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle_name)
     : node_(node), turtle_name_(turtle_name) {
@@ -100,16 +100,13 @@ void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
 }
 
 
-
-void Environment::drawRectangle(Point topLeft, Point bottomRight, int r, int g, int b) {
-    Point topRight = {bottomRight.x, topLeft.y};
-    Point bottomLeft = {topLeft.x, bottomRight.y};
-
-    drawLine(topLeft, topRight, true, r, g, b, 2);     // Top edge
-    drawLine(topRight, bottomRight, true, r, g, b, 2); // Right edge
-    drawLine(bottomRight, bottomLeft, true, r, g, b, 2); // Bottom edge
-    drawLine(bottomLeft, topLeft, true, r, g, b, 2);   // Left edge
+void Environment::drawRectangle(Point topLeft, Point bottomRight) {
+    drawLine(topLeft, {bottomRight.x, topLeft.y});
+    drawLine({bottomRight.x, topLeft.y}, bottomRight);
+    drawLine(bottomRight, {topLeft.x, bottomRight.y});
+    drawLine({topLeft.x, bottomRight.y}, topLeft);
 }
+
 
 
 void Environment::quit() {
