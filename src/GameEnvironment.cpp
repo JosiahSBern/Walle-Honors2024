@@ -47,3 +47,14 @@ void GameEnvironment::drawGame() {
     drawBins();
     populateAssortment();
 }
+
+void GameEnvironment::drawWalls() {
+    RCLCPP_INFO(node_->get_logger(), "Drawing walls in the game environment...");
+
+    // Example: Drawing a rectangle as the game boundary
+    Point topLeft = {1.0, 1.0};
+    Point bottomRight = {10.0, 10.0};
+
+    // Use the drawRectangle method inherited from Environment
+    drawRectangle(topLeft, bottomRight);
+}
