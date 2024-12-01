@@ -24,6 +24,12 @@ void GameEnvironment::drawBins() {
 
     RCLCPP_INFO(node_->get_logger(), "Drawing bins...");
 
+    // Ensure the pen service is ready before drawing
+    if (!pen_client_->wait_for_service(std::chrono::seconds(1))) {
+        RCLCPP_ERROR(node_->get_logger(), "Pen service not available.");
+        return;
+    }
+
     // Draw top bins with specific colors
     for (size_t i = 0; i < binPositions.size(); ++i) {
         // Set pen color based on bin type
@@ -42,6 +48,9 @@ void GameEnvironment::drawBins() {
                 break;
         }
 
+        // Add a short delay to ensure pen settings take effect
+        rclcpp::sleep_for(std::chrono::milliseconds(100));
+
         Point binBottomRight = {binPositions[i].x + binWidth, binPositions[i].y - binHeight};
         drawRectangle(binPositions[i], binBottomRight);
 
@@ -50,8 +59,13 @@ void GameEnvironment::drawBins() {
     }
 
     // Draw the large box at the bottom with a default pen color
+    setPen(true, 255, 255, 255, 2);  // White
     Point bottomBoxTopLeft = {1.0, 3.0};
     Point bottomBoxBottomRight = {10.0, 3.0 - bottomBoxHeight};
+
+    // Add a short delay for the bottom box
+    rclcpp::sleep_for(std::chrono::milliseconds(100));
+
     drawRectangle(bottomBoxTopLeft, bottomBoxBottomRight);
 
     RCLCPP_INFO(node_->get_logger(), "Bottom box: TopLeft (%f, %f), BottomRight (%f, %f)",
