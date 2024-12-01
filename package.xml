@@ -3,9 +3,14 @@
 <package format="3">
   <name>robot_dog</name>
   <version>0.0.1</version>
-  <description>Robot dog simulation environment</description>
+  <description>
+    A robot dog simulation environment leveraging turtlesim and ROS2.
+  </description>
   <maintainer email="you@example.com">Your Name</maintainer>
   <license>Apache License 2.0</license>
+
+  <!-- URL for the repository -->
+  <url type="repository">https://github.com/your-repository/robot_dog</url>
 
   <!-- Build and runtime dependencies -->
   <depend>rclcpp</depend>
@@ -14,14 +19,15 @@
   <depend>std_msgs</depend>
   <depend>std_srvs</depend>
 
-
   <!-- Build tool dependencies -->
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <!-- Testing dependencies -->
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
 
+  <!-- Export information -->
   <export>
     <build_type>ament_cmake</build_type>
   </export>
