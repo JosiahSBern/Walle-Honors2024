@@ -23,7 +23,9 @@ Point Environment::getExit() {
 
 void Environment::drawLine(Point start, Point end) {
     auto teleport_request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
-    setPen(false);
+
+    // Set the pen to an "off" state while moving
+    setPen(false, 0, 0, 0, 1);
 
     teleport_request->x = start.x;
     teleport_request->y = start.y;
@@ -35,7 +37,9 @@ void Environment::drawLine(Point start, Point end) {
         return;
     }
 
-    setPen(true);
+    // Enable the pen with a default color (black)
+    setPen(true, 0, 0, 0, 2);
+
     teleport_request->x = end.x;
     teleport_request->y = end.y;
 
@@ -43,8 +47,11 @@ void Environment::drawLine(Point start, Point end) {
     if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
         RCLCPP_ERROR(node_->get_logger(), "Failed to teleport to end position");
     }
-    setPen(false);
+
+    // Turn off the pen after drawing the line
+    setPen(false, 0, 0, 0, 1);
 }
+
 
 void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
     std::string service_name = "/" + turtle_name_ + "/set_pen";
