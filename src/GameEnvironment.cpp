@@ -1,5 +1,4 @@
 #include "GameEnvironment.h"
-#include "CollisionHandler.h"
 #include "Point.h"
 #include <rclcpp/rclcpp.hpp>
 #include <cmath>

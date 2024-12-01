@@ -16,7 +16,6 @@ find_package(turtlesim REQUIRED)
 add_library(environment_library
   src/Environment.cpp
   src/GameEnvironment.cpp
-  src/CollisionHandler.cpp
 )
 
 # Link dependencies for the library
