@@ -17,7 +17,6 @@ GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node, const std::string
         {leftWallOffset + 2 * binSpacing, binTopY}   // Third bin
     };
 }
-
 void GameEnvironment::drawBins() {
     const double binWidth = 2.0;
     const double binHeight = 1.5;
