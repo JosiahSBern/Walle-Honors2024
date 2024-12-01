@@ -25,7 +25,7 @@ public:
     Point getExit();
     void drawLine(Point start, Point end);
     void drawRectangle(Point topLeft, Point bottomRight);
-    void setPen(bool pen_state, int r = 255, int g = 0, int b = 0, int width = 2);
+    void setPen(bool pen_state, int r, int g , int b, int width = 2);
     void quit();
     virtual ~Environment() = default;
 };
