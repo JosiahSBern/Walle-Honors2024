@@ -8,8 +8,6 @@ Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle
     clear_client_ = node_->create_client<std_srvs::srv::Empty>("/clear");
 }
 
-Environment::~Environment() {
-}
 
 void Environment::drawLine(Point start, Point end, bool pen_state, int r, int g, int b, int width) {
     setPen(false, 0, 0, 0, 1); // Disable pen for teleportation

@@ -31,3 +31,4 @@ public:
     void setPen(bool pen_state, int r, int g , int b, int width = 2);
     void quit();
 };
+#endif 
