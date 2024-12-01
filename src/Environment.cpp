@@ -4,6 +4,7 @@
 
 Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle_name)
     : node_(node), turtle_name_(turtle_name) {
+        
     std::string set_pen_service = "/" + turtle_name_ + "/set_pen";
     std::string teleport_service = "/" + turtle_name_ + "/teleport_absolute";
 
@@ -100,12 +101,15 @@ void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
 }
 
 
-void Environment::drawRectangle(Point topLeft, Point bottomRight) {
-    drawLine(topLeft, {bottomRight.x, topLeft.y});
-    drawLine({bottomRight.x, topLeft.y}, bottomRight);
-    drawLine(bottomRight, {topLeft.x, bottomRight.y});
-    drawLine({topLeft.x, bottomRight.y}, topLeft);
+void Environment::drawRectangle(Point topLeft, Point bottomRight, int r, int g, int b) {
+    setPen(true, r, g, b, 2);  // Set color
+    drawLine(topLeft, {bottomRight.x, topLeft.y}, true, r, g, b, 2);
+    drawLine({bottomRight.x, topLeft.y}, bottomRight, true, r, g, b, 2);
+    drawLine(bottomRight, {topLeft.x, bottomRight.y}, true, r, g, b, 2);
+    drawLine({topLeft.x, bottomRight.y}, topLeft, true, r, g, b, 2);
+    setPen(false, 0, 0, 0, 2);  // Turn off pen
 }
+
 
 
 

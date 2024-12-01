@@ -11,8 +11,9 @@
 
 class Environment {
 protected:
-    std::string turtle_name_;  // Name of the turtle
-    rclcpp::Node::SharedPtr node_;  // ROS2 node for managing environment
+        std::string turtle_name_;  // Name of the turtle
+        rclcpp::Node::SharedPtr node_;  // ROS2 node for managing environment
+
     std::shared_ptr<rclcpp::Client<turtlesim::srv::SetPen>> pen_client_;
     std::shared_ptr<rclcpp::Client<turtlesim::srv::TeleportAbsolute>> teleport_client_;
     rclcpp::Client<std_srvs::srv::Empty>::SharedPtr clear_client_;  // Client for /clear service
@@ -28,7 +29,7 @@ public:
     virtual void setExit(double x, double y, const std::string& direction);
     Point getExit();
     void drawLine(Point start, Point end, bool pen_state, int r, int g, int b, int width);
-    void drawRectangle(Point topLeft, Point bottomRight);
+    void drawRectangle(Point topLeft, Point bottomRight, int r, int g, int b);
     void setPen(bool pen_state, int r, int g , int b, int width = 2);
     void quit();
     virtual ~Environment() = default;
