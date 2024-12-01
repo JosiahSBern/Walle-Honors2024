@@ -20,10 +20,10 @@ bool CollisionHandler::checkCollision(const Point& p1, double r1, const Point& p
 }
 
 // Adjust position with soft collision
-Point CollisionHandler::adjustPositionWithSoftCollision(const Point& current, const Point& proposed) const {
+Point CollisionHandler::adjustPositionWithSoftCollision(const Point& proposed) const {
     Point adjusted = proposed;
 
-    // Prevent moving out of bounds
+    // Boundary checks
     if (adjusted.x < 0) adjusted.x = 0;
     if (adjusted.x > areaWidth_) adjusted.x = areaWidth_;
     if (adjusted.y < 0) adjusted.y = 0;

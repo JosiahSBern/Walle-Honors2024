@@ -1,4 +1,5 @@
 #include "GameEnvironment.h"
+#include "CollisionHandler.h"
 #include <cmath>
 
 // Constructor

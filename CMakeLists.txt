@@ -33,7 +33,9 @@ add_executable(user_inputs
 ament_target_dependencies(user_inputs
   rclcpp
   turtlesim
+  geometry_msgs
 )
+
 
 # Install executables
 install(TARGETS 
