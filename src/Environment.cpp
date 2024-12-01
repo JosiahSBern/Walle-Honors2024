@@ -47,8 +47,10 @@ void Environment::drawLine(Point start, Point end) {
 }
 
 void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
-    if (!pen_client_ || !pen_client_->wait_for_service(std::chrono::seconds(1))) {
-        RCLCPP_ERROR(node_->get_logger(), "Pen service not available for turtle: %s", turtle_name_.c_str());
+    std::string service_name = "/" + turtle_name_ + "/set_pen";
+
+    if (!pen_client_->wait_for_service(std::chrono::seconds(1))) {
+        RCLCPP_ERROR(node_->get_logger(), "Pen service %s not available.", service_name.c_str());
         return;
     }
 
@@ -61,11 +63,13 @@ void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
 
     auto future = pen_client_->async_send_request(request);
     if (rclcpp::spin_until_future_complete(node_, future) != rclcpp::FutureReturnCode::SUCCESS) {
-        RCLCPP_ERROR(node_->get_logger(), "Failed to set pen for turtle: %s", turtle_name_.c_str());
+        RCLCPP_ERROR(node_->get_logger(), "Failed to set pen via %s.", service_name.c_str());
     } else {
-        RCLCPP_INFO(node_->get_logger(), "Pen set successfully for turtle: %s", turtle_name_.c_str());
+        RCLCPP_INFO(node_->get_logger(), "Pen updated via %s: r=%d, g=%d, b=%d, width=%d, off=%d",
+                    service_name.c_str(), r, g, b, width, !pen_state);
     }
 }
+
 
 
 void Environment::drawRectangle(Point topLeft, Point bottomRight) {
