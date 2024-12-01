@@ -11,6 +11,8 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(turtlesim REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
+
 
 # Add a shared library for reusable environment code
 add_library(environment_library
