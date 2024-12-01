@@ -11,15 +11,29 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(turtlesim REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(ament_cmake_gtest REQUIRED)
 
-# Add executable for Environment Building
-add_executable(environment_building
+# Add a shared library for reusable environment code
+add_library(environment_library
   src/Environment.cpp
   src/GameEnvironment.cpp
   src/CollisionHandler.cpp
 )
 
-# Link libraries for Environment Building
+# Link dependencies for the library
+ament_target_dependencies(environment_library
+  rclcpp
+  turtlesim
+)
+
+# Add executable for Environment Building
+add_executable(environment_building
+  src/main_environment_builder.cpp
+)
+
+# Link the library to the Environment Building executable
+target_link_libraries(environment_building environment_library)
+
 ament_target_dependencies(environment_building
   rclcpp
   turtlesim
@@ -30,7 +44,6 @@ add_executable(user_inputs
   src/UserTurtle.cpp
 )
 
-# Link libraries for User Inputs
 ament_target_dependencies(user_inputs
   rclcpp
   turtlesim
@@ -38,20 +51,19 @@ ament_target_dependencies(user_inputs
 )
 
 # Add test executable for Environment Builder Testing
-find_package(ament_cmake_gtest REQUIRED)
 ament_add_gtest(environment_builder_test test/environment_builder_test.cpp)
-target_link_libraries(environment_builder_test environment_building)
+target_link_libraries(environment_builder_test environment_library)
 
-# Link dependencies for tests
 ament_target_dependencies(environment_builder_test
   rclcpp
   turtlesim
 )
 
-# Install executables
+# Install executables and library
 install(TARGETS 
   environment_building 
   user_inputs
+  environment_library
   environment_builder_test
   DESTINATION lib/${PROJECT_NAME}
 )
