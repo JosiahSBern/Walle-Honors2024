@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.8)
 project(robot_dog)
 
-# Enable compiler warnings
+# Enable C++17 and compiler warnings
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -14,7 +17,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(ament_cmake_gtest REQUIRED)
 
 # Add a shared library for reusable environment code
-add_library(environment_library
+add_library(environment_library SHARED
   src/Environment.cpp
   src/GameEnvironment.cpp
   src/CollisionHandler.cpp
@@ -26,22 +29,17 @@ ament_target_dependencies(environment_library
   turtlesim
 )
 
-# Add executable for Environment Building
-add_executable(environment_building
-  src/main_environment_builder.cpp
-)
+# Add executables
+add_executable(environment_building src/main_environment_builder.cpp)
+add_executable(user_inputs src/UserTurtle.cpp)
 
-# Link the library to the Environment Building executable
+# Link libraries and dependencies
 target_link_libraries(environment_building environment_library)
+target_link_libraries(user_inputs environment_library)
 
 ament_target_dependencies(environment_building
   rclcpp
   turtlesim
-)
-
-# Add executable for User Inputs
-add_executable(user_inputs
-  src/UserTurtle.cpp
 )
 
 ament_target_dependencies(user_inputs
@@ -50,21 +48,18 @@ ament_target_dependencies(user_inputs
   geometry_msgs
 )
 
-# Add test executable for Environment Builder Testing
-ament_add_gtest(environment_builder_test test/environment_builder_test.cpp)
+# Add test with working directory
+ament_add_gtest(environment_builder_test 
+  test/environment_builder_test.cpp
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
 target_link_libraries(environment_builder_test environment_library)
 
-ament_target_dependencies(environment_builder_test
-  rclcpp
-  turtlesim
-)
-
-# Install executables and library
+# Install targets
 install(TARGETS 
   environment_building 
   user_inputs
   environment_library
-  environment_builder_test
   DESTINATION lib/${PROJECT_NAME}
 )
 
