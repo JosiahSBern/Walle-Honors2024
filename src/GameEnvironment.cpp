@@ -73,6 +73,7 @@ void GameEnvironment::drawBins() {
 }
 
 
+
 // Draw the game
 void GameEnvironment::drawGame() {
     RCLCPP_INFO(node_->get_logger(), "Drawing the game environment...");
