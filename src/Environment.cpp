@@ -1,13 +1,32 @@
 #include "Environment.h"
 #include <cmath>
+#include <std_srvs/srv/empty.hpp>
 
-Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle_name) 
-    : turtle_name_(turtle_name), node_(node) {
+Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle_name)
+    : node_(node), turtle_name_(turtle_name) {
     std::string set_pen_service = "/" + turtle_name_ + "/set_pen";
     std::string teleport_service = "/" + turtle_name_ + "/teleport_absolute";
 
     pen_client_ = node_->create_client<turtlesim::srv::SetPen>(set_pen_service);
     teleport_client_ = node_->create_client<turtlesim::srv::TeleportAbsolute>(teleport_service);
+
+    clear_client_ = node_->create_client<std_srvs::srv::Empty>("/clear");  // Initialize /clear client
+}
+
+void Environment::clearEnvironment() {
+    if (!clear_client_->wait_for_service(std::chrono::seconds(1))) {
+        RCLCPP_ERROR(node_->get_logger(), "/clear service not available.");
+        return;
+    }
+
+    auto request = std::make_shared<std_srvs::srv::Empty::Request>();
+    auto result = clear_client_->async_send_request(request);
+
+    if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
+        RCLCPP_ERROR(node_->get_logger(), "Failed to call /clear service.");
+    } else {
+        RCLCPP_INFO(node_->get_logger(), "Environment cleared successfully.");
+    }
 }
 
 
