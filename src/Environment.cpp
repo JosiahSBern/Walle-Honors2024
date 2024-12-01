@@ -2,7 +2,7 @@
 #include <cmath>
 
 Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle_name) 
-    : node_(node), turtle_name_(turtle_name) {
+    : turtle_name_(turtle_name), node_(node) {
     std::string set_pen_service = "/" + turtle_name_ + "/set_pen";
     std::string teleport_service = "/" + turtle_name_ + "/teleport_absolute";
 
