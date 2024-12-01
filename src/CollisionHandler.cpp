@@ -1,5 +1,6 @@
 #include "CollisionHandler.h"
 #include <cmath>
+#include <rclcpp/rclcpp.hpp>
 
 // Constructor to set boundary dimensions
 CollisionHandler::CollisionHandler(double areaWidth, double areaHeight)
@@ -23,15 +24,24 @@ bool CollisionHandler::checkCollision(const Point& p1, double r1, const Point& p
     return distance <= (r1 + r2);
 }
 
+// Log position adjustments (helper function)
+void logAdjustment(const rclcpp::Logger &logger, const Point &original, const Point &adjusted) {
+    RCLCPP_INFO(logger, "Adjusting position: Original (%f, %f), Adjusted (%f, %f)",
+                original.x, original.y, adjusted.x, adjusted.y);
+}
+
 // Adjust position with soft collision handling
-Point CollisionHandler::adjustPositionWithSoftCollision(const Point& proposed) const {
+Point CollisionHandler::adjustPositionWithSoftCollision(const Point& current, const Point& proposed) const {
     Point adjusted = proposed;
 
-    // Boundary checks: Prevent the position from going outside defined boundaries
+    // Adjust based on boundaries
     if (adjusted.x < 0) adjusted.x = 0;
     if (adjusted.x > areaWidth_) adjusted.x = areaWidth_;
     if (adjusted.y < 0) adjusted.y = 0;
     if (adjusted.y > areaHeight_) adjusted.y = areaHeight_;
+
+    // Log the adjustment for debugging
+    logAdjustment(rclcpp::get_logger("CollisionHandler"), proposed, adjusted);
 
     return adjusted;
 }

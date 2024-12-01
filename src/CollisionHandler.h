@@ -15,7 +15,7 @@ public:
     bool checkCollision(const Point& p1, double r1, const Point& p2, double r2) const;
 
     // Adjust position to keep it within bounds
-    Point adjustPositionWithSoftCollision(const Point& proposed) const;
+   Point adjustPositionWithSoftCollision(const Point& current, const Point& proposed) const;
 
 private:
     double areaWidth_;  // Width of the bounded area
