@@ -6,15 +6,18 @@ TrashTurtle::TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& 
     : Turtle(node, name, radius), type(type), targetPosition(target), targetRadius(targetRadius) {}
 
 void TrashTurtle::updateVelocityToTarget(const Point& target) {
+    // Consider adding more sophisticated movement
     double distance = Turtle::calculateDistance(position, target);
+    double angle = std::atan2(target.y - position.y, target.x - position.x);
 
     geometry_msgs::msg::Twist twist_msg;
-    twist_msg.linear.x = distance > 0.1 ? 1.0 : 0.0;  // Move towards the target
-    twist_msg.angular.z = 0.0;
+    // Proportional control for linear velocity
+    twist_msg.linear.x = std::min(distance, 1.0);  // Limit max speed
+    // Add angular velocity to orient towards the target
+    twist_msg.angular.z = angle;
 
     twist_pub_->publish(twist_msg);
 }
-
 void TrashTurtle::move() {
     if (Turtle::calculateDistance(position, targetPosition) > 0.1) {
         updateVelocityToTarget(targetPosition);
@@ -31,6 +34,10 @@ void TrashTurtle::renderTurtle() {
 }
 
 void TrashTurtle::setTargetPosition(const Point& target) {
+    if (std::isnan(target.x) || std::isnan(target.y)) {
+        RCLCPP_ERROR(node_->get_logger(), "Invalid target position");
+        return;
+    }
     targetPosition = target;
 }
 
