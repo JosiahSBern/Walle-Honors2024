@@ -53,7 +53,7 @@ void GameEnvironment::drawBins() {
     const double binWidth = 2.0;
     const double binHeight = 1.5;
 
-    RCLCPPINFO(node->get_logger(), "Drawing bins...");
+    RCLCPP_INFO(node_->get_logger(), "Drawing bins...");
     for (size_t i = 0; i < binPositions.size(); ++i) {
         Point binBottomRight = {binPositions[i].x + binWidth, binPositions[i].y - binHeight};
 
