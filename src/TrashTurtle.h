@@ -1,6 +1,5 @@
 #ifndef TRASHTURTLE_H
 #define TRASHTURTLE_H
-
 #include "Turtle.h"
 #include <memory>
 
@@ -19,7 +18,8 @@ private:
 
 public:
     TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, 
-                double radius, TrashType type, const Point& target);
+            double radius, TrashType type, const Point& target);
+
 
     void setLeaderTurtle(std::shared_ptr<Turtle> leader);
     void moveToBin();

@@ -31,10 +31,10 @@ void GameEnvironment::drawGame() {
 void GameEnvironment::spawnTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
     trashTurtles.clear();
+auto trashTurtle1 = std::make_shared<TrashTurtle>(node_, "Trash1", 0.5, TrashType::PLASTIC, binPositions[0]);
+auto trashTurtle2 = std::make_shared<TrashTurtle>(node_, "Trash2", 0.5, TrashType::PAPER, binPositions[1]);
+auto trashTurtle3 = std::make_shared<TrashTurtle>(node_, "Trash3", 0.5, TrashType::ORGANIC, binPositions[2]);
 
-    trashTurtles.emplace_back(std::make_shared<TrashTurtle>(node_, "Trash1", 0.5, PLASTIC, binPositions[0]));
-    trashTurtles.emplace_back(std::make_shared<TrashTurtle>(node_, "Trash2", 0.5, PAPER, binPositions[1]));
-    trashTurtles.emplace_back(std::make_shared<TrashTurtle>(node_, "Trash3", 0.5, ORGANIC, binPositions[2]));
 
     for (auto& turtle : trashTurtles) {
         turtle->setLeaderTurtle(turtle1);
@@ -42,4 +42,9 @@ void GameEnvironment::spawnTrashTurtles() {
 }
 
 void GameEnvironment::updateTrashTurtles() {
-    RCLCPP_INFO(node_->get_logger(),
+    RCLCPP_INFO(node_->get_logger(), "Updating TrashTurtles...");
+    for (auto& turtle : trashTurtles) {
+        turtle->move();
+        turtle->renderTurtle();s
+    }
+}
