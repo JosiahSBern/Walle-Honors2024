@@ -36,7 +36,7 @@ void GameEnvironment::spawnTrashTurtles() {
 
     // Constants for offsets
     const double offsetX = 0.3;  // Horizontal offset for the second turtle
-    const double offsetY = 0.0;  // No vertical offset
+    const double offsetY = 0.5;  // No vertical offset
 
     for (size_t i = 0; i < binPositions.size(); ++i) {
         Point center = binPositions[i];
