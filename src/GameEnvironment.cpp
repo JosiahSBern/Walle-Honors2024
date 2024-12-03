@@ -36,19 +36,17 @@ void GameEnvironment::spawnTrashTurtles() {
 
     // Constants for offsets
     const double offsetX = 0.3;  // Horizontal offset for the second turtle
-    const double offsetY = 0.5;  // No vertical offset
-
     for (size_t i = 0; i < binPositions.size(); ++i) {
         Point center = binPositions[i];
         center.x += 1.0;  // Move to the center of the bin (assuming bin width is 2.0)
 
         // Spawn first turtle in the middle of the box
         std::string name1 = "Trash" + std::to_string(i * 2 + 1);
-        spawnTurtle(name1, center.x, center.y, 0.0);
+        spawnTurtle(name1, center.x, center.y-0.5, 0.0);
 
         // Spawn second turtle with a slight horizontal offset
         std::string name2 = "Trash" + std::to_string(i * 2 + 2);
-        spawnTurtle(name2, center.x + offsetX, center.y + offsetY, 0.0);
+        spawnTurtle(name2, center.x + offsetX, center.y-0.5, 0.0);
 
         // Add the spawned turtles to the trashTurtles list
         auto trashTurtle1 = std::make_shared<TrashTurtle>(node_, name1, 0.5, static_cast<TrashType>(i), center);
