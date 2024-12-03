@@ -42,6 +42,7 @@ auto trashTurtle3 = std::make_shared<TrashTurtle>(node_, "Trash3", 0.5, TrashTyp
 }
 
 void GameEnvironment::updateTrashTurtles() {
+    turtle1 = std::make_shared<TrashTurtle>(node_, "LeaderTurtle", 0.5, TrashType::PLASTIC, someInitialPosition);
     RCLCPP_INFO(node_->get_logger(), "Updating TrashTurtles...");
     for (auto& turtle : trashTurtles) {
         turtle->move();

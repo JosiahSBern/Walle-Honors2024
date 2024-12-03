@@ -18,8 +18,9 @@ set(SOURCES
     src/TrashTurtle.cpp
     src/main.cpp
 )
-# Add executable
+
 add_executable(robot_dog ${SOURCES})
+
 
 # Link libraries and dependencies
 ament_target_dependencies(robot_dog
