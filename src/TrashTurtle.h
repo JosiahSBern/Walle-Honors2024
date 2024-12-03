@@ -3,11 +3,8 @@
 
 #include "Turtle.h"
 #include "Point.h"
-#include <rclcpp/rclcpp.hpp>
-#include "geometry_msgs/msg/twist.hpp"
-#include <string>
 
-enum class TrashType {
+enum TrashType {
     PLASTIC,
     PAPER,
     ORGANIC
@@ -15,28 +12,18 @@ enum class TrashType {
 
 class TrashTurtle : public Turtle {
 private:
-    TrashType trashType;    // Type of trash this turtle represents
-    Point boxPosition;      // Bin position for this turtle
-    double speed;           // Movement speed
-    Point targetPosition;   // Current target position
-
-    // Update the turtle's velocity to move towards the target position
-    void updateVelocityToTarget( Point& target);
+    TrashType type;
+    Point targetPosition;
+    double targetRadius;
 
 public:
-    TrashTurtle(std::shared_ptr<rclcpp::Node> node,  std::string& name, double radius, 
-                TrashType type,  Point& boxPosition, double speed = 0.5);
+    TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius, TrashType type, const Point& target, double targetRadius);
 
-    // Implement movement logic
-    void move();
-    // Set the target position
-    void setTargetPosition(Point& target);
-    // Render the turtle visually
-    void renderTurtle();
-    // Move to its designated bin
-    void moveToBin();
-    // Get the trash type
-    TrashType getTrashType();
+    void updateVelocityToTarget(const Point& target);
+    void move() override;
+    void renderTurtle() override;
+    void setTargetPosition(const Point& target);
+    TrashType getTrashType() const;
 };
 
 #endif  // TRASH_TURTLE_H

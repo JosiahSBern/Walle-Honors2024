@@ -5,7 +5,6 @@ project(robot_dog)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(turtlesim REQUIRED)
-find_package(std_srvs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
 # Add src as an include directory
