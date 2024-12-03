@@ -40,7 +40,7 @@ install(FILES
     src/GameEnvironment.h
     src/TrashTurtle.h
     src/Point.h
-    src/Turlt.h
+    src/Turtle.h
     DESTINATION include/${PROJECT_NAME}
 )
 
