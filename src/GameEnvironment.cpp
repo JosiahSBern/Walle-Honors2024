@@ -92,6 +92,6 @@ void GameEnvironment::drawWalls() {
     Point bottomRight = {WALL_RIGHT, WALL_BOTTOM};
     drawRectangle(topLeft, bottomRight, 255, 255, 255); // White
 
-    RCLCPPINFO(node->get_logger(), "Walls drawn: TopLeft (%f, %f), BottomRight (%f, %f)",
+    RCLCPP_INFO(node_->get_logger(), "Walls drawn: TopLeft (%f, %f), BottomRight (%f, %f)",
                 topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
 }
