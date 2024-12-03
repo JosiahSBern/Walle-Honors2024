@@ -45,6 +45,6 @@ void GameEnvironment::updateTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Updating TrashTurtles...");
     for (auto& turtle : trashTurtles) {
         turtle->move();
-        turtle->renderTurtle();s
+        turtle->renderTurtle();
     }
 }
