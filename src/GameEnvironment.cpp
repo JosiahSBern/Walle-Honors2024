@@ -1,6 +1,7 @@
 #include "GameEnvironment.h"
 #include "TrashTurtle.h"
 #include <rclcpp/rclcpp.hpp>
+#include "turtlesim/srv/spawn.hpp"
 #include <memory>
 
 GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node, const std::string& turtle_name)
@@ -30,19 +31,13 @@ void GameEnvironment::drawGame() {
 
 void GameEnvironment::spawnTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
-    trashTurtles.clear();
-    auto trashTurtle1 = std::make_shared<TrashTurtle>(node_, "Trash1", 0.5, TrashType::PLASTIC, binPositions[0]);
-    auto trashTurtle2 = std::make_shared<TrashTurtle>(node_, "Trash2", 0.5, TrashType::PAPER, binPositions[1]);
-    auto trashTurtle3 = std::make_shared<TrashTurtle>(node_, "Trash3", 0.5, TrashType::ORGANIC, binPositions[2]);
-
-    trashTurtles.push_back(trashTurtle1);
-    trashTurtles.push_back(trashTurtle2);
-    trashTurtles.push_back(trashTurtle3);
-
-    for (auto& turtle : trashTurtles) {
-        turtle->setLeaderTurtle(turtle1);
-    }
+    
+    // Spawn turtles at the bin positions
+    spawnTurtle("Trash1", binPositions[0].x, binPositions[0].y, 0.0);
+    spawnTurtle("Trash2", binPositions[1].x, binPositions[1].y, 0.0);
+    spawnTurtle("Trash3", binPositions[2].x, binPositions[2].y, 0.0);
 }
+
 
 void GameEnvironment::updateTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Updating TrashTurtles...");
