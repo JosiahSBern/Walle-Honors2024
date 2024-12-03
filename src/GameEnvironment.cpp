@@ -67,7 +67,7 @@ void GameEnvironment::drawBins() {
         }
 
         drawRectangle(binPositions[i], binBottomRight, r, g, b);
-        RCLCPPINFO(node->get_logger(), "Bin %zu drawn: TopLeft (%f, %f), BottomRight (%f, %f), Color (%d, %d, %d)",
+        RCLCPP_INFO(node_->get_logger(), "Bin %zu drawn: TopLeft (%f, %f), BottomRight (%f, %f), Color (%d, %d, %d)",
                     i + 1, binPositions[i].x, binPositions[i].y, binBottomRight.x, binBottomRight.y, r, g, b);
     }
 
@@ -75,6 +75,6 @@ void GameEnvironment::drawBins() {
     Point bottomBoxTopLeft = {1.0, 3.0};
     Point bottomBoxBottomRight = {10.0, 1.0};
     drawRectangle(bottomBoxTopLeft, bottomBoxBottomRight, 255, 255, 255); // White
-    RCLCPPINFO(node->get_logger(), "Bottom box drawn: TopLeft (%f, %f), BottomRight (%f, %f), Color (255, 255, 255)",
+    RCLCPP_INFO(node_->get_logger(), "Bottom box drawn: TopLeft (%f, %f), BottomRight (%f, %f), Color (255, 255, 255)",
                 bottomBoxTopLeft.x, bottomBoxTopLeft.y, bottomBoxBottomRight.x, bottomBoxBottomRight.y);
 }
