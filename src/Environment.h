@@ -19,8 +19,6 @@ protected:
 public:
     virtual ~Environment() = default;
     Environment(rclcpp::Node::SharedPtr node, const std::string& turtle_name);
-
-    virtual void drawWalls() = 0;  
     void drawLine(Point start, Point end, bool pen_state, int r, int g, int b, int width);
     void drawRectangle(Point topLeft, Point bottomRight, int r, int g, int b);
     void setPen(bool pen_state, int r, int g, int b, int width = 2);

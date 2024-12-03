@@ -31,10 +31,13 @@ void GameEnvironment::drawGame() {
 void GameEnvironment::spawnTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
     trashTurtles.clear();
-auto trashTurtle1 = std::make_shared<TrashTurtle>(node_, "Trash1", 0.5, TrashType::PLASTIC, binPositions[0]);
-auto trashTurtle2 = std::make_shared<TrashTurtle>(node_, "Trash2", 0.5, TrashType::PAPER, binPositions[1]);
-auto trashTurtle3 = std::make_shared<TrashTurtle>(node_, "Trash3", 0.5, TrashType::ORGANIC, binPositions[2]);
+    auto trashTurtle1 = std::make_shared<TrashTurtle>(node_, "Trash1", 0.5, TrashType::PLASTIC, binPositions[0]);
+    auto trashTurtle2 = std::make_shared<TrashTurtle>(node_, "Trash2", 0.5, TrashType::PAPER, binPositions[1]);
+    auto trashTurtle3 = std::make_shared<TrashTurtle>(node_, "Trash3", 0.5, TrashType::ORGANIC, binPositions[2]);
 
+    trashTurtles.push_back(trashTurtle1);
+    trashTurtles.push_back(trashTurtle2);
+    trashTurtles.push_back(trashTurtle3);
 
     for (auto& turtle : trashTurtles) {
         turtle->setLeaderTurtle(turtle1);
@@ -77,4 +80,18 @@ void GameEnvironment::drawBins() {
     drawRectangle(bottomBoxTopLeft, bottomBoxBottomRight, 255, 255, 255); // White
     RCLCPP_INFO(node_->get_logger(), "Bottom box drawn: TopLeft (%f, %f), BottomRight (%f, %f), Color (255, 255, 255)",
                 bottomBoxTopLeft.x, bottomBoxTopLeft.y, bottomBoxBottomRight.x, bottomBoxBottomRight.y);
+}
+
+void GameEnvironment::drawWalls() {
+    const double WALL_LEFT = 1.0;
+    const double WALL_RIGHT = 10.0;
+    const double WALL_TOP = 10.0;
+    const double WALL_BOTTOM = 1.0;
+
+    Point topLeft = {WALL_LEFT, WALL_TOP};
+    Point bottomRight = {WALL_RIGHT, WALL_BOTTOM};
+    drawRectangle(topLeft, bottomRight, 255, 255, 255); // White
+
+    RCLCPPINFO(node->get_logger(), "Walls drawn: TopLeft (%f, %f), BottomRight (%f, %f)",
+                topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
 }
