@@ -14,10 +14,10 @@ include_directories(src)
 set(SOURCES
     src/Environment.cpp
     src/GameEnvironment.cpp
+    src/Turtle.cpp
     src/TrashTurtle.cpp
     src/main.cpp
 )
-
 # Add executable
 add_executable(robot_dog ${SOURCES})
 
@@ -39,6 +39,7 @@ install(FILES
     src/GameEnvironment.h
     src/TrashTurtle.h
     src/Point.h
+    src/Turlt.h
     DESTINATION include/${PROJECT_NAME}
 )
 
