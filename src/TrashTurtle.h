@@ -29,16 +29,12 @@ public:
 
     // Implement movement logic
     void move();
-
     // Set the target position
     void setTargetPosition(Point& target);
-
     // Render the turtle visually
     void renderTurtle();
-
     // Move to its designated bin
     void moveToBin();
-
     // Get the trash type
     TrashType getTrashType();
 };
