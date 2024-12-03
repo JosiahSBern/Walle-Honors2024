@@ -31,12 +31,36 @@ void GameEnvironment::drawGame() {
 
 void GameEnvironment::spawnTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
-    
-    // Spawn turtles at the bin positions
-    spawnTurtle("Trash1", binPositions[0].x, binPositions[0].y, 0.0);
-    spawnTurtle("Trash2", binPositions[1].x, binPositions[1].y, 0.0);
-    spawnTurtle("Trash3", binPositions[2].x, binPositions[2].y, 0.0);
+
+    trashTurtles.clear(); // Clear any existing turtles
+
+    // Constants for offsets
+    const double offsetX = 0.3;  // Horizontal offset for the second turtle
+    const double offsetY = 0.0;  // No vertical offset
+
+    for (size_t i = 0; i < binPositions.size(); ++i) {
+        Point center = binPositions[i];
+        center.x += 1.0;  // Move to the center of the bin (assuming bin width is 2.0)
+
+        // Spawn first turtle in the middle of the box
+        std::string name1 = "Trash" + std::to_string(i * 2 + 1);
+        spawnTurtle(name1, center.x, center.y, 0.0);
+
+        // Spawn second turtle with a slight horizontal offset
+        std::string name2 = "Trash" + std::to_string(i * 2 + 2);
+        spawnTurtle(name2, center.x + offsetX, center.y + offsetY, 0.0);
+
+        // Add the spawned turtles to the trashTurtles list
+        auto trashTurtle1 = std::make_shared<TrashTurtle>(node_, name1, 0.5, static_cast<TrashType>(i), center);
+        auto trashTurtle2 = std::make_shared<TrashTurtle>(node_, name2, 0.5, static_cast<TrashType>(i), Point{center.x + offsetX, center.y + offsetY});
+        
+        trashTurtles.push_back(trashTurtle1);
+        trashTurtles.push_back(trashTurtle2);
+
+        RCLCPP_INFO(node_->get_logger(), "Spawned turtles %s and %s for bin %zu", name1.c_str(), name2.c_str(), i + 1);
+    }
 }
+
 
 
 void GameEnvironment::updateTrashTurtles() {
