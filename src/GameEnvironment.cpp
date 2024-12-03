@@ -2,6 +2,8 @@
 #include "Point.h"
 #include <rclcpp/rclcpp.hpp>
 #include <cmath>
+#include "TrashTurtle.h"
+
 
 GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node, const std::string& turtle_name) 
     : Environment(node, turtle_name) {
@@ -47,11 +49,13 @@ void GameEnvironment::drawBins() {
 }
 
 void GameEnvironment::drawGame() {
-    RCLCPP_INFO(node_->get_logger(), "Clearing the environment...");
     RCLCPP_INFO(node_->get_logger(), "Drawing the game environment...");
     drawWalls();
     drawBins();
+    spawnTrashTurtles(); 
+    updateTrashTurtles(); 
 }
+
 
 void GameEnvironment::drawWalls() {
     const double WALL_LEFT = 1.0;
@@ -65,4 +69,22 @@ void GameEnvironment::drawWalls() {
 
     RCLCPP_INFO(node_->get_logger(), "Walls drawn: TopLeft (%f, %f), BottomRight (%f, %f)",
                 topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
+}
+
+void GameEnvironment::spawnTrashTurtles() {
+    RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
+    trashTurtles.clear(); // Clear any existing turtles
+
+    // Spawn TrashTurtles for each bin
+    trashTurtles.push_back(std::make_shared<TrashTurtle>(node_, "Trash1", 0.5, TrashType::PLASTIC, binPositions[0]));
+    trashTurtles.push_back(std::make_shared<TrashTurtle>(node_, "Trash2", 0.5, TrashType::PAPER, binPositions[1]));
+    trashTurtles.push_back(std::make_shared<TrashTurtle>(node_, "Trash3", 0.5, TrashType::ORGANIC, binPositions[2]));
+}
+
+void GameEnvironment::updateTrashTurtles() {
+    RCLCPP_INFO(node_->get_logger(), "Updating TrashTurtles...");
+    for (auto& turtle : trashTurtles) {
+        turtle->moveToBin();  // Move each turtle to its assigned bin
+        turtle->renderTurtle();
+    }
 }
