@@ -21,11 +21,11 @@ private:
     Point targetPosition;   // Current target position
 
     // Update the turtle's velocity to move towards the target position
-    void updateVelocityToTarget(const Point& target);
+    void updateVelocityToTarget( Point& target);
 
 public:
-    TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius, 
-                TrashType type, const Point& boxPosition, double speed = 0.5);
+    TrashTurtle(std::shared_ptr<rclcpp::Node> node,  std::string& name, double radius, 
+                TrashType type,  Point& boxPosition, double speed = 0.5);
 
     // Implement movement logic
     void move();

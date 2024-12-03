@@ -3,12 +3,12 @@
 #include <rclcpp/rclcpp.hpp>
 #include "geometry_msgs/msg/twist.hpp"
 
-TrashTurtle::TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius, 
+TrashTurtle::TrashTurtle(std::shared_ptr<rclcpp::Node> node,  std::string& name, double radius, 
                          TrashType type, const Point& boxPosition, double speed)
     : Turtle(node, name, radius), trashType(type), boxPosition(boxPosition), speed(speed) {}
 
 // Update the velocity to move towards the target
-void TrashTurtle::updateVelocityToTarget(const Point& target) {
+void TrashTurtle::updateVelocityToTarget( Point& target) {
     geometry_msgs::msg::Twist twist_msg;
     double dx = target.x - position.x;
     double dy = target.y - position.y;
@@ -48,11 +48,11 @@ void TrashTurtle::moveToBin() {
 }
 
 // Set the turtle's target position
-void TrashTurtle::setTargetPosition(const Point& target) {
+void TrashTurtle::setTargetPosition( Point& target) {
     targetPosition = target;
 }
 
 // Get the trash type
-TrashType TrashTurtle::getTrashType() const {
+TrashType TrashTurtle::getTrashType()  {
     return trashType;
 }
