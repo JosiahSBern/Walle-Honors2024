@@ -25,7 +25,6 @@ add_executable(robot_dog ${SOURCES})
 ament_target_dependencies(robot_dog
   rclcpp
   turtlesim
-  std_srvs
   geometry_msgs
 )
 
