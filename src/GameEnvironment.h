@@ -18,8 +18,8 @@ private:
 
 public:
     GameEnvironment(rclcpp::Node::SharedPtr node, const std::string& turtle_name);
-    void drawGame() override;
-    void drawWalls() override;
+    void drawGame();
+    void drawWalls();
     void drawBins();
 };
 

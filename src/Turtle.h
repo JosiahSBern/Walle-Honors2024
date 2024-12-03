@@ -23,9 +23,6 @@ public:
     Turtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius);
     virtual ~Turtle();
 
-    virtual void move() = 0;
-    virtual void renderTurtle() = 0;
-
     bool checkCollision(const Point& other, double otherRadius) const;
 
     Point getPosition() const;

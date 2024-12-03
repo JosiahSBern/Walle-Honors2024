@@ -23,8 +23,8 @@ public:
 
     void setLeaderTurtle(std::shared_ptr<Turtle> leader);
     void moveToBin();
-    void move() override;
-    void renderTurtle() override;
+    void move();
+    void renderTurtle();
 
     void setTargetPosition(const Point& target);
     TrashType getTrashType() const;

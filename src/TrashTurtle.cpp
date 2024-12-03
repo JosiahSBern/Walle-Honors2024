@@ -1,5 +1,5 @@
 #include "TrashTurtle.h"
-#include "Turtle.h" s
+#include "Turtle.h"
 #include <cmath>
 
 TrashTurtle::TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, 
