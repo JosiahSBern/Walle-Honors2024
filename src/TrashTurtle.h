@@ -1,10 +1,10 @@
-#ifndef TRASH_TURTLE_H
-#define TRASH_TURTLE_H
+#ifndef TRASHTURTLE_H
+#define TRASHTURTLE_H
 
 #include "Turtle.h"
-#include "Point.h"
+#include <memory>
 
-enum TrashType {
+enum class TrashType {
     PLASTIC,
     PAPER,
     ORGANIC
@@ -15,15 +15,23 @@ private:
     TrashType type;
     Point targetPosition;
     double targetRadius;
+    std::shared_ptr<Turtle> leaderTurtle; // The turtle to follow
 
 public:
-    TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius, TrashType type, const Point& target, double targetRadius);
+    TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, 
+                double radius, TrashType type, const Point& target);
 
-    void updateVelocityToTarget(const Point& target);
+    void setLeaderTurtle(std::shared_ptr<Turtle> leader);
+    void moveToBin();
     void move() override;
     void renderTurtle() override;
+
     void setTargetPosition(const Point& target);
     TrashType getTrashType() const;
+
+private:
+    void updateVelocityToTarget(const Point& target);
+    bool isAtTarget() const;
 };
 
-#endif  // TRASH_TURTLE_H
+#endif

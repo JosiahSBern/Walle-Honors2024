@@ -76,9 +76,18 @@ void GameEnvironment::spawnTrashTurtles() {
     trashTurtles.clear(); // Clear any existing turtles
 
     // Spawn TrashTurtles for each bin
-    trashTurtles.push_back(std::make_shared<TrashTurtle>(node_, "Trash1", 0.5, TrashType::PLASTIC, binPositions[0]));
-    trashTurtles.push_back(std::make_shared<TrashTurtle>(node_, "Trash2", 0.5, TrashType::PAPER, binPositions[1]));
-    trashTurtles.push_back(std::make_shared<TrashTurtle>(node_, "Trash3", 0.5, TrashType::ORGANIC, binPositions[2]));
+    auto trashTurtle1 = std::make_shared<TrashTurtle>(node_, "Trash1", 0.5, TrashType::PLASTIC, binPositions[0]);
+    auto trashTurtle2 = std::make_shared<TrashTurtle>(node_, "Trash2", 0.5, TrashType::PAPER, binPositions[1]);
+    auto trashTurtle3 = std::make_shared<TrashTurtle>(node_, "Trash3", 0.5, TrashType::ORGANIC, binPositions[2]);
+
+    // Assuming the first turtle (turtle1) is the leader
+    trashTurtle1->setLeaderTurtle(turtle1);
+    trashTurtle2->setLeaderTurtle(turtle1);
+    trashTurtle3->setLeaderTurtle(turtle1);
+
+    trashTurtles.push_back(trashTurtle1);
+    trashTurtles.push_back(trashTurtle2);
+    trashTurtles.push_back(trashTurtle3);
 }
 
 void GameEnvironment::updateTrashTurtles() {
