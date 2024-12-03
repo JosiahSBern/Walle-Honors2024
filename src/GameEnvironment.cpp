@@ -48,3 +48,33 @@ void GameEnvironment::updateTrashTurtles() {
         turtle->renderTurtle();
     }
 }
+
+void GameEnvironment::drawBins() {
+    const double binWidth = 2.0;
+    const double binHeight = 1.5;
+
+    RCLCPPINFO(node->get_logger(), "Drawing bins...");
+    for (size_t i = 0; i < binPositions.size(); ++i) {
+        Point binBottomRight = {binPositions[i].x + binWidth, binPositions[i].y - binHeight};
+
+        // Set the pen color and draw the bin
+        int r, g, b;
+        switch (i) {
+            case 0: r = 0; g = 255; b = 0; break;       // Green (Trash)
+            case 1: r = 0; g = 0; b = 255; break;       // Blue (Recycling)
+            case 2: r = 128; g = 128; b = 128; break;   // Gray (Paper)
+            default: r = g = b = 0;                    // Default Black
+        }
+
+        drawRectangle(binPositions[i], binBottomRight, r, g, b);
+        RCLCPPINFO(node->get_logger(), "Bin %zu drawn: TopLeft (%f, %f), BottomRight (%f, %f), Color (%d, %d, %d)",
+                    i + 1, binPositions[i].x, binPositions[i].y, binBottomRight.x, binBottomRight.y, r, g, b);
+    }
+
+    // Draw the bottom box
+    Point bottomBoxTopLeft = {1.0, 3.0};
+    Point bottomBoxBottomRight = {10.0, 1.0};
+    drawRectangle(bottomBoxTopLeft, bottomBoxBottomRight, 255, 255, 255); // White
+    RCLCPPINFO(node->get_logger(), "Bottom box drawn: TopLeft (%f, %f), BottomRight (%f, %f), Color (255, 255, 255)",
+                bottomBoxTopLeft.x, bottomBoxTopLeft.y, bottomBoxBottomRight.x, bottomBoxBottomRight.y);
+}
