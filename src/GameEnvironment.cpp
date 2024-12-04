@@ -50,7 +50,7 @@ void GameEnvironment::spawnTrashTurtles() {
 
         // Add the spawned turtles to the trashTurtles list
         auto trashTurtle1 = std::make_shared<TrashTurtle>(node_, name1, 0.5, static_cast<TrashType>(i), center);
-        auto trashTurtle2 = std::make_shared<TrashTurtle>(node_, name2, 0.5, static_cast<TrashType>(i), Point{center.x + offsetX, center.y + offsetY});
+        auto trashTurtle2 = std::make_shared<TrashTurtle>(node_, name2, 0.5, static_cast<TrashType>(i), Point{center.x + offsetX, center.y});
         
         trashTurtles.push_back(trashTurtle1);
         trashTurtles.push_back(trashTurtle2);
