@@ -1,5 +1,10 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.8)
 project(robot_dog)
+
+# Default to C++17
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+endif()
 
 # Find dependencies
 find_package(ament_cmake REQUIRED)
@@ -11,7 +16,7 @@ add_executable(teleop_turtle
     src/TeleopTurtle.cpp
 )
 
-# Dependencies for teleop
+# Link dependencies
 ament_target_dependencies(teleop_turtle
     rclcpp
     geometry_msgs
@@ -23,4 +28,5 @@ install(TARGETS
     DESTINATION lib/${PROJECT_NAME}
 )
 
+# Necessary for a ROS2 package
 ament_package()
