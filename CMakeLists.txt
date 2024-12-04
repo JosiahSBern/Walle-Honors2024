@@ -21,7 +21,7 @@ set(SOURCES
 
 # Main executable
 add_executable(robot_dog ${SOURCES})
-add_executable(user_turtle src/UserTurtle.cpp)
+add_executable(teleop_turtle src/TeleopTurtle.cpp)  # New line to add teleop executable
 
 # Link libraries and dependencies for robot_dog
 ament_target_dependencies(robot_dog
@@ -31,8 +31,8 @@ ament_target_dependencies(robot_dog
 )
 
 
-# Link libraries and dependencies for UserTurtle
-ament_target_dependencies(user_turtle
+# Link libraries and dependencies for TeleopTurtle
+ament_target_dependencies(teleop_turtle
   rclcpp
   geometry_msgs
 )
@@ -40,7 +40,7 @@ ament_target_dependencies(user_turtle
 # Install targets
 install(TARGETS 
     robot_dog
-    user_turtle
+    teleop_turtle  # Add teleop_turtle to installed targets
     DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -51,7 +51,6 @@ install(FILES
     src/TrashTurtle.h
     src/Point.h
     src/Turtle.h
-    src/UserTurtle.cpp
     DESTINATION include/${PROJECT_NAME}
 )
 
