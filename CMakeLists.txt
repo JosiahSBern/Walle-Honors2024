@@ -19,18 +19,29 @@ set(SOURCES
     src/main.cpp
 )
 
+# Main executable
 add_executable(robot_dog ${SOURCES})
 
-
-# Link libraries and dependencies
+# Link libraries and dependencies for robot_dog
 ament_target_dependencies(robot_dog
   rclcpp
   turtlesim
   geometry_msgs
 )
 
+# Teleop executable for UserTurtle
+add_executable(user_turtle src/UserTurtle.cpp)
+
+# Link libraries and dependencies for UserTurtle
+ament_target_dependencies(user_turtle
+  rclcpp
+  geometry_msgs
+)
+
 # Install targets
-install(TARGETS robot_dog
+install(TARGETS 
+    robot_dog
+    user_turtle
     DESTINATION lib/${PROJECT_NAME}
 )
 

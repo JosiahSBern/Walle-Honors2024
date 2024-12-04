@@ -1,8 +1,9 @@
-#include "UserTurtle.h"
-#include "CollisionHandler.h"
-#include "Point.h"
+#include "rclcpp/rclcpp.hpp"
+#include <geometry_msgs/msg/twist.hpp>
+#include <signal.h>
 #include <termios.h>
 #include <stdio.h>
+#include <memory.h>
 #include <unistd.h>
 
 #define KEYCODE_W 0x77
@@ -11,46 +12,115 @@
 #define KEYCODE_D 0x64
 #define KEYCODE_Q 0x71
 
-UserTurtle::UserTurtle(std::shared_ptr<rclcpp::Node> node)
-    : nh_(node), linear_(0), angular_(0), l_scale_(2.0), a_scale_(2.0) {
-    twist_pub_ = nh_->create_publisher<geometry_msgs::msg::Twist>("turtle1/cmd_vel", 1);
+class TeleopTurtle
+{
+public:
+  TeleopTurtle(std::shared_ptr<rclcpp::Node> nh);
+  void keyLoop();
+
+private:
+  std::shared_ptr<rclcpp::Node> nh_;
+  double linear_, angular_, l_scale_, a_scale_;
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub_;
+};
+
+TeleopTurtle::TeleopTurtle(std::shared_ptr<rclcpp::Node> nh)
+    : nh_(nh),
+      linear_(0),
+      angular_(0),
+      l_scale_(2.0),
+      a_scale_(2.0)
+{
+  twist_pub_ = nh_->create_publisher<geometry_msgs::msg::Twist>("turtle1/cmd_vel", 1);
 }
 
-void UserTurtle::keyLoop() {
-    char c;
-    struct termios cooked, raw;
+int kfd = 0;
+struct termios cooked, raw;
 
-    // Set the console in raw mode
-    tcgetattr(STDIN_FILENO, &cooked);
-    raw = cooked;
-    raw.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &raw);
+void quit(int sig)
+{
+  (void)sig;
+  tcsetattr(kfd, TCSANOW, &cooked);
+  rclcpp::shutdown();
+  exit(0);
+}
 
-    CollisionHandler collisionHandler(11.0, 11.0);  // Room boundaries
-    Point currentPos = {5.5, 5.5};
+int main(int argc, char **argv)
+{
+  rclcpp::init(argc, argv);
+  auto node = rclcpp::Node::make_shared("teleop_turtle_wasd");
+  TeleopTurtle teleop_turtle(node);
 
-    puts("Use WASD keys to move the turtle. Press Q to quit.");
+  signal(SIGINT, quit);
 
-    while (true) {
-        if (read(STDIN_FILENO, &c, 1) < 0) break;
-        if (c == KEYCODE_Q) break;
+  teleop_turtle.keyLoop();
 
-        Point proposedPos = currentPos;
+  return 0;
+}
 
-        switch (c) {
-            case KEYCODE_W: proposedPos.y += 0.5; break;
-            case KEYCODE_S: proposedPos.y -= 0.5; break;
-            case KEYCODE_A: proposedPos.x -= 0.5; break;
-            case KEYCODE_D: proposedPos.x += 0.5; break;
-        }
+void TeleopTurtle::keyLoop()
+{
+  char c;
+  bool dirty = false;
 
-        currentPos = collisionHandler.adjustPositionWithSoftCollision(currentPos, proposedPos);
+  // Get the console in raw mode
+  tcgetattr(kfd, &cooked);
+  memcpy(&raw, &cooked, sizeof(struct termios));
+  raw.c_lflag &= ~(ICANON | ECHO);
+  raw.c_cc[VEOL] = 1;
+  raw.c_cc[VEOF] = 2;
+  tcsetattr(kfd, TCSANOW, &raw);
 
-        geometry_msgs::msg::Twist twist;
-        twist.linear.x = (proposedPos.x != currentPos.x) ? 0 : l_scale_ * linear_;
-        twist.angular.z = (proposedPos.y != currentPos.y) ? 0 : a_scale_ * angular_;
-        twist_pub_->publish(twist);
+  puts("Reading from keyboard");
+  puts("---------------------------");
+  puts("Use WASD keys to move the turtle. Q to quit.");
+
+  for (;;)
+  {
+    // Get the next event from the keyboard
+    if (::read(kfd, &c, 1) < 0)
+    {
+      perror("read():");
+      exit(-1);
     }
 
-    tcsetattr(STDIN_FILENO, TCSANOW, &cooked);
+    linear_ = angular_ = 0;
+
+    switch (c)
+    {
+    case KEYCODE_W:
+      std::cout << "FORWARD" << std::endl;
+      linear_ = 1.0;
+      dirty = true;
+      break;
+    case KEYCODE_S:
+      std::cout << "BACKWARD" << std::endl;
+      linear_ = -1.0;
+      dirty = true;
+      break;
+    case KEYCODE_A:
+      std::cout << "LEFT" << std::endl;
+      angular_ = 1.0;
+      dirty = true;
+      break;
+    case KEYCODE_D:
+      std::cout << "RIGHT" << std::endl;
+      angular_ = -1.0;
+      dirty = true;
+      break;
+    case KEYCODE_Q:
+      std::cout << "QUIT" << std::endl;
+      quit(SIGINT);
+      break;
+    }
+
+    geometry_msgs::msg::Twist twist;
+    twist.angular.z = a_scale_ * angular_;
+    twist.linear.x = l_scale_ * linear_;
+    if (dirty)
+    {
+      twist_pub_->publish(twist);
+      dirty = false;
+    }
+  }
 }
