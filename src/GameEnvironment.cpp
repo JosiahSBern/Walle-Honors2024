@@ -38,7 +38,7 @@ void GameEnvironment::drawGame() {
 
 void GameEnvironment::spawnTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
-    trashTurtles.clear();
+    TrashTurtle.clear();
 
     // Define initial spawn positions
     std::vector<Point> spawnPositions = {
@@ -66,8 +66,8 @@ void GameEnvironment::spawnTrashTurtles() {
             trashTurtle->setPosition(spawnPositions[i]);
         }
 
-        trashTurtle->setLeaderTurtle(teleopTurtle);
-        trashTurtles.push_back(trashTurtle);
+        TrashTurtle->setLeaderTurtle(teleopTurtle);
+        TrashTurtle.push_back(trashTurtle);
     }
 }    RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
     trashTurtles.clear();
