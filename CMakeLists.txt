@@ -11,20 +11,22 @@ find_package(geometry_msgs REQUIRED)
 include_directories(src)
 
 # Main executable source files
-set(SOURCES
+set(ROBOT_DOG_SOURCES
   src/Environment.cpp
   src/GameEnvironment.cpp
-  src/TeleopTurtle.cpp
   src/Turtle.cpp
   src/TrashTurtle.cpp
   src/main.cpp
 )
 
-# Add the main executable for the game environment
-add_executable(robot_dog ${SOURCES})
+# Main executable for the game environment
+add_executable(robot_dog ${ROBOT_DOG_SOURCES})
 
-# Add a separate executable for teleop control (if truly independent)
-add_executable(teleop_turtle src/TeleopTurtle.cpp)
+# Separate executable for teleop control
+add_executable(teleop_turtle
+  src/TeleopTurtle.cpp
+  src/TeleopMain.cpp  # Separate main for teleop_turtle
+)
 
 # Link libraries and dependencies for robot_dog
 ament_target_dependencies(robot_dog
@@ -46,7 +48,7 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
 )
 
-# Install headers (assuming all headers are in the src directory)
+# Install headers
 install(DIRECTORY src/
     DESTINATION include/${PROJECT_NAME}
     FILES_MATCHING PATTERN "*.h"

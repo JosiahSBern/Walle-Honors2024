@@ -28,8 +28,8 @@ public:
     Point getPosition() const;
     void setPosition(const Point& newPosition);
 
-    virtual void move() = 0;
-    virtual void renderTurtle() = 0;
+    virtual void move() = 0;  // Pure virtual function
+    virtual void renderTurtle() = 0;  // Pure virtual function
 };
 
-#endif  // TURTLE_H
+#endif
