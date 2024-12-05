@@ -46,10 +46,9 @@ void GameEnvironment::drawGame() {
     drawBins();
 
     // Step 2: Remove `turtle1` and spawn the new TeleopTurtle
-    initializeEnvironment();
+    // initializeEnvironment();
 
     // Step 3: Spawn initial TrashTurtles
-
     // Step 4: Start the update timer
     // timer_ = node_->create_wall_timer(
     //     std::chrono::milliseconds(200),
@@ -100,6 +99,7 @@ void GameEnvironment::initializeEnvironment() {
         }
     }
 }
+
 
 
 void GameEnvironment::spawnTrashTurtles() {
