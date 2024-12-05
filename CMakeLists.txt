@@ -8,7 +8,7 @@ find_package(turtlesim REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
 # Override system turtlesim with local version
-include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../ros_tutorials/turtlesim/include)
+include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/../custom_turtlesim/turtlesim/include)
 
 # Add src as an include directory
 include_directories(src)
