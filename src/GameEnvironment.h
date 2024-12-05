@@ -3,6 +3,7 @@
 
 #include "Environment.h"
 #include "TrashTurtle.h"
+#include "TeleopTurtle.h"
 #include "Point.h"
 #include <vector>
 #include <memory>
