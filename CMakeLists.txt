@@ -11,10 +11,11 @@ find_package(geometry_msgs REQUIRED)
 include_directories(src)
 
 # Main executable source files
-set(ROBOT_DOG_SOURCES
+set(SOURCES
   src/Environment.cpp
   src/GameEnvironment.cpp
-  src/Turtle.cpp
+  src/TeleopTurtle.cpp
+  src/Turtle.cpp  # Ensure this is included
   src/TrashTurtle.cpp
   src/main.cpp
 )

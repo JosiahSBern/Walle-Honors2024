@@ -9,14 +9,14 @@
 
 class Turtle {
 protected:
-    Point position;  //Current turtle position
-    std::string name;
-    double radius;  //Radius of the turtle's bounding circle
+    Point position;  // Current turtle position
+    std::string name;  // Turtle's name
+    double radius;  // Radius of the turtle's bounding circle
 
     std::shared_ptr<rclcpp::Node> node_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub_;
 
-    //Calculate the Euclidean distance between two points
+    // Calculate the Euclidean distance between two points
     double calculateDistance(const Point& p1, const Point& p2) const;
 
 public:
@@ -32,4 +32,4 @@ public:
     virtual void renderTurtle() = 0;
 };
 
-#endif  
+#endif  // TURTLE_H
