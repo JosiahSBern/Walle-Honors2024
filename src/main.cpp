@@ -14,7 +14,6 @@ int main(int argc, char* argv[]) {
     // Define a target point for the TrashTurtle
     Point someTargetPoint = {5.0, 5.0};
 
-    // Create a TrashTurtle instance (example usage)
     auto myTurtle = std::make_shared<TrashTurtle>(node, "MyTrash", 0.5, TrashType::PLASTIC, someTargetPoint);
 
     // Create a GameEnvironment instance

@@ -7,7 +7,7 @@ struct Point {
     double x;
     double y;
 
-    // Operator Overload -
+    //Operator Overload -
     Point operator-(const Point& other) const {
         return {x - other.x, y - other.y};
     }
