@@ -5,12 +5,14 @@ int main(int argc, char *argv[]) {
     // Initialize the ROS 2 system
     rclcpp::init(argc, argv);
 
-    // Create a node and instantiate the GameEnvironment
+    // Create a node
     auto node = rclcpp::Node::make_shared("robot_dog_node");
-    auto GameEnvironment = std::make_shared<GameEnvironment>(node, "turtle1");
+
+    // Instantiate GameEnvironment
+    auto gameEnvironment = std::make_shared<GameEnvironment>(node, "turtle1");
 
     // Call the method to draw the game environment
-    GameEnvironment->drawGame();
+    gameEnvironment->drawGame();
 
     // Spin to keep the program alive for callbacks (e.g., service calls)
     rclcpp::spin(node);
