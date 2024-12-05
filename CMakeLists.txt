@@ -16,6 +16,7 @@ set(ROBOT_DOG_SOURCES
   src/GameEnvironment.cpp
   src/Turtle.cpp
   src/TrashTurtle.cpp
+  src/TeleopTurtle.cpp 
   src/main.cpp
 )
 
