@@ -217,8 +217,8 @@ void GameEnvironment::drawWalls() {
 }
 
 void GameEnvironment::drawBins() {
-    const double binWidth = 2.0;
-    const double binHeight = 1.5;
+    const double binWidth = 2.5;
+    const double binHeight = 2.0;
 
     RCLCPP_INFO(node_->get_logger(), "Drawing bins...");
     for (size_t i = 0; i < binPositions.size(); ++i) {
