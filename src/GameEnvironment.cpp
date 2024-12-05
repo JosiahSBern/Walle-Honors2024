@@ -76,7 +76,7 @@ void GameEnvironment::spawnTrashTurtles() {
 }
 
 void GameEnvironment::drawGame() {
-    std::lock_guard<std::mutex> lock(updateMutex); // Prevent race conditions
+    // std::lock_guard<std::mutex> lock(updateMutex); // Prevent race conditions
     RCLCPP_INFO(node_->get_logger(), "Drawing game...");
 
     // Draw static elements of the environment
@@ -87,12 +87,12 @@ void GameEnvironment::drawGame() {
     spawnTrashTurtles();
 
     // Create a timer for continuous updates
-    if (!timer_) {
-        timer_ = node_->create_wall_timer(
-            std::chrono::milliseconds(200), // 5 Hz update rate
-            [this]() { updateTrashTurtles(); }
-        );
-    }
+    // if (!timer_) {
+    //     timer_ = node_->create_wall_timer(
+    //         std::chrono::milliseconds(200), // 5 Hz update rate
+    //         [this]() { updateTrashTurtles(); }
+    //     );
+    // }
 }
 
 
