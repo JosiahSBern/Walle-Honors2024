@@ -75,25 +75,6 @@ void GameEnvironment::spawnTrashTurtles() {
     }
 }
 
-void GameEnvironment::updateTrashTurtles() {
-    std::lock_guard<std::mutex> lock(updateMutex); // Prevent race conditions
-    if (trashTurtles.empty()) {
-        RCLCPP_INFO(node_->get_logger(), "No TrashTurtles to update.");
-        return;
-    }
-
-    RCLCPP_INFO(node_->get_logger(), "Updating TrashTurtles...");
-    for (auto& turtle : trashTurtles) {
-        if (!turtle->isAtTarget()) {
-            RCLCPP_INFO(node_->get_logger(), "Updating Turtle: %s", turtle->getName().c_str());
-            turtle->move();
-        } else {
-            RCLCPP_INFO(node_->get_logger(), "Turtle %s has reached its target.", turtle->getName().c_str());
-        }
-    }
-}
-
-
 void GameEnvironment::drawGame() {
     std::lock_guard<std::mutex> lock(updateMutex); // Prevent race conditions
     RCLCPP_INFO(node_->get_logger(), "Drawing game...");

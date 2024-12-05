@@ -17,7 +17,7 @@ private:
     rclcpp::TimerBase::SharedPtr timer_;
     std::mutex updateMutex; 
     void spawnTrashTurtles();
-    void updateTrashTurtles();
+    //void updateTrashTurtles();
 
 public:
     ~GameEnvironment();
