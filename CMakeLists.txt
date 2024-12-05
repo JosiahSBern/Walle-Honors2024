@@ -59,4 +59,12 @@ install(DIRECTORY src/
     FILES_MATCHING PATTERN "*.h"
 )
 
+target_link_libraries(teleop_turtle
+    rclcpp::rclcpp
+)
+
+# Ensure headers are available for teleop_turtle
+target_include_directories(teleop_turtle PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
 ament_package()
