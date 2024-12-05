@@ -25,7 +25,8 @@ add_executable(robot_dog ${ROBOT_DOG_SOURCES})
 # Separate executable for teleop control
 add_executable(teleop_turtle
   src/TeleopTurtle.cpp
-  src/TeleopMain.cpp  # Separate main for teleop_turtle
+  src/Turtle.cpp  # Add Turtle.cpp to teleop_turtle
+  src/TeleopMain.cpp
 )
 
 # Link libraries and dependencies for robot_dog
