@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
     rclcpp::init(argc, argv);
 
     // Create a node and instantiate the GameEnvironment
-    auto node = rclcpp::Node::make_shared("environment_builder");
+    auto node = rclcpp::Node::make_shared("robot_dog");
     auto GameEnvironment = std::make_shared<GameEnvironment>(node, "turtle1");
 
     // Call the method to draw the game environment
