@@ -22,6 +22,7 @@ protected:
 public:
     Turtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius);
     virtual ~Turtle();
+     std::string getName() const { return name; }
 
     bool checkCollision(const Point& other, double otherRadius) const;
 

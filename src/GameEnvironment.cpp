@@ -57,15 +57,13 @@ void GameEnvironment::spawnTrashTurtles() {
 
 void GameEnvironment::updateTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Updating TrashTurtles...");
-    if (trashTurtles.empty()) {
-        RCLCPP_WARN(node_->get_logger(), "No TrashTurtles to update.");
-    }
     for (auto& turtle : trashTurtles) {
-        RCLCPP_INFO(node_->get_logger(), "Updating Turtle: %s", turtle->getName().c_str());
+        RCLCPP_INFO(node_->get_logger(), "Updating Turtle: %s", turtle->getName().c_str()); // Use getName() here
         turtle->move();
         turtle->renderTurtle();
     }
 }
+
 
 
 void GameEnvironment::drawBins() {
