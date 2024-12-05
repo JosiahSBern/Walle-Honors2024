@@ -38,7 +38,7 @@ void GameEnvironment::drawGame() {
 
 void GameEnvironment::spawnTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
-    TrashTurtle.clear();
+    trashTurtles.clear(); // Corrected from TrashTurtle.clear()
 
     // Define initial spawn positions
     std::vector<Point> spawnPositions = {
@@ -66,26 +66,11 @@ void GameEnvironment::spawnTrashTurtles() {
             trashTurtle->setPosition(spawnPositions[i]);
         }
 
-        TrashTurtle->setLeaderTurtle(teleopTurtle);
-        TrashTurtle.push_back(trashTurtle);
+        trashTurtle->setLeaderTurtle(teleopTurtle); // Set the leader for each turtle
+        trashTurtles.push_back(trashTurtle); // Store the turtle in the list
     }
-}    RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
-    trashTurtles.clear();
-
-    // Create TrashTurtles for each bin
-    auto trashTurtle1 = std::make_shared<TrashTurtle>(node_, "Trash1", 0.5, TrashType::PLASTIC, binPositions[0]);
-    auto trashTurtle2 = std::make_shared<TrashTurtle>(node_, "Trash2", 0.5, TrashType::PAPER, binPositions[1]);
-    auto trashTurtle3 = std::make_shared<TrashTurtle>(node_, "Trash3", 0.5, TrashType::ORGANIC, binPositions[2]);
-
-    // Set TeleopTurtle as the leader
-    trashTurtle1->setLeaderTurtle(teleopTurtle);
-    trashTurtle2->setLeaderTurtle(teleopTurtle);
-    trashTurtle3->setLeaderTurtle(teleopTurtle);
-
-    trashTurtles.push_back(trashTurtle1);
-    trashTurtles.push_back(trashTurtle2);
-    trashTurtles.push_back(trashTurtle3);
 }
+
 
 void GameEnvironment::updateTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Updating TrashTurtles...");
