@@ -2,12 +2,13 @@
 #include "turtlesim/srv/spawn.hpp"
 #include "turtlesim/srv/kill.hpp"
 #include <memory>
+#include <cmath>
+#include <limits>
 #include "GameEnvironment.h"
 #include "TeleopTurtle.h"
 #include "TrashTurtle.h"
 #include "TrashType.h"
-#include <cmath>
-#include <limits>
+
 
 GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node, const std::string& turtle_name)
     : Environment(node, turtle_name) {
