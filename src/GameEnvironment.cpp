@@ -111,6 +111,8 @@ void GameEnvironment::spawnTrashTurtles() {
 
     const int numTurtles = 9;
     const double horizontalSpacing = (bottomBoxRight - bottomBoxLeft) / (numTurtles + 1);
+    
+    RCLCPP_ERROR(node_->get_logger(), "Spawn service not available.");
 
     for (size_t i = 0; i < numTurtles; ++i) {
         TrashType type = static_cast<TrashType>(i % 3);  // Cycle through trash types
