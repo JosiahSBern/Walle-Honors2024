@@ -5,16 +5,16 @@
 #include <iostream>
 #include <cmath>
 
-// Constructor
+
 TeleopTurtle::TeleopTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius)
-    : Turtle(node, name, radius), kfd(0) {
+    : Turtle(node, name, radius) {  // Ensure correct base class constructor call
     setupTerminal();
 }
 
-// Destructor
 TeleopTurtle::~TeleopTurtle() {
     restoreTerminal();
 }
+
 
 // Handle key input
 void TeleopTurtle::handleKeyInput(char c) {
