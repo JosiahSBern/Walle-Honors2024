@@ -13,7 +13,7 @@ Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle
         !spawn_client_->wait_for_service(std::chrono::seconds(5))) {
         RCLCPP_ERROR(node_->get_logger(), "One or more services are not available. Check turtlesim node.");
     }
-}s
+}
 
 
 
