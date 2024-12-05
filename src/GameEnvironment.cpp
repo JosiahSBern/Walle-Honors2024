@@ -85,14 +85,6 @@ void GameEnvironment::drawGame() {
 
     // Spawn initial TrashTurtles
     spawnTrashTurtles();
-
-    // Create a timer for continuous updates
-    // if (!timer_) {
-    //     timer_ = node_->create_wall_timer(
-    //         std::chrono::milliseconds(200), // 5 Hz update rate
-    //         [this]() { updateTrashTurtles(); }
-    //     );
-    // }
 }
 
 
