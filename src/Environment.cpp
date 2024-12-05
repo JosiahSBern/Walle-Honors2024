@@ -2,7 +2,7 @@
 #include <cmath>
 
 Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle_name)
-    : turtle_name_(turtle_name), node_(node) {
+    : turtle_name(turtle_name), node_(node) {
     pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/" + turtle_name + "/set_pen");
     teleport_client_ = node_->create_client<turtlesim::srv::TeleportAbsolute>("/" + turtle_name + "/teleport_absolute");
     spawn_client_ = node_->create_client<turtlesim::srv::Spawn>("/spawn");
@@ -55,6 +55,27 @@ void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
     request->b = b;                     // Blue value (uint8)
     request->width = width;             // Pen width (uint8)
     request->off = static_cast<uint8_t>(!pen_state);  // Convert bool to uint8 (0 for enabled, 1 for disabled)
+void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
+    if (!pen_client_->wait_for_service(std::chrono::seconds(5))) {
+        RCLCPP_ERROR(node_->get_logger(), "Pen service not available.");
+        return;
+    }
+
+    auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
+    request->r = r;                     // Red value (uint8)
+    request->g = g;                     // Green value (uint8)
+    request->b = b;                     // Blue value (uint8)
+    request->width = width;             // Pen width (uint8)
+    request->off = static_cast<uint8_t>(!pen_state);  // Convert bool to uint8 (0 for enabled, 1 for disabled)
+
+    auto result = pen_client_->async_send_request(request);
+    if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
+        RCLCPP_ERROR(node_->get_logger(), "Failed to set pen.");
+    } else {
+        RCLCPP_INFO(node_->get_logger(), "Pen state set: r=%d, g=%d, b=%d, width=%d, off=%d",
+                    request->r, request->g, request->b, request->width, request->off);
+    }
+}
 
     auto result = pen_client_->async_send_request(request);
     if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
