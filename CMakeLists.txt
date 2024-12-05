@@ -15,15 +15,15 @@ set(SOURCES
   src/Environment.cpp
   src/GameEnvironment.cpp
   src/TeleopTurtle.cpp
-  src/Turtle.cpp  # Ensure this is included
+  src/Turtle.cpp
   src/TrashTurtle.cpp
   src/main.cpp
 )
 
-# Main executable for the game environment
-add_executable(robot_dog ${ROBOT_DOG_SOURCES})
+# Add the main executable for the game environment
+add_executable(robot_dog ${SOURCES})
 
-# Separate executable for teleop control
+# Add a separate executable for teleop control (if truly independent)
 add_executable(teleop_turtle src/TeleopTurtle.cpp)
 
 # Link libraries and dependencies for robot_dog
