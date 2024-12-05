@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
-#include "turtlesim/srv/set_pen.hpp"            // Set pen color and width
+#include "turtlesim/srv/set_pen.hpp"
 #include "turtlesim/srv/teleport_absolute.hpp" // Teleport turtle
 #include "turtlesim/srv/spawn.hpp"             // Spawn new turtles
 #include "Point.h"
