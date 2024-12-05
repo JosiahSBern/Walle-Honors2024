@@ -36,10 +36,11 @@ void Environment::drawLine(Point start, Point end, bool pen_state, int r, int g,
 }
 
 void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
-    if (!pen_client_->wait_for_service(std::chrono::seconds(1))) {
-        RCLCPP_ERROR(node_->get_logger(), "Pen service not available.");
-        return;
-    }
+   if (!pen_client_->wait_for_service(std::chrono::seconds(5))) {
+    RCLCPP_ERROR(node_->get_logger(), "Pen service for turtle '%s' is not available.", turtle_name_.c_str());
+    return;
+}
+
 
     auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
     request->r = r;
