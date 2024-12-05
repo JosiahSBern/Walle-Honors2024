@@ -10,7 +10,7 @@ Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle
 
 
 void Environment::drawLine(Point start, Point end, bool pen_state, int r, int g, int b, int width) {
-    setPen(false, 0, 0, 0, 1); // Disable pen for teleportation
+    setPen(false, 0, 0, 0, 1); //Disable pen 
 
     auto teleport_request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
     teleport_request->x = start.x;
@@ -23,7 +23,7 @@ void Environment::drawLine(Point start, Point end, bool pen_state, int r, int g,
         return;
     }
 
-    setPen(pen_state, r, g, b, width); // Enable pen for drawing
+    setPen(pen_state, r, g, b, width); //Enable pen for drawing
     teleport_request->x = end.x;
     teleport_request->y = end.y;
 

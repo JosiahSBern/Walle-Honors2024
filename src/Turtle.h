@@ -27,6 +27,9 @@ public:
 
     Point getPosition() const;
     void setPosition(const Point& newPosition);
+
+    virtual void move() = 0;
+    virtual void renderTurtle() = 0;
 };
 
 #endif  // TURTLE_H

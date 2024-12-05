@@ -10,19 +10,20 @@ find_package(geometry_msgs REQUIRED)
 # Add src as an include directory
 include_directories(src)
 
-# Source files
-set(SOURCES
+# Main executable source files
+set(ROBOT_DOG_SOURCES
   src/Environment.cpp
   src/GameEnvironment.cpp
-  src/TeleopTurtle.cpp
   src/Turtle.cpp
   src/TrashTurtle.cpp
   src/main.cpp
 )
 
-# Main executable
-add_executable(robot_dog ${SOURCES})
-add_executable(teleop_turtle src/TeleopTurtle.cpp)  # New line to add teleop executable
+# Main executable for the game environment
+add_executable(robot_dog ${ROBOT_DOG_SOURCES})
+
+# Separate executable for teleop control
+add_executable(teleop_turtle src/TeleopTurtle.cpp)
 
 # Link libraries and dependencies for robot_dog
 ament_target_dependencies(robot_dog
@@ -31,28 +32,23 @@ ament_target_dependencies(robot_dog
   geometry_msgs
 )
 
-
-# Link libraries and dependencies for TeleopTurtle
+# Link libraries and dependencies for teleop_turtle
 ament_target_dependencies(teleop_turtle
   rclcpp
   geometry_msgs
 )
 
-# Install targets
+# Install the executables
 install(TARGETS 
-    robot_dog
-    teleop_turtle  # Add teleop_turtle to installed targets
-    DESTINATION lib/${PROJECT_NAME}
+  robot_dog
+  teleop_turtle
+  DESTINATION lib/${PROJECT_NAME}
 )
 
-# Install headers (even if in src)
-install(FILES
-    src/Environment.h
-    src/GameEnvironment.h
-    src/TrashTurtle.h
-    src/Point.h
-    src/Turtle.h
+# Install headers (assuming all headers are in the src directory)
+install(DIRECTORY src/
     DESTINATION include/${PROJECT_NAME}
+    FILES_MATCHING PATTERN "*.h"
 )
 
 ament_package()

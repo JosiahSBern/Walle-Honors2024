@@ -1,9 +1,9 @@
 #include "Turtle.h"
 
 // Constructor
-Turtle::Turtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius)
+Turtle::Turtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius, const std::string& topic)
     : node_(node), name(name), radius(radius), position({0.0, 0.0}) {
-    twist_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>("turtle1/cmd_vel", 1);
+    twist_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>(topic, 1);
 }
 
 // Destructor
