@@ -46,10 +46,11 @@ void GameEnvironment::drawGame() {
     drawBins();
 
     // Step 2: Spawn initial TrashTurtles
+    initializeEnvironment();
     spawnTrashTurtles();
 
     // Step 3: Remove `turtle1` and spawn a new turtle in the center
-    initializeEnvironment();
+    
 
     // Start the update timer
     timer_ = node_->create_wall_timer(
