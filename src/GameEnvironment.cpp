@@ -98,6 +98,9 @@ void GameEnvironment::initializeEnvironment() {
 }
 
 void GameEnvironment::spawnTrashTurtles() {
+    RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
+    trashTurtles.clear();
+
     const double bottomBoxLeft = 1.0;
     const double bottomBoxRight = 10.0;
     const double bottomBoxTop = 3.0;
@@ -113,6 +116,25 @@ void GameEnvironment::spawnTrashTurtles() {
         double xPos = bottomBoxLeft + (i + 1) * horizontalSpacing;
         double yPos = (bottomBoxTop + bottomBoxBottom) / 2;
 
+        // Use the /spawn service
+        auto spawn_request = std::make_shared<turtlesim::srv::Spawn::Request>();
+        spawn_request->x = xPos;
+        spawn_request->y = yPos;
+        spawn_request->theta = 0.0;  // Facing straight
+        spawn_request->name = name;
+
+        if (!spawn_client_->wait_for_service(std::chrono::seconds(5))) {
+            RCLCPP_ERROR(node_->get_logger(), "Spawn service not available.");
+            return;
+        }
+
+        auto spawn_result = spawn_client_->async_send_request(spawn_request);
+        if (rclcpp::spin_until_future_complete(node_, spawn_result) != rclcpp::FutureReturnCode::SUCCESS) {
+            RCLCPP_ERROR(node_->get_logger(), "Failed to spawn TrashTurtle: %s", name.c_str());
+            continue;
+        }
+
+        // Create TrashTurtle instance and add it to the list
         auto trashTurtle = std::make_shared<TrashTurtle>(
             node_,
             name,
@@ -123,9 +145,12 @@ void GameEnvironment::spawnTrashTurtles() {
 
         trashTurtle->setPosition({xPos, yPos});
         trashTurtles.push_back(trashTurtle);
-        trashTurtle->renderTurtle();   
- }
+
+        // Log the spawned turtle
+        RCLCPP_INFO(node_->get_logger(), "Spawned TrashTurtle: %s at (%f, %f)", name.c_str(), xPos, yPos);
+    }
 }
+
 
 
 void GameEnvironment::updateTrashTurtles() {

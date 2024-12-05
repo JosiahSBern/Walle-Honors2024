@@ -4,16 +4,16 @@
 #include <cmath>
 
 TrashTurtle::TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, 
-                         double radius, TrashType type, const Point& target)
+                         double radius, TrashType type, const Point& target){
     : Turtle(node, name, radius), 
       type(type), 
       targetPosition(target), 
       targetRadius(0.5), 
       followingLeader_(false), 
       followDistanceThreshold_(2.0)  // Set a threshold distance for following
-{
-    // Initialization
+      pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/" + name + "/set_pen");
 }
+
 
 void TrashTurtle::setLeaderTurtle(std::shared_ptr<Turtle> leader) {
     leaderTurtle = leader;
