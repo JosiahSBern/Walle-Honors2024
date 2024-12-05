@@ -6,7 +6,15 @@ Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle
     pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/" + turtle_name_ + "/set_pen");
     teleport_client_ = node_->create_client<turtlesim::srv::TeleportAbsolute>("/" + turtle_name_ + "/teleport_absolute");
     spawn_client_ = node_->create_client<turtlesim::srv::Spawn>("/spawn");
-}
+
+    // Wait for services during initialization
+    if (!pen_client_->wait_for_service(std::chrono::seconds(5)) ||
+        !teleport_client_->wait_for_service(std::chrono::seconds(5)) ||
+        !spawn_client_->wait_for_service(std::chrono::seconds(5))) {
+        RCLCPP_ERROR(node_->get_logger(), "One or more services are not available. Check turtlesim node.");
+    }
+}s
+
 
 
 void Environment::drawLine(Point start, Point end, bool pen_state, int r, int g, int b, int width) {
