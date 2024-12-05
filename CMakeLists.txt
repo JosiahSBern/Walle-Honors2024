@@ -46,10 +46,13 @@ ament_target_dependencies(teleop_turtle
 # Install the executables
 install(TARGETS 
   robot_dog
-  teleop_turtle
   DESTINATION lib/${PROJECT_NAME}
 )
 
+install(TARGETS 
+  teleop_turtle
+  DESTINATION lib/${PROJECT_NAME}
+)
 # Install headers
 install(DIRECTORY src/
     DESTINATION include/${PROJECT_NAME}
