@@ -47,7 +47,6 @@ void GameEnvironment::drawGame() {
 
     // Step 2: Spawn initial TrashTurtles
     spawnTrashTurtles();
-
     // Step 3: Remove `turtle1` and spawn a new turtle in the center
     
 
@@ -147,6 +146,7 @@ void GameEnvironment::spawnTrashTurtles() {
 
         // Log the spawned turtle
         RCLCPP_INFO(node_->get_logger(), "Spawned TrashTurtle: %s at (%f, %f)", name.c_str(), xPos, yPos);
+        trashTurtle->renderTurtle();
     }
 }
 
