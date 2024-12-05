@@ -46,22 +46,22 @@ void GameEnvironment::drawGame() {
     drawBins();
 
     // Step 2: Remove `turtle1` and spawn the new TeleopTurtle
-    // initializeEnvironment();
+    initializeEnvironment();
 
     // Step 3: Spawn initial TrashTurtles
+    spawnTrashTurtles();
+
     // Step 4: Start the update timer
-    // timer_ = node_->create_wall_timer(
-    //     std::chrono::milliseconds(200),
-    //     [this]() {
-    //         RCLCPP_DEBUG(node_->get_logger(), "Updating TrashTurtles...");
-    //         updateTrashTurtles();
-    //     }
-    // );
+    timer_ = node_->create_wall_timer(
+        std::chrono::milliseconds(200),
+        [this]() {
+            RCLCPP_DEBUG(node_->get_logger(), "Updating TrashTurtles...");
+            updateTrashTurtles();
+        }
+    );
 }
 
 void GameEnvironment::initializeEnvironment() {
-    RCLCPP_INFO(node_->get_logger(), "Spawning InitializedEnvironment...");
-
     // Kill the default turtle1
     if (!kill_client_->wait_for_service(std::chrono::seconds(10))) {
         RCLCPP_ERROR(node_->get_logger(), "Kill service not available. Turtle1 might persist.");
@@ -101,8 +101,8 @@ void GameEnvironment::initializeEnvironment() {
 }
 
 
-
 void GameEnvironment::spawnTrashTurtles() {
+    RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
 
     const double bottomBoxLeft = 1.0;
     const double bottomBoxRight = 10.0;
@@ -111,9 +111,6 @@ void GameEnvironment::spawnTrashTurtles() {
 
     const int numTurtles = 9;
     const double horizontalSpacing = (bottomBoxRight - bottomBoxLeft) / (numTurtles + 1);
-    
-    RCLCPP_ERROR(node_->get_logger(), "Spawn service not available.");
-
     for (size_t i = 0; i < numTurtles; ++i) {
         TrashType type = static_cast<TrashType>(i % 3);  // Cycle through trash types
         std::string name = "Trash" + std::to_string(i + 1);
