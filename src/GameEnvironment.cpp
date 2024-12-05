@@ -123,7 +123,7 @@ void GameEnvironment::spawnTrashTurtles() {
 
         trashTurtle->setPosition({xPos, yPos});
         trashTurtles.push_back(trashTurtle);
-        TrashTurtle->renderTurtle();
+        trashTurtle->renderTurtle();
     }
 }
 
