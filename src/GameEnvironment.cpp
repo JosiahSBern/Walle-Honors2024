@@ -98,8 +98,6 @@ void GameEnvironment::initializeEnvironment() {
 }
 
 void GameEnvironment::spawnTrashTurtles() {
-    trashTurtles.clear();
-
     const double bottomBoxLeft = 1.0;
     const double bottomBoxRight = 10.0;
     const double bottomBoxTop = 3.0;
@@ -125,6 +123,7 @@ void GameEnvironment::spawnTrashTurtles() {
 
         trashTurtle->setPosition({xPos, yPos});
         trashTurtles.push_back(trashTurtle);
+        TrashTurtle->renderTurtle();
     }
 }
 
