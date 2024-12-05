@@ -1,5 +1,6 @@
 #include "GameEnvironment.h"
 #include "TrashTurtle.h"
+#include "TeleopTurtle.cpp"
 #include <rclcpp/rclcpp.hpp>
 #include "turtlesim/srv/spawn.hpp"
 #include <memory>
@@ -18,7 +19,7 @@ GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node, const std::string
     };
 
     // Initialize leader turtle (replace with actual initialization logic)
-    teleopTurtle = std::make_shared<TeleopTurtle>(node, "TeleopLeader", 0.5);
+    teleopTurtle = std::make_shared<TeleopTurtle>(node);
 }
 
 void GameEnvironment::drawGame() {

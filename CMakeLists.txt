@@ -12,11 +12,12 @@ include_directories(src)
 
 # Source files
 set(SOURCES
-    src/Environment.cpp
-    src/GameEnvironment.cpp
-    src/Turtle.cpp
-    src/TrashTurtle.cpp
-    src/main.cpp
+  src/Environment.cpp
+  src/GameEnvironment.cpp
+  src/TeleopTurtle.cpp
+  src/Turtle.cpp
+  src/TrashTurtle.cpp
+  src/main.cpp
 )
 
 # Main executable

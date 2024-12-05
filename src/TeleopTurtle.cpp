@@ -1,166 +1,94 @@
-#include "rclcpp/rclcpp.hpp"
+#include "TeleopTurtle.h"
 #include <geometry_msgs/msg/twist.hpp>
 #include <signal.h>
-#include <termios.h>
-#include <stdio.h>
-#include <memory.h>
 #include <unistd.h>
+#include <iostream>
+#include <cmath>
 
-#define KEYCODE_W 0x77
-#define KEYCODE_A 0x61
-#define KEYCODE_S 0x73
-#define KEYCODE_D 0x64
-#define KEYCODE_Q 0x71
-
-class TeleopTurtle
-{
-public:
-  TeleopTurtle(std::shared_ptr<rclcpp::Node> nh);
-  void keyLoop();
-
-private:
-  std::shared_ptr<rclcpp::Node> nh_;
-  double linear_, angular_, l_scale_, a_scale_;
-  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub_;
-};
-
-TeleopTurtle::TeleopTurtle(std::shared_ptr<rclcpp::Node> nh)
-    : nh_(nh),
-      linear_(0),
-      angular_(0),
-      l_scale_(2.0),
-      a_scale_(2.0)
-{
-  twist_pub_ = nh_->create_publisher<geometry_msgs::msg::Twist>("turtle1/cmd_vel", 1);
+// Constructor
+TeleopTurtle::TeleopTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius)
+    : Turtle(node, name, radius), kfd(0) {
+    setupTerminal();
 }
 
-int kfd = 0;
-struct termios cooked, raw;
-
-void quit(int sig)
-{
-  (void)sig;
-  tcsetattr(kfd, TCSANOW, &cooked);
-  rclcpp::shutdown();
-  exit(0);
+// Destructor
+TeleopTurtle::~TeleopTurtle() {
+    restoreTerminal();
 }
 
-int main(int argc, char **argv)
-{
-  rclcpp::init(argc, argv);
-  auto node = rclcpp::Node::make_shared("teleop_turtle_wasd");
-  TeleopTurtle teleop_turtle(node);
+// Handle key input
+void TeleopTurtle::handleKeyInput(char c) {
+    double linear = 0.0;
+    double angular = 0.0;
 
-  signal(SIGINT, quit);
+    switch (c) {
+        case 'w':  // Forward
+            linear = 1.0;
+            break;
+        case 's':  // Backward
+            linear = -1.0;
+            break;
+        case 'a':  // Turn left
+            angular = 1.0;
+            break;
+        case 'd':  // Turn right
+            angular = -1.0;
+            break;
+        case 'q':  // Quit
+            restoreTerminal();
+            rclcpp::shutdown();
+            exit(0);
+        default:
+            break;
+    }
 
-  teleop_turtle.keyLoop();
+    geometry_msgs::msg::Twist twist_msg;
+    twist_msg.linear.x = linear;
+    twist_msg.angular.z = angular;
+    twist_pub_->publish(twist_msg);
 
-  return 0;
+    // Update position for tracking purposes
+    position.x += linear * std::cos(angular);
+    position.y += linear * std::sin(angular);
 }
 
+// Key input loop
 void TeleopTurtle::keyLoop() {
     char c;
-    bool dirty = false;
 
-    tcgetattr(kfd, &cooked);
-    memcpy(&raw, &cooked, sizeof(struct termios));
-    raw.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(kfd, TCSANOW, &raw);
+    puts("Reading from keyboard. Use 'WASD' to move the turtle. Press 'Q' to quit.");
 
-    puts("Use WASD keys to move the turtle. Q to quit.");
-
-    for (;;) {
-        if (::read(kfd, &c, 1) < 0) {
+    while (true) {
+        if (read(kfd, &c, 1) < 0) {
             perror("read():");
             exit(-1);
         }
-
-        linear_ = angular_ = 0;
-
-        switch (c) {
-            case KEYCODE_W: linear_ = 1.0; dirty = true; break;
-            case KEYCODE_S: linear_ = -1.0; dirty = true; break;
-            case KEYCODE_A: angular_ = 1.0; dirty = true; break;
-            case KEYCODE_D: angular_ = -1.0; dirty = true; break;
-            case KEYCODE_Q: quit(SIGINT); break;
-        }
-
-        geometry_msgs::msg::Twist twist;
-        twist.angular.z = a_scale_ * angular_;
-        twist.linear.x = l_scale_ * linear_;
-        if (dirty) {
-            twist_pub_->publish(twist);
-
-            // Simulate position updates
-            position.x += linear_ * std::cos(angular_);
-            position.y += linear_ * std::sin(angular_);
-
-            dirty = false;
-        }
+        handleKeyInput(c);
     }
 }
 
-  char c;
-  bool dirty = false;
+// Set up terminal for raw input
+void TeleopTurtle::setupTerminal() {
+    tcgetattr(kfd, &cooked);
+    raw = cooked;
+    raw.c_lflag &= ~(ICANON | ECHO);
+    raw.c_cc[VEOL] = 1;
+    raw.c_cc[VEOF] = 2;
+    tcsetattr(kfd, TCSANOW, &raw);
+}
 
-  // Get the console in raw mode
-  tcgetattr(kfd, &cooked);
-  memcpy(&raw, &cooked, sizeof(struct termios));
-  raw.c_lflag &= ~(ICANON | ECHO);
-  raw.c_cc[VEOL] = 1;
-  raw.c_cc[VEOF] = 2;
-  tcsetattr(kfd, TCSANOW, &raw);
+// Restore terminal settings
+void TeleopTurtle::restoreTerminal() {
+    tcsetattr(kfd, TCSANOW, &cooked);
+}
 
-  puts("Reading from keyboard");
-  puts("---------------------------");
-  puts("Use WASD keys to move the turtle. Q to quit.");
+// Render turtle status
+void TeleopTurtle::renderTurtle() {
+    RCLCPP_INFO(node_->get_logger(), "TeleopTurtle: %s is at position (%f, %f)", 
+                name.c_str(), position.x, position.y);
+}
 
-  for (;;)
-  {
-    // Get the next event from the keyboard
-    if (::read(kfd, &c, 1) < 0)
-    {
-      perror("read():");
-      exit(-1);
-    }
-
-    linear_ = angular_ = 0;
-
-    switch (c)
-    {
-    case KEYCODE_W:
-      std::cout << "FORWARD" << std::endl;
-      linear_ = 1.0;
-      dirty = true;
-      break;
-    case KEYCODE_S:
-      std::cout << "BACKWARD" << std::endl;
-      linear_ = -1.0;
-      dirty = true;
-      break;
-    case KEYCODE_A:
-      std::cout << "LEFT" << std::endl;
-      angular_ = 1.0;
-      dirty = true;
-      break;
-    case KEYCODE_D:
-      std::cout << "RIGHT" << std::endl;
-      angular_ = -1.0;
-      dirty = true;
-      break;
-    case KEYCODE_Q:
-      std::cout << "QUIT" << std::endl;
-      quit(SIGINT);
-      break;
-    }
-
-    geometry_msgs::msg::Twist twist;
-    twist.angular.z = a_scale_ * angular_;
-    twist.linear.x = l_scale_ * linear_;
-    if (dirty)
-    {
-      twist_pub_->publish(twist);
-      dirty = false;
-    }
-  }
+// Overriding move (optional additional logic could be added here)
+void TeleopTurtle::move() {
+    keyLoop();
 }
