@@ -12,16 +12,17 @@ class GameEnvironment : public Environment {
 private:
     std::vector<Point> binPositions;  //Positions of bins
     std::vector<std::shared_ptr<TrashTurtle>> trashTurtles;  //TrashTurtle instances
-    std::shared_ptr<Turtle> turtle1;  //Leader turtle
-    std::shared_ptr<TeleopTurtle> teleopTurtle;
+    std::shared_ptr<TeleopTurtle> teleopTurtle;  
+    std::shared_ptr<TrashTurtle> activeFollower; 
     rclcpp::TimerBase::SharedPtr timer_;
     std::mutex updateMutex; 
     
     std::shared_ptr<TrashTurtle> activeFollower;  // Track the current follower
     std::shared_ptr<TeleopTurtle> teleopTurtle;
-    void updateTrashTurtles();
+    
 
 public:
+    void updateTrashTurtles();
     ~GameEnvironment();
     GameEnvironment(rclcpp::Node::SharedPtr node, const std::string& turtle_name);
     void drawGame(); 

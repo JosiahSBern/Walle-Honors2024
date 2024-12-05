@@ -17,9 +17,9 @@ protected:
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub_;
 
     // Calculate the Euclidean distance between two points
-    double calculateDistance(const Point& p1, const Point& p2) const;
 
 public:
+    double calculateDistance(const Point& p1, const Point& p2) const;
     Turtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius);
     virtual ~Turtle();
      std::string getName() const { return name; }

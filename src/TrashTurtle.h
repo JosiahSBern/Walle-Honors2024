@@ -21,10 +21,12 @@ private:
     bool followingLeader_;//Whether the TrashTurtle is currently following the leader
     std::shared_ptr<Turtle> leaderTurtle;//Pointer to the leader Turtle
 
-    void followLeader();//Logic for following the leader turtle
-    void updateVelocityToTarget(const Point& target);//Updates velocity
 
 public:
+    void updateVelocityToTarget(const Point& target);//Updates velocity
+
+    void followLeader();//Logic for following the leader turtle
+
     TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, 
                 double radius, TrashType type, const Point& target);
 
