@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(robot_dog)
 
 # Find dependencies
+find_package(turtlesim REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(turtlesim REQUIRED)
@@ -9,6 +10,7 @@ find_package(geometry_msgs REQUIRED)
 
 # Add src as an include directory
 include_directories(src)
+include_directories(/home/ros2/ros2_ws/src/ros_tutorials/turtlesim/include)
 
 # Main executable source files
 set(ROBOT_DOG_SOURCES
@@ -32,9 +34,9 @@ add_executable(teleop_turtle
 
 # Link libraries and dependencies for robot_dog
 ament_target_dependencies(robot_dog
-  rclcpp
-  turtlesim
-  geometry_msgs
+    rclcpp
+    turtlesim
+    geometry_msgs
 )
 
 # Link libraries and dependencies for teleop_turtle
