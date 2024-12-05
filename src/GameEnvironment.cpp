@@ -103,7 +103,6 @@ void GameEnvironment::initializeEnvironment() {
 
 
 void GameEnvironment::spawnTrashTurtles() {
-    RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
 
     const double bottomBoxLeft = 1.0;
     const double bottomBoxRight = 10.0;
