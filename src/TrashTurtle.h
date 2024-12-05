@@ -17,6 +17,8 @@ private:
     double followDistanceThreshold_;//Distance threshold for following the leader turtle
     bool followingLeader_;//Whether the TrashTurtle is currently following the leader
     std::shared_ptr<Turtle> leaderTurtle;//Pointer to the leader Turtle
+    rclcpp::Client<turtlesim::srv::SetPen>::SharedPtr pen_client_;
+
 
 
 public:
