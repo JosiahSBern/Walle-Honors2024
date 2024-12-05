@@ -5,6 +5,7 @@
 #include "GameEnvironment.h"
 #include "TeleopTurtle.h"
 #include "TrashTurtle.h"
+#include "TrashType.h"
 #include <cmath>
 #include <limits>
 
