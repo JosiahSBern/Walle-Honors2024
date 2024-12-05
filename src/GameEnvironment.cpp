@@ -174,3 +174,17 @@ void GameEnvironment::assignFollower() {
         RCLCPP_INFO(node_->get_logger(), "Assigned %s as follower.", closestTurtle->getName().c_str());
     }
 }
+
+void GameEnvironment::drawWalls() {
+    const double WALL_LEFT = 1.0;
+    const double WALL_RIGHT = 10.0;
+    const double WALL_TOP = 10.0;
+    const double WALL_BOTTOM = 1.0;
+
+    Point topLeft = {WALL_LEFT, WALL_TOP};
+    Point bottomRight = {WALL_RIGHT, WALL_BOTTOM};
+    drawRectangle(topLeft, bottomRight, 255, 255, 255); // White
+
+    RCLCPP_INFO(node_->get_logger(), "Walls drawn: TopLeft (%f, %f), BottomRight (%f, %f)",
+                topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
+}
