@@ -58,11 +58,16 @@ void GameEnvironment::spawnTrashTurtles() {
 void GameEnvironment::updateTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Updating TrashTurtles...");
     for (auto& turtle : trashTurtles) {
-        RCLCPP_INFO(node_->get_logger(), "Updating Turtle: %s", turtle->getName().c_str()); // Use getName() here
-        turtle->move();
-        turtle->renderTurtle();
+        if (!turtle->isAtTarget()) {
+            RCLCPP_INFO(node_->get_logger(), "Updating Turtle: %s", turtle->getName().c_str());
+            turtle->move();
+            turtle->renderTurtle();
+        } else {
+            RCLCPP_INFO(node_->get_logger(), "Turtle %s has reached its target.", turtle->getName().c_str());
+        }
     }
 }
+
 
 
 
