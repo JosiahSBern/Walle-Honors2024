@@ -13,13 +13,13 @@ public:
     // Destructor
     ~TeleopTurtle();
 
-    // Overriding move method
+    //Move method
     void move();
 
-    // Render turtle status
+    //Render turtle status
     void renderTurtle();
 
-    // Key event handling loop
+    //Key event handling loop
     void keyLoop();
 
 private:
@@ -30,4 +30,4 @@ private:
     void restoreTerminal();
 };
 
-#endif  // TELEOP_TURTLE_H
+#endif 
