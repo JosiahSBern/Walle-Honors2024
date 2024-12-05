@@ -40,17 +40,20 @@ GameEnvironment::~GameEnvironment() {
 
 
 void GameEnvironment::drawGame() {
-    // std::lock_guard<std::mutex> lock(updateMutex); // Prevent race conditions
     RCLCPP_INFO(node_->get_logger(), "Drawing game...");
 
-    // Draw static elements of the environment
     drawWalls();
     drawBins();
-
-    // Spawn initial TrashTurtles
     spawnTrashTurtles();
 
+    timer_ = node_->create_wall_timer(
+        std::chrono::milliseconds(500),  // Update at 5 Hz
+        [this]() {
+            this->updateTrashTurtles();
+        }
+    );
 }
+
 void GameEnvironment::drawBins() {
     const double binWidth = 2.0;
     const double binHeight = 1.5;
@@ -160,4 +163,39 @@ void GameEnvironment::spawnTrashTurtles() {
     }
 
     RCLCPP_INFO(node_->get_logger(), "Finished spawning TrashTurtles.");
+}
+
+
+void GameEnvironment::assignFollower() {
+    for (auto& trashTurtle : trashTurtles) {
+        double distance_to_leader = calculateDistance(
+            trashTurtle->getPosition(),
+            teleopTurtle->getPosition()
+        );
+
+        if (distance_to_leader <= 2.0) {  // Threshold to assign
+            if (activeFollower != trashTurtle) {
+                if (activeFollower) {
+                    activeFollower->stopMovement();  // Stop the previous follower
+                }
+
+                activeFollower = trashTurtle;
+                activeFollower->setLeaderTurtle(teleopTurtle);
+                RCLCPP_INFO(node_->get_logger(), "Assigned %s as follower.", trashTurtle->getName().c_str());
+            }
+            break;  // Only one follower
+        }
+    }
+}
+
+void GameEnvironment::updateTrashTurtles() {
+    for (auto& trashTurtle : trashTurtles) {
+        if (trashTurtle == activeFollower) {
+            trashTurtle->followLeader();  // Active follower follows
+        } else {
+            trashTurtle->move();  // Others move to their bins
+        }
+    }
+
+    assignFollower();  // Check and assign a new follower if needed
 }

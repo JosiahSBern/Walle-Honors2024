@@ -32,9 +32,11 @@ void TrashTurtle::followLeader() {
         return;
     }
 
-    followingLeader_ = true;
-    updateVelocityToTarget(leaderTurtle->getPosition());
+    if (followingLeader_) {
+        updateVelocityToTarget(leaderTurtle->getPosition());
+    }
 }
+
 
 
 void TrashTurtle::moveToBin() {

@@ -16,8 +16,10 @@ private:
     std::shared_ptr<TeleopTurtle> teleopTurtle;
     rclcpp::TimerBase::SharedPtr timer_;
     std::mutex updateMutex; 
-    void spawnTrashTurtles();
-    //void updateTrashTurtles();
+    
+    std::shared_ptr<TrashTurtle> activeFollower;  // Track the current follower
+    std::shared_ptr<TeleopTurtle> teleopTurtle;
+    void updateTrashTurtles();
 
 public:
     ~GameEnvironment();
@@ -25,6 +27,8 @@ public:
     void drawGame(); 
     void drawWalls(); 
     void drawBins();
+    void assignFollower(); 
+    void spawnTrashTurtles();
 };
 
 #endif  
