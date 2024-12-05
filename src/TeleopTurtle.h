@@ -9,7 +9,7 @@ class TeleopTurtle : public Turtle {
 public:
     // Constructor
     TeleopTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius);
-
+    
     // Destructor
     ~TeleopTurtle();
 
