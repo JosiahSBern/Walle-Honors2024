@@ -49,19 +49,20 @@ void GameEnvironment::drawGame() {
     initializeEnvironment();
 
     // Step 3: Spawn initial TrashTurtles
-    spawnTrashTurtles();
 
     // Step 4: Start the update timer
-    timer_ = node_->create_wall_timer(
-        std::chrono::milliseconds(200),
-        [this]() {
-            RCLCPP_DEBUG(node_->get_logger(), "Updating TrashTurtles...");
-            updateTrashTurtles();
-        }
-    );
+    // timer_ = node_->create_wall_timer(
+    //     std::chrono::milliseconds(200),
+    //     [this]() {
+    //         RCLCPP_DEBUG(node_->get_logger(), "Updating TrashTurtles...");
+    //         updateTrashTurtles();
+    //     }
+    // );
 }
 
 void GameEnvironment::initializeEnvironment() {
+    RCLCPP_INFO(node_->get_logger(), "Spawning InitializedEnvironment...");
+
     // Kill the default turtle1
     if (!kill_client_->wait_for_service(std::chrono::seconds(10))) {
         RCLCPP_ERROR(node_->get_logger(), "Kill service not available. Turtle1 might persist.");
