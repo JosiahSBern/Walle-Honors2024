@@ -12,7 +12,7 @@
 //Enivronment is the base class for managing turtles in a simulated enivronment.
 class Environment {
 protected:
-    std::string turtle_name_;
+    std::string turtle_name;
     std::string direction;  
 
     /*Built in TurtleSim Clients*/

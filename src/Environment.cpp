@@ -3,8 +3,8 @@
 
 Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle_name)
     : turtle_name_(turtle_name), node_(node) {
-    pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/" + turtle_name_ + "/set_pen");
-    teleport_client_ = node_->create_client<turtlesim::srv::TeleportAbsolute>("/" + turtle_name_ + "/teleport_absolute");
+    pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/" + turtle_name + "/set_pen");
+    teleport_client_ = node_->create_client<turtlesim::srv::TeleportAbsolute>("/" + turtle_name + "/teleport_absolute");
     spawn_client_ = node_->create_client<turtlesim::srv::Spawn>("/spawn");
 
     // Wait for services during initialization
