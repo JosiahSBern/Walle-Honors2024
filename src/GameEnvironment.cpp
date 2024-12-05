@@ -24,8 +24,13 @@ GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node, const std::string
 
 GameEnvironment::~GameEnvironment() {
     RCLCPP_INFO(node_->get_logger(), "Shutting down game environment...");
+    if (timer_) {
+        timer_->cancel();
+        timer_.reset();
+    }
     trashTurtles.clear();
-    timer_->cancel();
+    teleopTurtle.reset();
+    turtle1.reset();
 }
 
 
@@ -71,15 +76,23 @@ void GameEnvironment::spawnTrashTurtles() {
 }
 
 void GameEnvironment::updateTrashTurtles() {
-    std::lock_guard<std::mutex> lock(updateMutex);
+    std::lock_guard<std::mutex> lock(updateMutex); // Prevent race conditions
+    if (trashTurtles.empty()) {
+        RCLCPP_INFO(node_->get_logger(), "No TrashTurtles to update.");
+        return;
+    }
+
     RCLCPP_INFO(node_->get_logger(), "Updating TrashTurtles...");
     for (auto& turtle : trashTurtles) {
         if (!turtle->isAtTarget()) {
             RCLCPP_INFO(node_->get_logger(), "Updating Turtle: %s", turtle->getName().c_str());
             turtle->move();
+        } else {
+            RCLCPP_INFO(node_->get_logger(), "Turtle %s has reached its target.", turtle->getName().c_str());
         }
     }
 }
+
 
 void GameEnvironment::drawGame() {
     std::lock_guard<std::mutex> lock(updateMutex); // Prevent race conditions
@@ -93,11 +106,14 @@ void GameEnvironment::drawGame() {
     spawnTrashTurtles();
 
     // Create a timer for continuous updates
-    timer_ = node_->create_wall_timer(
-        std::chrono::milliseconds(200), // 5 Hz update rate
-        [this]() { updateTrashTurtles(); }
-    );
+    if (!timer_) {
+        timer_ = node_->create_wall_timer(
+            std::chrono::milliseconds(200), // 5 Hz update rate
+            [this]() { updateTrashTurtles(); }
+        );
+    }
 }
+
 
 
 

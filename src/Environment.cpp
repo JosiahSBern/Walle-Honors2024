@@ -15,10 +15,8 @@ Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle
     }
 }
 
-
-
 void Environment::drawLine(Point start, Point end, bool pen_state, int r, int g, int b, int width) {
-    setPen(false, 0, 0, 0, 1); //Disable pen 
+    setPen(false, 0, 0, 0, 1); // Disable pen 
 
     auto teleport_request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
     teleport_request->x = start.x;
@@ -31,7 +29,7 @@ void Environment::drawLine(Point start, Point end, bool pen_state, int r, int g,
         return;
     }
 
-    setPen(pen_state, r, g, b, width); //Enable pen for drawing
+    setPen(pen_state, r, g, b, width); // Enable pen for drawing
     teleport_request->x = end.x;
     teleport_request->y = end.y;
 
@@ -55,18 +53,6 @@ void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
     request->b = b;                     // Blue value (uint8)
     request->width = width;             // Pen width (uint8)
     request->off = static_cast<uint8_t>(!pen_state);  // Convert bool to uint8 (0 for enabled, 1 for disabled)
-void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
-    if (!pen_client_->wait_for_service(std::chrono::seconds(5))) {
-        RCLCPP_ERROR(node_->get_logger(), "Pen service not available.");
-        return;
-    }
-
-    auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
-    request->r = r;                     // Red value (uint8)
-    request->g = g;                     // Green value (uint8)
-    request->b = b;                     // Blue value (uint8)
-    request->width = width;             // Pen width (uint8)
-    request->off = static_cast<uint8_t>(!pen_state);  // Convert bool to uint8 (0 for enabled, 1 for disabled)
 
     auto result = pen_client_->async_send_request(request);
     if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
@@ -76,16 +62,6 @@ void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
                     request->r, request->g, request->b, request->width, request->off);
     }
 }
-
-    auto result = pen_client_->async_send_request(request);
-    if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
-        RCLCPP_ERROR(node_->get_logger(), "Failed to set pen.");
-    } else {
-        RCLCPP_INFO(node_->get_logger(), "Pen state set: r=%d, g=%d, b=%d, width=%d, off=%d",
-                    request->r, request->g, request->b, request->width, request->off);
-    }
-}
-
 
 void Environment::drawRectangle(Point topLeft, Point bottomRight, int r, int g, int b) {
     drawLine(topLeft, {bottomRight.x, topLeft.y}, true, r, g, b, 2);
