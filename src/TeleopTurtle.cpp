@@ -58,8 +58,48 @@ int main(int argc, char **argv)
   return 0;
 }
 
-void TeleopTurtle::keyLoop()
-{
+void TeleopTurtle::keyLoop() {
+    char c;
+    bool dirty = false;
+
+    tcgetattr(kfd, &cooked);
+    memcpy(&raw, &cooked, sizeof(struct termios));
+    raw.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(kfd, TCSANOW, &raw);
+
+    puts("Use WASD keys to move the turtle. Q to quit.");
+
+    for (;;) {
+        if (::read(kfd, &c, 1) < 0) {
+            perror("read():");
+            exit(-1);
+        }
+
+        linear_ = angular_ = 0;
+
+        switch (c) {
+            case KEYCODE_W: linear_ = 1.0; dirty = true; break;
+            case KEYCODE_S: linear_ = -1.0; dirty = true; break;
+            case KEYCODE_A: angular_ = 1.0; dirty = true; break;
+            case KEYCODE_D: angular_ = -1.0; dirty = true; break;
+            case KEYCODE_Q: quit(SIGINT); break;
+        }
+
+        geometry_msgs::msg::Twist twist;
+        twist.angular.z = a_scale_ * angular_;
+        twist.linear.x = l_scale_ * linear_;
+        if (dirty) {
+            twist_pub_->publish(twist);
+
+            // Simulate position updates
+            position.x += linear_ * std::cos(angular_);
+            position.y += linear_ * std::sin(angular_);
+
+            dirty = false;
+        }
+    }
+}
+
   char c;
   bool dirty = false;
 

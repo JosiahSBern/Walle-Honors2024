@@ -7,22 +7,44 @@ TrashTurtle::TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& 
     : Turtle(node, name, radius), 
       type(type), 
       targetPosition(target), 
-      targetRadius(0.5) {}
+      targetRadius(0.5), 
+      followingLeader_(false), 
+      followDistanceThreshold_(2.0)  // Set a threshold distance for following
+{
+    // Initialization
+}
 
 void TrashTurtle::setLeaderTurtle(std::shared_ptr<Turtle> leader) {
     leaderTurtle = leader;
 }
 
-void TrashTurtle::moveToBin() {
+void TrashTurtle::followLeader() {
     if (!leaderTurtle) {
         RCLCPP_WARN(node_->get_logger(), "No leader turtle set for %s", name.c_str());
         return;
     }
 
-    // If not close to target, follow the leader
-    if (!isAtTarget()) {
+    // Check the distance between the TrashTurtle and the TeleopTurtle
+    double distance_to_leader = calculateDistance(position, leaderTurtle->getPosition());
+
+    // If the leader is within the follow threshold, start following
+    if (distance_to_leader < followDistanceThreshold_) {
+        followingLeader_ = true;
         Point leaderPos = leaderTurtle->getPosition();
         updateVelocityToTarget(leaderPos);
+    } else {
+        // Stop following if the leader is too far away
+        followingLeader_ = false;
+        geometry_msgs::msg::Twist stop_msg;
+        stop_msg.linear.x = 0.0;
+        stop_msg.angular.z = 0.0;
+        twist_pub_->publish(stop_msg);
+    }
+}
+
+void TrashTurtle::moveToBin() {
+    if (followingLeader_) {
+        followLeader();  // Follow the leader if within distance
     } else {
         // Stop when at the target bin
         geometry_msgs::msg::Twist stop_msg;
@@ -33,7 +55,7 @@ void TrashTurtle::moveToBin() {
 }
 
 void TrashTurtle::move() {
-    moveToBin(); // Reuse the moveToBin logic
+    moveToBin();  // Reuse the moveToBin logic
 }
 
 void TrashTurtle::renderTurtle() {
@@ -68,3 +90,4 @@ void TrashTurtle::setTargetPosition(const Point& target) {
 TrashType TrashTurtle::getTrashType() const {
     return type;
 }
+
