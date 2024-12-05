@@ -51,10 +51,13 @@ void GameEnvironment::drawGame() {
     
 
     // Start the update timer
-    timer_ = node_->create_wall_timer(
-        std::chrono::milliseconds(200),
-        [this]() { updateTrashTurtles(); }
-    );
+timer_ = node_->create_wall_timer(
+    std::chrono::milliseconds(200),
+    [this]() {
+        RCLCPP_DEBUG(node_->get_logger(), "Updating TrashTurtles...");
+        updateTrashTurtles();
+    }
+);
 }
 
 void GameEnvironment::initializeEnvironment() {
