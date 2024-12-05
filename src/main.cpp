@@ -7,10 +7,10 @@ int main(int argc, char *argv[]) {
 
     // Create a node and instantiate the GameEnvironment
     auto node = rclcpp::Node::make_shared("environment_builder");
-    auto gameEnvironment = std::make_shared<GameEnvironment>(node, "turtle1");
+    auto GameEnvironment = std::make_shared<GameEnvironment>(node, "turtle1");
 
     // Call the method to draw the game environment
-    gameEnvironment->drawGame();
+    GameEnvironment->drawGame();
 
     // Spin to keep the program alive for callbacks (e.g., service calls)
     rclcpp::spin(node);
