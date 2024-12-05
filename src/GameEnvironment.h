@@ -7,7 +7,7 @@
 #include "Point.h"
 #include <vector>
 #include <memory>
-
+#include <mutex>
 class GameEnvironment : public Environment {
 private:
     std::vector<Point> binPositions;  //Positions of bins
@@ -15,7 +15,7 @@ private:
     std::shared_ptr<Turtle> turtle1;  //Leader turtle
     std::shared_ptr<TeleopTurtle> teleopTurtle;
     rclcpp::TimerBase::SharedPtr timer_;
-
+    std::mutex updateMutex; 
     void spawnTrashTurtles();
     void updateTrashTurtles();
 

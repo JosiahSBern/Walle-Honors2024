@@ -18,7 +18,7 @@ GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node, const std::string
         {leftWallOffset + 2 * binSpacing, binTopY}
     };
 
-    // Initialize leader turtle (replace with actual initialization logic)
+    // Initialize leader turtle
     teleopTurtle = std::make_shared<TeleopTurtle>(node, "TeleopLeader", 0.5);
 }
 
@@ -35,42 +35,46 @@ void GameEnvironment::drawGame() {
     );
 }
 
-
 void GameEnvironment::spawnTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
-    trashTurtles.clear(); // Corrected from TrashTurtle.clear()
+    trashTurtles.clear(); // Clear existing turtles
 
-    // Define initial spawn positions
-    std::vector<Point> spawnPositions = {
-        {3.0, 5.0},  // Turtle 1
-        {4.0, 5.0},  // Turtle 2
-        {5.0, 5.0},  // Turtle 3
-        // Add more positions as needed for total 9 turtles
-    };
+    // Define bottom container boundaries
+    const double bottomBoxLeft = 1.0;
+    const double bottomBoxRight = 10.0;
+    const double bottomBoxTop = 3.0;
+    const double bottomBoxBottom = 1.0;
 
-    // Create TrashTurtles with initial positions
-    for (size_t i = 0; i < 9; ++i) {
+    // Define spacing and number of turtles
+    const int numTurtles = 9;
+    const double horizontalSpacing = (bottomBoxRight - bottomBoxLeft) / (numTurtles + 1);
+
+    // Create TrashTurtles with positions spaced horizontally in the bottom container
+    for (size_t i = 0; i < numTurtles; ++i) {
         TrashType type = static_cast<TrashType>(i % 3);  // Cycle through trash types
         std::string name = "Trash" + std::to_string(i + 1);
-        
-        auto trashTurtle = std::make_shared<TrashTurtle>(
-            node_, 
-            name, 
-            0.5, 
-            type, 
-            binPositions[i % 3]  // Target bin
-        );
-        
-        // Set initial position
-        if (i < spawnPositions.size()) {
-            trashTurtle->setPosition(spawnPositions[i]);
-        }
 
-        trashTurtle->setLeaderTurtle(teleopTurtle); // Set the leader for each turtle
-        trashTurtles.push_back(trashTurtle); // Store the turtle in the list
+        double xPos = bottomBoxLeft + (i + 1) * horizontalSpacing;
+        double yPos = (bottomBoxTop + bottomBoxBottom) / 2;  // Center vertically
+
+        auto trashTurtle = std::make_shared<TrashTurtle>(
+            node_,
+            name,
+            0.5,  // Radius
+            type,
+            binPositions[i % binPositions.size()]  // Assign bins cyclically
+        );
+
+        // Set initial position within the bottom container
+        trashTurtle->setPosition({xPos, yPos});
+
+        // Set leader turtle
+        trashTurtle->setLeaderTurtle(teleopTurtle);
+
+        // Add to the list of turtles
+        trashTurtles.push_back(trashTurtle);
     }
 }
-
 
 void GameEnvironment::updateTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Updating TrashTurtles...");
@@ -84,9 +88,6 @@ void GameEnvironment::updateTrashTurtles() {
         }
     }
 }
-
-
-
 
 void GameEnvironment::drawBins() {
     const double binWidth = 2.0;
