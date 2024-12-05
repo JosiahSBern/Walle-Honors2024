@@ -22,18 +22,12 @@ GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node, const std::string
     teleopTurtle = std::make_shared<TeleopTurtle>(node, "TeleopLeader", 0.5);
 }
 
-void GameEnvironment::drawGame() {
-    RCLCPP_INFO(node_->get_logger(), "Drawing game...");
-    drawWalls();
-    drawBins();
-    spawnTrashTurtles();
-
-    // Create a timer for continuous updates
-    timer_ = node_->create_wall_timer(
-        std::chrono::milliseconds(100),
-        [this]() { updateTrashTurtles(); }
-    );
+GameEnvironment::~GameEnvironment() {
+    RCLCPP_INFO(node_->get_logger(), "Shutting down game environment...");
+    trashTurtles.clear();
+    timer_->cancel();
 }
+
 
 void GameEnvironment::spawnTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
@@ -77,17 +71,35 @@ void GameEnvironment::spawnTrashTurtles() {
 }
 
 void GameEnvironment::updateTrashTurtles() {
+    std::lock_guard<std::mutex> lock(updateMutex);
     RCLCPP_INFO(node_->get_logger(), "Updating TrashTurtles...");
     for (auto& turtle : trashTurtles) {
         if (!turtle->isAtTarget()) {
             RCLCPP_INFO(node_->get_logger(), "Updating Turtle: %s", turtle->getName().c_str());
             turtle->move();
-            turtle->renderTurtle();
-        } else {
-            RCLCPP_INFO(node_->get_logger(), "Turtle %s has reached its target.", turtle->getName().c_str());
         }
     }
 }
+
+void GameEnvironment::drawGame() {
+    std::lock_guard<std::mutex> lock(updateMutex); // Prevent race conditions
+    RCLCPP_INFO(node_->get_logger(), "Drawing game...");
+
+    // Draw static elements of the environment
+    drawWalls();
+    drawBins();
+
+    // Spawn initial TrashTurtles
+    spawnTrashTurtles();
+
+    // Create a timer for continuous updates
+    timer_ = node_->create_wall_timer(
+        std::chrono::milliseconds(200), // 5 Hz update rate
+        [this]() { updateTrashTurtles(); }
+    );
+}
+
+
 
 void GameEnvironment::drawBins() {
     const double binWidth = 2.0;

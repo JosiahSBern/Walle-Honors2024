@@ -20,27 +20,22 @@ void TrashTurtle::setLeaderTurtle(std::shared_ptr<Turtle> leader) {
 
 void TrashTurtle::followLeader() {
     if (!leaderTurtle) {
-        RCLCPP_WARN(node_->get_logger(), "No leader turtle set for %s", name.c_str());
+        RCLCPP_WARN(node_->get_logger(), "Leader not set for TrashTurtle: %s", name.c_str());
         return;
     }
 
-    // Check the distance between the TrashTurtle and the TeleopTurtle
     double distance_to_leader = calculateDistance(position, leaderTurtle->getPosition());
-
-    // If the leader is within the follow threshold, start following
-    if (distance_to_leader < followDistanceThreshold_) {
-        followingLeader_ = true;
-        Point leaderPos = leaderTurtle->getPosition();
-        updateVelocityToTarget(leaderPos);
-    } else {
-        // Stop following if the leader is too far away
+    if (distance_to_leader > followDistanceThreshold_) {
+        RCLCPP_INFO(node_->get_logger(), "Leader is out of range. Stopping follow for: %s", name.c_str());
         followingLeader_ = false;
-        geometry_msgs::msg::Twist stop_msg;
-        stop_msg.linear.x = 0.0;
-        stop_msg.angular.z = 0.0;
-        twist_pub_->publish(stop_msg);
+        stopMovement();
+        return;
     }
+
+    followingLeader_ = true;
+    updateVelocityToTarget(leaderTurtle->getPosition());
 }
+
 
 void TrashTurtle::moveToBin() {
     if (followingLeader_) {

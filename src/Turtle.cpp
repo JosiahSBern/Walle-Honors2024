@@ -14,7 +14,8 @@ double Turtle::calculateDistance(const Point& p1, const Point& p2) const {
 }
 
 bool Turtle::checkCollision(const Point& other, double otherRadius) const {
-    return calculateDistance(position, other) <= (radius + otherRadius);
+    double distance = calculateDistance(position, other);
+    return distance <= (radius + otherRadius + 0.1); 
 }
 
 Point Turtle::getPosition() const {
