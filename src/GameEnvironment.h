@@ -9,6 +9,9 @@
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 #include <mutex>
+#include "TrashTurtle.h"
+#include "turtlesim/srv/kill.hpp"
+
 
 class GameEnvironment : public Environment {
 private:

@@ -6,13 +6,8 @@
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include "turtlesim/srv/set_pen.hpp"
-s
+#include "TrashType.h"
 
-enum class TrashType {
-    PLASTIC,
-    PAPER,
-    ORGANIC
-};
 
 class TrashTurtle : public Turtle {
 private:
