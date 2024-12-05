@@ -5,6 +5,8 @@
 #include "Point.h"
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
+#include "turtlesim/srv/set_pen.hpp"
+s
 
 enum class TrashType {
     PLASTIC,
@@ -23,6 +25,8 @@ private:
 
 
 public:
+    void setPenColor(int r, int g, int b, int width);
+
     void updateVelocityToTarget(const Point& target);//Updates velocity
 
     void followLeader();//Logic for following the leader turtle

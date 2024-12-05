@@ -50,6 +50,7 @@ public:
     void spawnTrashTurtles();      // Spawn TrashTurtles in designated areas
     void assignFollower();         // Assign the closest TrashTurtle to follow the TeleopTurtle
     void updateTrashTurtles();  
+    void resetFollowerPen();
 };
 
 #endif // GAME_ENVIRONMENT_H

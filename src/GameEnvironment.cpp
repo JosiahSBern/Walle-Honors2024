@@ -127,6 +127,25 @@ void GameEnvironment::spawnTrashTurtles() {
     }
 }
 
+
+void GameEnvironment::updateTrashTurtles() {
+    assignFollower();  // Reassign a follower if necessary
+    for (auto& turtle : trashTurtles) {
+        if (turtle == activeFollower) {
+            turtle->followLeader();
+        } else {
+            turtle->move();  // Non-followers move towards their bins
+        }
+    }
+}
+
+void GameEnvironment::resetFollowerPen() {
+    if (activeFollower) {
+        // Reset pen color of the previous follower to default (e.g., black)
+        activeFollower->setPenColor(0, 0, 0, 2);
+    }
+}
+
 void GameEnvironment::assignFollower() {
     double minDistance = std::numeric_limits<double>::max();
     std::shared_ptr<TrashTurtle> closestTurtle = nullptr;
@@ -144,23 +163,14 @@ void GameEnvironment::assignFollower() {
     }
 
     if (closestTurtle && activeFollower != closestTurtle) {
-        if (activeFollower) {
-            activeFollower->stopMovement();
-        }
+        resetFollowerPen();  // Reset previous follower's pen color
+
         activeFollower = closestTurtle;
         activeFollower->setLeaderTurtle(teleopTurtle);
+
+        // Set new follower's pen color to visually distinguish it
+        activeFollower->setPenColor(255, 0, 0, 3);  // Red pen with width 3
+
         RCLCPP_INFO(node_->get_logger(), "Assigned %s as follower.", closestTurtle->getName().c_str());
     }
 }
-
-void GameEnvironment::updateTrashTurtles() {
-    assignFollower();  // Reassign a follower if necessary
-    for (auto& turtle : trashTurtles) {
-        if (turtle == activeFollower) {
-            turtle->followLeader();
-        } else {
-            turtle->move();  // Non-followers move towards their bins
-        }
-    }
-}
-s

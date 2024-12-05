@@ -1,4 +1,5 @@
 #include "TrashTurtle.h"
+#include "turtlesim/srv/set_pen.hpp"
 #include "Turtle.h"
 #include <cmath>
 
@@ -94,4 +95,21 @@ void TrashTurtle::stopMovement() {
     stop_msg.angular.z = 0.0;
     twist_pub_->publish(stop_msg);
     RCLCPP_INFO(node_->get_logger(), "TrashTurtle %s has stopped moving.", name.c_str());
+}
+
+void TrashTurtle::setPenColor(int r, int g, int b, int width) {
+    auto set_pen_request = std::make_shared<turtlesim::srv::SetPen::Request>();
+    set_pen_request->r = r;
+    set_pen_request->g = g;
+    set_pen_request->b = b;
+    set_pen_request->width = width;
+    set_pen_request->off = 0;  // Pen ON
+
+    auto result = pen_client_->async_send_request(set_pen_request);
+    if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
+        RCLCPP_ERROR(node_->get_logger(), "Failed to set pen color for %s", name.c_str());
+    } else {
+        RCLCPP_INFO(node_->get_logger(), "Pen color set for %s to (%d, %d, %d, %d)",
+                    name.c_str(), r, g, b, width);
+    }
 }
