@@ -54,6 +54,8 @@ public:
     void assignFollower();         // Assign the closest TrashTurtle to follow the TeleopTurtle
     void updateTrashTurtles();  
     void resetFollowerPen();
+    void drawBins();
+    void drawWalls();
 };
 
 #endif // GAME_ENVIRONMENT_H
