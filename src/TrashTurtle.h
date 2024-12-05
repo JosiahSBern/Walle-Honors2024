@@ -35,6 +35,7 @@ public:
     bool isAtTarget() const;//Check if TrashTurtle is at its target
     void setTargetPosition(const Point& target);//Set the target position
     TrashType getTrashType() const; //Get the type of trash handled by this turtle
+    void stopMovement();
 };
 
 #endif // TRASH_TURTLE_H

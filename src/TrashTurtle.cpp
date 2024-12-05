@@ -86,3 +86,10 @@ TrashType TrashTurtle::getTrashType() const {
     return type;
 }
 
+void TrashTurtle::stopMovement() {
+    geometry_msgs::msg::Twist stop_msg;
+    stop_msg.linear.x = 0.0;
+    stop_msg.angular.z = 0.0;
+    twist_pub_->publish(stop_msg);
+    RCLCPP_INFO(node_->get_logger(), "TrashTurtle %s has stopped moving.", name.c_str());
+}
