@@ -30,8 +30,9 @@ GameEnvironment::~GameEnvironment() {
     }
     trashTurtles.clear();
     teleopTurtle.reset();
-    turtle1.reset();
+    activeFollower.reset(); // Clean up the follower
 }
+
 
 
 
@@ -168,12 +169,12 @@ void GameEnvironment::spawnTrashTurtles() {
 
 void GameEnvironment::assignFollower() {
     for (auto& trashTurtle : trashTurtles) {
-        double distance_to_leader = calculateDistance(
+        double distance_to_leader = trashTurtle->calculateDistance(
             trashTurtle->getPosition(),
             teleopTurtle->getPosition()
         );
 
-        if (distance_to_leader <= 2.0) {  // Threshold to assign
+        if (distance_to_leader <= 2.0) {
             if (activeFollower != trashTurtle) {
                 if (activeFollower) {
                     activeFollower->stopMovement();  // Stop the previous follower
@@ -187,6 +188,7 @@ void GameEnvironment::assignFollower() {
         }
     }
 }
+
 
 void GameEnvironment::updateTrashTurtles() {
     for (auto& trashTurtle : trashTurtles) {

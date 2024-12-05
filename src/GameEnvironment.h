@@ -7,7 +7,6 @@
 #include "Point.h"
 #include <vector>
 #include <memory>
-#include <mutex>
 class GameEnvironment : public Environment {
 private:
     std::vector<Point> binPositions;  //Positions of bins
@@ -15,10 +14,8 @@ private:
     std::shared_ptr<TeleopTurtle> teleopTurtle;  
     std::shared_ptr<TrashTurtle> activeFollower; 
     rclcpp::TimerBase::SharedPtr timer_;
-    std::mutex updateMutex; 
     
-    std::shared_ptr<TrashTurtle> activeFollower;  // Track the current follower
-    std::shared_ptr<TeleopTurtle> teleopTurtle;
+
     
 
 public:
