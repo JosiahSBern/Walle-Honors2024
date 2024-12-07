@@ -1,5 +1,5 @@
 # Walle Game
-Welcome to Walle, an engaging simulation game blending robotics, environmental awareness, and interactive gameplay. Inspired by the movie WALL-E, this project  allows user players to control a robot and is tasked with bring trash to they're apporiate bins disigushed by being either trash,recyclying, or paper. This is done using ros2 and turtlesim enviornement. 
+Welcome to Walle, an engaging simulation game blending robotics, environmental awareness, and interactive gameplay. Inspired by the movie WALL-E, this project  allows user players to control a robot and is tasked with bring trash to they're apporiate bins disigushed by being either **Trash**, **Recyclying**, or **Paper**. This is done using Ros2 and a Turtlesim enviornement. 
 
 ## Overview
 Walle-Honors2024 is a ROS2-based project implemented in C++ and centered on a robotic simulation inspired by environmental sustainability and robotics. The system includes:
