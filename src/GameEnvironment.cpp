@@ -167,7 +167,7 @@ void GameEnvironment::drawWalls() {
     const double WALL_RIGHT = 10.0;
     const double WALL_TOP = 10.0;
     const double WALL_BOTTOM = 1.0;
-    const int LINE_WIDTH = 4;
+    const int LINE_WIDTH = 6;
 
     Point topLeft = {WALL_LEFT, WALL_TOP};
     Point bottomRight = {WALL_RIGHT, WALL_BOTTOM};
@@ -180,7 +180,7 @@ void GameEnvironment::drawWalls() {
 void GameEnvironment::drawBins() {
     const double binWidth = 2.0;
     const double binHeight = 3;
-    const int LINE_WIDTH = 3;
+    const int LINE_WIDTH = 4;
 
     RCLCPP_INFO(node_->get_logger(), "Drawing bins...");
     for (size_t i = 0; i < binPositions.size(); ++i) {
@@ -189,7 +189,7 @@ void GameEnvironment::drawBins() {
         // Set the pen color and draw the bin
         int r, g, b;
         switch (i) {
-            case 0: r = 0; g = 255; b = 0; break;       // Green (Trash)
+            case 0: r = 0; g = 100; b = 0; break;       // Green (Trash)
             case 1: r = 0; g = 0; b = 255; break;       // Blue (Recycling)
             case 2: r = 128; g = 128; b = 128; break;   // Gray (Paper)
             default: r = g = b = 0;                    // Default Black
