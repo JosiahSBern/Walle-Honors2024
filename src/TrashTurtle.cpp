@@ -1,64 +1,97 @@
+// src/TrashTurtle.cpp
 #include "TrashTurtle.h"
-#include "turtlesim/srv/set_pen.hpp"
-#include "Turtle.h"
 #include <cmath>
+#include <limits>
+#include "turtlesim/msg/pose.hpp"
+#include "turtlesim/srv/teleport_absolute.hpp"
 
-TrashTurtle::TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, 
-                         double radius, TrashType type, const Point& target)
-    : Turtle(node, name, radius), 
-      type(type), 
-      targetPosition(target), 
-      targetRadius(0.5), 
-      followingLeader_(false), 
-      followDistanceThreshold_(2.0)  // Set a threshold distance for following
+TrashTurtle::TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius, TrashType type, const Point& target)
+    : Turtle(node, name, radius) // Base class constructor must remain in initializer list
 {
-    // Initialization
+    this->type = type;
+    this->targetPosition = target;
+    this->targetRadius = 0.5;
+    this->currentState_ = SortState::MOVING_TO_BIN;
+    this->pen_client_ = this->node_->create_client<turtlesim::srv::SetPen>("/" + name + "/set_pen");
+    this->teleport_client_ = this->node_->create_client<turtlesim::srv::TeleportAbsolute>("/" + name + "/teleport_absolute");
+    this->twist_pub_ = this->node_->create_publisher<geometry_msgs::msg::Twist>("/" + name + "/cmd_vel", 10);
+
+    // Subscribe to the turtle's pose topic to track its position and orientation
+    auto pose_callback = [this](const turtlesim::msg::Pose::SharedPtr msg) {
+        this->position.x = msg->x;
+        this->position.y = msg->y;
+        this->orientation = msg->theta;  // Update orientation
+    };
+
+    this->node_->create_subscription<turtlesim::msg::Pose>("/" + name + "/pose", 10, pose_callback);
 }
+ 
 
-void TrashTurtle::setLeaderTurtle(std::shared_ptr<Turtle> leader) {
-    leaderTurtle = leader;
+
+bool TrashTurtle::isAtTarget() const {
+    double distance = calculateDistance(position, targetPosition);
+    return distance <= targetRadius;  // Check if within radius
 }
+void TrashTurtle::move(const Turtle& target, double follow_distance) {
+    // Get the target position and orientation
+    Point targetPosition = target.getPosition();
+    double targetOrientation = target.getOrientation();
 
-void TrashTurtle::followLeader() {
-    if (!leaderTurtle) {
-        RCLCPP_WARN(node_->get_logger(), "Leader not set for TrashTurtle: %s", name.c_str());
-        return;
-    }
+    // Calculate the desired position to maintain the follow distance
+    double desired_x = targetPosition.x - follow_distance * std::cos(targetOrientation);
+    double desired_y = targetPosition.y - follow_distance * std::sin(targetOrientation);
 
-    double distance_to_leader = calculateDistance(position, leaderTurtle->getPosition());
-    if (distance_to_leader > followDistanceThreshold_) {
-        RCLCPP_INFO(node_->get_logger(), "Leader is out of range. Stopping follow for: %s", name.c_str());
-        followingLeader_ = false;
-        stopMovement();
-        return;
-    }
+    // Calculate the distance and angle to the desired position
+    double dx = desired_x - position.x;
+    double dy = desired_y - position.y;
+    double distance = std::sqrt(dx * dx + dy * dy);
+    double target_angle = std::atan2(dy, dx);
 
-    if (followingLeader_) {
-        updateVelocityToTarget(leaderTurtle->getPosition());
-    }
-}
+    // Log for debugging
+    RCLCPP_INFO(node_->get_logger(), "%s: Desired Position=(%.2f, %.2f), Distance=%.2f, Target Angle=%.2f",
+                name.c_str(), desired_x, desired_y, distance, target_angle);
 
+    // Use TeleportAbsolute to move to the desired position
+    if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
+        auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
+        request->x = desired_x;
+        request->y = desired_y;
+        request->theta = target_angle;
 
-
-void TrashTurtle::moveToBin() {
-    if (followingLeader_) {
-        followLeader();  // Follow the leader if within distance
+        auto result = teleport_client_->async_send_request(request);
+        if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+            position.x = desired_x;
+            position.y = desired_y;
+            orientation = target_angle;
+            RCLCPP_INFO(node_->get_logger(), "%s moved to (%.2f, %.2f) with orientation %.2f.",
+                        name.c_str(), request->x, request->y, request->theta);
+        } else {
+            RCLCPP_ERROR(node_->get_logger(), "Failed to move %s to the desired position.", name.c_str());
+        }
     } else {
-        // Stop when at the target bin
-        geometry_msgs::msg::Twist stop_msg;
-        stop_msg.linear.x = 0.0;
-        stop_msg.angular.z = 0.0;
-        twist_pub_->publish(stop_msg);
+        RCLCPP_ERROR(node_->get_logger(), "TeleportAbsolute service not available for %s.", name.c_str());
     }
 }
 
-void TrashTurtle::move() {
-    moveToBin();  // Reuse the moveToBin logic
-}
 
-void TrashTurtle::renderTurtle() {
-    RCLCPP_INFO(node_->get_logger(), "Rendering TrashTurtle: %s at (%f, %f)", 
-                name.c_str(), position.x, position.y);
+
+
+
+
+
+
+
+
+
+void TrashTurtle::sortIntoBin() {
+    if (currentState_ == SortState::MOVING_TO_BIN) {
+        currentState_ = SortState::SORTED;
+        stopMovement();  // Stop the turtle's motion
+        RCLCPP_INFO(node_->get_logger(), "%s has been sorted!", name.c_str());
+
+        // Optional: Change pen color to indicate completion
+        setPenColor(0, 0, 0, 2);
+    }
 }
 
 void TrashTurtle::updateVelocityToTarget(const Point& target) {
@@ -66,23 +99,41 @@ void TrashTurtle::updateVelocityToTarget(const Point& target) {
     double angle = std::atan2(target.y - position.y, target.x - position.x);
 
     geometry_msgs::msg::Twist twist_msg;
-    
-    // Proportional control for linear velocity
-    twist_msg.linear.x = std::min(distance, 1.0);  // Limit max speed
-    
-    // Proportional control for angular velocity to orient towards the target
-    twist_msg.angular.z = angle * 0.5;  // Scaling factor to prevent over-rotation
+    twist_msg.linear.x = std::min(distance * 0.5, 1.0);  // Proportional speed control
+    twist_msg.angular.z = angle * 0.5;                // Proportional rotation control
 
     twist_pub_->publish(twist_msg);
 }
 
-bool TrashTurtle::isAtTarget() const {
-    double distance = calculateDistance(position, targetPosition);
-    return distance <= targetRadius;
+Point TrashTurtle::getBinPositionForTrashType() const {
+    // Define bin positions similar to your GameEnvironment
+    switch(type) {
+        case TrashType::TRASH:
+            return {1.5, 9.0};  // First bin (green)
+        case TrashType::RECYCLING:
+            return {4.5, 9.0};  // Second bin (blue)
+        case TrashType::PAPER:
+            return {7.5, 9.0};  // Third bin (gray)
+        default:
+            // Default fallback
+            return {5.5, 5.5};
+    }
 }
 
 void TrashTurtle::setTargetPosition(const Point& target) {
     targetPosition = target;
+}
+
+void TrashTurtle::setPenColor(int r, int g, int b, int width) {
+    auto set_pen_request = std::make_shared<turtlesim::srv::SetPen::Request>();
+    set_pen_request->r = r;
+    set_pen_request->g = g;
+    set_pen_request->b = b;
+    set_pen_request->width = width;
+    set_pen_request->off = 0;
+
+    auto result = pen_client_->async_send_request(set_pen_request);
+    // Optionally, handle the response or future
 }
 
 TrashType TrashTurtle::getTrashType() const {
@@ -94,22 +145,10 @@ void TrashTurtle::stopMovement() {
     stop_msg.linear.x = 0.0;
     stop_msg.angular.z = 0.0;
     twist_pub_->publish(stop_msg);
-    RCLCPP_INFO(node_->get_logger(), "TrashTurtle %s has stopped moving.", name.c_str());
 }
 
-void TrashTurtle::setPenColor(int r, int g, int b, int width) {
-    auto set_pen_request = std::make_shared<turtlesim::srv::SetPen::Request>();
-    set_pen_request->r = r;
-    set_pen_request->g = g;
-    set_pen_request->b = b;
-    set_pen_request->width = width;
-    set_pen_request->off = 0;  // Pen ON
 
-    auto result = pen_client_->async_send_request(set_pen_request);
-    if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
-        RCLCPP_ERROR(node_->get_logger(), "Failed to set pen color for %s", name.c_str());
-    } else {
-        RCLCPP_INFO(node_->get_logger(), "Pen color set for %s to (%d, %d, %d, %d)",
-                    name.c_str(), r, g, b, width);
-    }
+SortState TrashTurtle::getCurrentState() const {
+    return currentState_;
 }
+

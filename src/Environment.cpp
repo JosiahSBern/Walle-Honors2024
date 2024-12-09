@@ -1,22 +1,25 @@
 #include "Environment.h"
 #include <cmath>
 
-Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle_name)
-    : turtle_name(turtle_name), node_(node) {
-    pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/" + turtle_name + "/set_pen");
-    teleport_client_ = node_->create_client<turtlesim::srv::TeleportAbsolute>("/" + turtle_name + "/teleport_absolute");
+Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle_name) {
+    this->turtle_name = turtle_name;
+    this->node_ = node;
+
+    //Initialize clients
+    pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/" + this->turtle_name + "/set_pen");
+    teleport_client_ = node_->create_client<turtlesim::srv::TeleportAbsolute>("/" + this->turtle_name + "/teleport_absolute");
     spawn_client_ = node_->create_client<turtlesim::srv::Spawn>("/spawn");
 
-    // Wait for services during initialization
+    //Wait for services during initialization
     if (!pen_client_->wait_for_service(std::chrono::seconds(5)) ||
         !teleport_client_->wait_for_service(std::chrono::seconds(5)) ||
         !spawn_client_->wait_for_service(std::chrono::seconds(5))) {
-        RCLCPP_ERROR(node_->get_logger(), "One or more services are not available. Check turtlesim node.");
+        RCLCPP_ERROR(this->node_->get_logger(), "One or more services are not available. Check turtlesim node.");
     }
 }
 
 void Environment::drawLine(Point start, Point end, bool pen_state, int r, int g, int b, int width) {
-    setPen(false, 0, 0, 0, 1); // Disable pen 
+    setPen(false, 0, 0, 0, 1);//Disable pen 
 
     auto teleport_request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
     teleport_request->x = start.x;
@@ -29,7 +32,7 @@ void Environment::drawLine(Point start, Point end, bool pen_state, int r, int g,
         return;
     }
 
-    setPen(pen_state, r, g, b, width); // Enable pen for drawing
+    setPen(pen_state, r, g, b, width);//Enable pen for drawing
     teleport_request->x = end.x;
     teleport_request->y = end.y;
 
@@ -38,7 +41,7 @@ void Environment::drawLine(Point start, Point end, bool pen_state, int r, int g,
         RCLCPP_ERROR(node_->get_logger(), "Failed to teleport to end position");
     }
 
-    setPen(false, 0, 0, 0, 1); // Disable pen after drawing
+    setPen(false, 0, 0, 0, 1);//Disable pen after drawing
 }
 
 void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
@@ -46,13 +49,13 @@ void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
         RCLCPP_ERROR(node_->get_logger(), "Pen service not available.");
         return;
     }
-
+    //Sends Request to RQT 
     auto request = std::make_shared<turtlesim::srv::SetPen::Request>();
-    request->r = r;                     // Red value (uint8)
-    request->g = g;                     // Green value (uint8)
-    request->b = b;                     // Blue value (uint8)
-    request->width = width;             // Pen width (uint8)
-    request->off = static_cast<uint8_t>(!pen_state);  // Convert bool to uint8 (0 for enabled, 1 for disabled)
+    request->r = r;                     //Red value 
+    request->g = g;                     //Green value 
+    request->b = b;                     //Blue value 
+    request->width = width;             //Pen width 
+    request->off = static_cast<uint8_t>(!pen_state); //Off/On
 
     auto result = pen_client_->async_send_request(request);
     if (rclcpp::spin_until_future_complete(node_, result) != rclcpp::FutureReturnCode::SUCCESS) {
@@ -63,11 +66,11 @@ void Environment::setPen(bool pen_state, int r, int g, int b, int width) {
     }
 }
 
-void Environment::drawRectangle(Point topLeft, Point bottomRight, int r, int g, int b) {
-    drawLine(topLeft, {bottomRight.x, topLeft.y}, true, r, g, b, 2);
-    drawLine({bottomRight.x, topLeft.y}, bottomRight, true, r, g, b, 2);
-    drawLine(bottomRight, {topLeft.x, bottomRight.y}, true, r, g, b, 2);
-    drawLine({topLeft.x, bottomRight.y}, topLeft, true, r, g, b, 2);
+void Environment::drawRectangle(Point topLeft, Point bottomRight, int r, int g, int b,int width) {
+    drawLine(topLeft, {bottomRight.x, topLeft.y}, true, r, g, b, width);
+    drawLine({bottomRight.x, topLeft.y}, bottomRight, true, r, g, b, width);
+    drawLine(bottomRight, {topLeft.x, bottomRight.y}, true, r, g, b, width);
+    drawLine({topLeft.x, bottomRight.y}, topLeft, true, r, g, b, width);
 }
 
 void Environment::spawnTurtle(const std::string& name, double x, double y, double theta) {

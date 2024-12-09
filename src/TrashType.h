@@ -2,9 +2,9 @@
 #define TRASH_TYPE_H
 
 enum class TrashType {
-    Trash,
-    Recycling,
-    Paper
+    TRASH,
+    RECYCLING,
+    PAPER
 };
 
 #endif 
