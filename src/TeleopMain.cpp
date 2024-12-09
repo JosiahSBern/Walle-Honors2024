@@ -6,7 +6,7 @@ int main(int argc, char** argv) {
 
     auto node = std::make_shared<rclcpp::Node>("teleop_turtle_node");
 
-    TeleopTurtle teleopTurtle(node, "turtle1", 0.5);
+    TeleopTurtle teleopTurtle(node, "TeleopTurtle", 0.5);
     teleopTurtle.keyLoop();
 
     rclcpp::shutdown();

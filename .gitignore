@@ -1,14 +1,1 @@
-# Ignore build and install directories
-build/
-install/
-log/
-
-# Ignore all files except for these specific ones
-# We can do this by first ignoring everything, then whitelisting what we want.
-*
-
-# Now whitelist the files and directories we want
-!src/
-!package.xml
-!CMakeLists.txt
-!README.md
+.vscode/

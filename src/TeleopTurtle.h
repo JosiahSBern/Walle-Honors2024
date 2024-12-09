@@ -14,10 +14,10 @@ public:
     ~TeleopTurtle();
 
     // Move method
-    void move();
+    void move() override;
 
     // Render turtle status
-    void renderTurtle();
+    void renderTurtle() override;
 
     // Key event handling loop
     void keyLoop();

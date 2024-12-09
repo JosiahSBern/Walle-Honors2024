@@ -1,28 +1,19 @@
 #include "Environment.h"
 #include <cmath>
-#include "Point.h"
-#include "Environment.h"
-#include <cmath>
-#include <geometry_msgs/msg/twist.hpp>  // Ensure this is included
 
 Environment::Environment(rclcpp::Node::SharedPtr node, const std::string& turtle_name)
     : turtle_name(turtle_name), node_(node) {
-
     pen_client_ = node_->create_client<turtlesim::srv::SetPen>("/" + turtle_name + "/set_pen");
     teleport_client_ = node_->create_client<turtlesim::srv::TeleportAbsolute>("/" + turtle_name + "/teleport_absolute");
     spawn_client_ = node_->create_client<turtlesim::srv::Spawn>("/spawn");
 
-    // Now that twist_pub_ is declared in the header, this line will work:
-    twist_pub_ = node_->create_publisher<geometry_msgs::msg::Twist>("turtle1/cmd_vel", 10);
-
+    // Wait for services during initialization
     if (!pen_client_->wait_for_service(std::chrono::seconds(5)) ||
         !teleport_client_->wait_for_service(std::chrono::seconds(5)) ||
         !spawn_client_->wait_for_service(std::chrono::seconds(5))) {
         RCLCPP_ERROR(node_->get_logger(), "One or more services are not available. Check turtlesim node.");
     }
 }
-
-
 
 void Environment::drawLine(Point start, Point end, bool pen_state, int r, int g, int b, int width) {
     setPen(false, 0, 0, 0, 1); // Disable pen 

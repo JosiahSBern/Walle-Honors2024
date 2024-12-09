@@ -39,8 +39,6 @@ public:
     void setTargetPosition(const Point& target);//Set the target position
     TrashType getTrashType() const; //Get the type of trash handled by this turtle
     void stopMovement();
-    bool waitForPenService(std::chrono::seconds timeout);
-
 };
 
 #endif // TRASH_TURTLE_H
