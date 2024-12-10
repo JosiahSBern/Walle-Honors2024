@@ -83,17 +83,17 @@ void TrashTurtle::move(const Turtle& target, double follow_distance) {
 
 
 
-void TrashTurtle::sortIntoBin() {
-    if (currentState_ == SortState::MOVING_TO_BIN) {
-        currentState_ = SortState::SORTED;
-        stopMovement();  // Stop the turtle's motion
-        RCLCPP_INFO(node_->get_logger(), "%s has been sorted!", name.c_str());
-        setPenColor(0, 255, 0, 2);  // Green pen for sorted turtles
+// void TrashTurtle::sortIntoBin() {
+//     if (currentState_ == SortState::MOVING_TO_BIN) {
+//         currentState_ = SortState::SORTED;
+//         stopMovement();  // Stop the turtle's motion
+//         RCLCPP_INFO(node_->get_logger(), "%s has been sorted!", name.c_str());
+//         setPenColor(0, 255, 0, 2);  // Green pen for sorted turtles
 
-        // Optional: Display a success message for the player
-        displaySuccessMessage();
-    }
-}
+//         // Optional: Display a success message for the player
+//         displaySuccessMessage();
+//     }
+// }
 
 void TrashTurtle::displaySuccessMessage() {
     RCLCPP_INFO(node_->get_logger(), "%s is successfully sorted into the correct bin!", name.c_str());
@@ -120,44 +120,44 @@ void TrashTurtle::updateVelocityToTarget(const Point& target) {
                  name.c_str(), target.x, target.y);
 }
 
-void TrashTurtle::setPenColor(int r, int g, int b, int width) {
-    if (!pen_client_) {
-        RCLCPP_ERROR(node_->get_logger(), "Pen client not initialized for %s", name.c_str());
-        return;
-    }
+// void TrashTurtle::setPenColor(int r, int g, int b, int width) {
+//     if (!pen_client_) {
+//         RCLCPP_ERROR(node_->get_logger(), "Pen client not initialized for %s", name.c_str());
+//         return;
+//     }
 
-    if (!pen_client_->wait_for_service(std::chrono::seconds(5))) {
-        RCLCPP_ERROR(node_->get_logger(), "SetPen service not available for %s.", name.c_str());
-        return;
-    }
+//     if (!pen_client_->wait_for_service(std::chrono::seconds(5))) {
+//         RCLCPP_ERROR(node_->get_logger(), "SetPen service not available for %s.", name.c_str());
+//         return;
+//     }
 
-    // Additional color validation
-    if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
-        RCLCPP_WARN(node_->get_logger(), "Invalid color values for TrashTurtle: %s", name.c_str());
-        return;
-    }
+//     // Additional color validation
+//     if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+//         RCLCPP_WARN(node_->get_logger(), "Invalid color values for TrashTurtle: %s", name.c_str());
+//         return;
+//     }
 
-    auto set_pen_request = std::make_shared<turtlesim::srv::SetPen::Request>();
-    set_pen_request->r = r;
-    set_pen_request->g = g;
-    set_pen_request->b = b;
-    set_pen_request->width = width;
-    set_pen_request->off = 0;  // Pen ON
+//     auto set_pen_request = std::make_shared<turtlesim::srv::SetPen::Request>();
+//     set_pen_request->r = r;
+//     set_pen_request->g = g;
+//     set_pen_request->b = b;
+//     set_pen_request->width = width;
+//     set_pen_request->off = 0;  // Pen ON
 
-    auto result = pen_client_->async_send_request(
-        set_pen_request,
-        [this, r, g, b, width](rclcpp::Client<turtlesim::srv::SetPen>::SharedFuture future) {
-            try {
-                auto response = future.get();
-                RCLCPP_INFO(node_->get_logger(), "Pen color set for TrashTurtle: %s to (%d, %d, %d, %d).",
-                            name.c_str(), r, g, b, width);
-            } catch (const std::exception& e) {
-                RCLCPP_ERROR(node_->get_logger(), "Failed to set pen color: %s", e.what());
-            }
-        }
-    );
-}
-}
+//     auto result = pen_client_->async_send_request(
+//         set_pen_request,
+//         [this, r, g, b, width](rclcpp::Client<turtlesim::srv::SetPen>::SharedFuture future) {
+//             try {
+//                 auto response = future.get();
+//                 RCLCPP_INFO(node_->get_logger(), "Pen color set for TrashTurtle: %s to (%d, %d, %d, %d).",
+//                             name.c_str(), r, g, b, width);
+//             } catch (const std::exception& e) {
+//                 RCLCPP_ERROR(node_->get_logger(), "Failed to set pen color: %s", e.what());
+//             }
+//         }
+//     );
+// }
+// }
 
 Point TrashTurtle::getBinPositionForTrashType() const {
     // Define bin positions similar to your GameEnvironment
