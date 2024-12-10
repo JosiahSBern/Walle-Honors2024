@@ -5,6 +5,7 @@
 #include "turtlesim/msg/pose.hpp"
 #include "turtlesim/srv/teleport_absolute.hpp"
 #include <random>  // For randomization of trash type
+#include "Point.h"
 
 TrashTurtle::TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius, TrashType type, const Point& target)
     : Turtle(node, name, radius) // Base class constructor must remain in initializer list

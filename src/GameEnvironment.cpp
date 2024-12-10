@@ -8,6 +8,7 @@
 #include <limits>
 #include <rclcpp/rclcpp.hpp>
 #include "turtlesim/msg/pose.hpp"
+#include "Point.h"
 
 GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node, const std::string& central_turtle_name)
     : Environment(node, central_turtle_name) 

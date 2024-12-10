@@ -9,6 +9,7 @@
 #include "geometry_msgs/msg/twist.hpp"
 #include <rclcpp/rclcpp.hpp>
 #include "TrashType.h"
+#include "Point.h"
 
 // Enum for Sorting States
 enum class SortState {
