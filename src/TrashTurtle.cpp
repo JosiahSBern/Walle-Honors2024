@@ -142,28 +142,6 @@ void TrashTurtle::move(const Turtle& target, double follow_distance) {
 
 
 
-
-
-
-
-
-// void TrashTurtle::sortIntoBin() {
-//     if (currentState_ == SortState::MOVING_TO_BIN) {
-//         currentState_ = SortState::SORTED;
-//         stopMovement();  // Stop the turtle's motion
-//         RCLCPP_INFO(node_->get_logger(), "%s has been sorted!", name.c_str());
-//         setPenColor(0, 255, 0, 2);  // Green pen for sorted turtles
-
-//         // Optional: Display a success message for the player
-//         displaySuccessMessage();
-//     }
-// }
-
-// void TrashTurtle::displaySuccessMessage() {
-//     RCLCPP_INFO(node_->get_logger(), "%s is successfully sorted into the correct bin!", name.c_str());
-// }
-
-
 void TrashTurtle::updateVelocityToTarget(const Point& target) {
     // Validate target
     if (std::isnan(target.x) || std::isnan(target.y)) {
@@ -184,61 +162,13 @@ void TrashTurtle::updateVelocityToTarget(const Point& target) {
                  name.c_str(), target.x, target.y);
 }
 
-// void TrashTurtle::setPenColor(int r, int g, int b, int width) {
-//     if (!pen_client_) {
-//         RCLCPP_ERROR(node_->get_logger(), "Pen client not initialized for %s", name.c_str());
-//         return;
-//     }
 
-//     if (!pen_client_->wait_for_service(std::chrono::seconds(5))) {
-//         RCLCPP_ERROR(node_->get_logger(), "SetPen service not available for %s.", name.c_str());
-//         return;
-//     }
-
-//     // Additional color validation
-//     if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
-//         RCLCPP_WARN(node_->get_logger(), "Invalid color values for TrashTurtle: %s", name.c_str());
-//         return;
-//     }
-
-//     auto set_pen_request = std::make_shared<turtlesim::srv::SetPen::Request>();
-//     set_pen_request->r = r;
-//     set_pen_request->g = g;
-//     set_pen_request->b = b;
-//     set_pen_request->width = width;
-//     set_pen_request->off = 0;  // Pen ON
-
-//     auto result = pen_client_->async_send_request(
-//         set_pen_request,
-//         [this, r, g, b, width](rclcpp::Client<turtlesim::srv::SetPen>::SharedFuture future) {
-//             try {
-//                 auto response = future.get();
-//                 RCLCPP_INFO(node_->get_logger(), "Pen color set for TrashTurtle: %s to (%d, %d, %d, %d).",
-//                             name.c_str(), r, g, b, width);
-//             } catch (const std::exception& e) {
-//                 RCLCPP_ERROR(node_->get_logger(), "Failed to set pen color: %s", e.what());
-//             }
-//         }
-//     );
-// }
-// }
 
 
 void TrashTurtle::setTargetPosition(const Point& target) {
     targetPosition = target;
 }
 
-// void TrashTurtle::setPenColor(int r, int g, int b, int width) {
-//     auto set_pen_request = std::make_shared<turtlesim::srv::SetPen::Request>();
-//     set_pen_request->r = r;
-//     set_pen_request->g = g;
-//     set_pen_request->b = b;
-//     set_pen_request->width = width;
-//     set_pen_request->off = 0;
-
-//     auto result = pen_client_->async_send_request(set_pen_request);
-//     // Optionally, handle the response or future
-// }
 
 TrashType TrashTurtle::getTrashType() const {
     return type;
@@ -256,6 +186,20 @@ SortState TrashTurtle::getCurrentState() const {
     return currentState_;
 }
 
+void TrashTurtle::setCurrentState(SortState newState) {
+    currentState_ = newState;  
+    switch (currentState_) {
+        case SortState::MOVING_TO_BIN:
+            RCLCPP_INFO(node_->get_logger(), "%s is moving to bin.", name.c_str());
+            break;
+        case SortState::SORTED:
+            RCLCPP_INFO(node_->get_logger(), "%s has been sorted.", name.c_str());
+            break;
+        case SortState::WAITING:
+            RCLCPP_INFO(node_->get_logger(), "%s is waiting.", name.c_str());
+            break;
+    }
+}
 
 void TrashTurtle::teleportToBinCenter() {
     if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
@@ -287,9 +231,11 @@ double TrashTurtle::calculateDistance(const Point& p1, const Point& p2) const {
 
 void TrashTurtle::stopAtTarget() {
     // Check if we are within the target radius (center of the bin)
+
     double distance = calculateDistance(position, targetPosition);
     if (distance <= targetRadius) {
         // Teleport the TrashTurtle to the exact position of the bin center
+        setCurrentState(SortState::SORTED); 
         teleportToBinCenter();
         stopMovement();  // Stop movement after reaching the bin
         RCLCPP_INFO(node_->get_logger(), "%s has stopped at the target bin.", name.c_str());

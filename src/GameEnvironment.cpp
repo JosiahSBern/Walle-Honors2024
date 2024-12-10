@@ -54,7 +54,6 @@ void GameEnvironment::drawGame() {
 
 
 void GameEnvironment::initializeEnvironment() {
-    // Subscribe to /turtle1/pose to track central turtle's position
     auto pose_callback = [this](const turtlesim::msg::Pose::SharedPtr msg) {
         centralTurtle->setPosition({msg->x, msg->y});
         centralTurtle->setOrientation(msg->theta);  // Update turtle1's orientation
@@ -116,20 +115,20 @@ void GameEnvironment::spawnTrashTurtles() {
         trashTurtles.push_back(trashTurtle);
     }
 }
-
 void GameEnvironment::updateTrashTurtles() {
     double follow_distance = 1.0; // Desired distance to maintain
 
     while (rclcpp::ok()) {
         for (auto& trashTurtle : trashTurtles) {
             // Get the real-time position of turtle1
+            while(trashTurtle->getCurrentState() )
             Point turtle1Position = centralTurtle->getPosition();
             double turtle1Orientation = centralTurtle->getOrientation();
 
             // Move TrashTurtle to follow turtle1 at the specified distance
             trashTurtle->move(*centralTurtle, follow_distance);
-            
-            // Stop the TrashTurtle when it reaches the target bin
+
+            // Stop the TrashTurtle when it reaches the target bin center
             trashTurtle->stopAtTarget();
         }
 
@@ -143,41 +142,12 @@ void GameEnvironment::updateTrashTurtles() {
 
 
 
-// void GameEnvironment::autoSortTrash() {
-//     for (auto& turtle : trashTurtles) {
-//         // Check if the TrashTurtle is not sorted yet
-//         if (turtle->getCurrentState() != SortState::SORTED) {
-//             // Get the type of the TrashTurtle
-//             TrashType trashType = turtle->getTrashType();
-
-//             // Get the corresponding bin position based on trash type
-//             Point binPosition = getBinPositionForTrashType(trashType);
-
-//             // Move the robot to the bin
-//             moveCentralTurtleToBin(binPosition);
-
-//             // After moving to the bin, the robot should "sort" the trash
-//             turtle->sortIntoBin();
-//         }
-//     }
-// }
 
 
 
 
 
-// // Point GameEnvironment::getBinPositionForTrashType(TrashType type) {
-//     switch (type) {
-//         case TrashType::TRASH:
-//             return {1.5, 9.0};  // First bin (green)
-//         case TrashType::RECYCLING:
-//             return {4.5, 9.0};  // Second bin (blue)
-//         case TrashType::PAPER:
-//             return {7.5, 9.0};  // Third bin (gray)
-//         default:
-//             return {5.5, 5.5};  // Default fallback
-//     }
-// }
+
 
 
 
@@ -231,49 +201,19 @@ void GameEnvironment::drawBins() {
 
 
 
-// void GameEnvironment::moveCentralTurtleToBin(const Point& binPosition) {
-//     // Check if the teleport service client is ready
-//     if (centralTurtle && teleport_client_->wait_for_service(std::chrono::seconds(1))) {
-//         // Get the current position of the central turtle
-//         Point currentPos = centralTurtle->getPosition();
-
-//         // Calculate the total distance to the target bin
-//         double dx = binPosition.x - currentPos.x;
-//         double dy = binPosition.y - currentPos.y;
-//         double totalDistance = std::sqrt(dx * dx + dy * dy);
-
-//         // Define the number of steps for the movement (more steps = slower)
-//         int numSteps = 10;
-//         double stepDistance = totalDistance / numSteps;
-
-//         // Move the turtle in small steps
-//         for (int i = 1; i <= numSteps; ++i) {
-//             // Calculate the intermediate position for this step
-//             double stepX = currentPos.x + (dx * i / numSteps);
-//             double stepY = currentPos.y + (dy * i / numSteps);
-
-//             // Create the teleport request for the current step
-//             auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
-//             request->x = stepX;
-//             request->y = stepY;
-//             request->theta = 0.0;  // Assuming no rotation needed, can be modified
-
-//             // Send the teleport request and wait for it to complete
-//             auto result = teleport_client_->async_send_request(request);
-//             if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
-//                 RCLCPP_INFO(node_->get_logger(), "Central turtle moved to step %d: (%.2f, %.2f).", i, stepX, stepY);
-//             } else {
-//                 RCLCPP_ERROR(node_->get_logger(), "Failed to move central turtle to step %d.", i);
-//             }
-
-//             // Introduce a small delay to make the movement slower
-//             rclcpp::sleep_for(std::chrono::milliseconds(500));  // 500ms delay between each step
-//         }
-
-//         // Log the final destination
-//         RCLCPP_INFO(node_->get_logger(), "Central turtle reached bin at (%.2f, %.2f).", binPosition.x, binPosition.y);
-//     } else {
-//         RCLCPP_ERROR(node_->get_logger(), "Teleport service not available for central turtle.");
+// // Point GameEnvironment::getBinPositionForTrashType(TrashType type) {
+//     switch (type) {
+//         case TrashType::TRASH:
+//             return {1.5, 9.0};  // First bin
+//         case TrashType::RECYCLING:
+//             return {4.5, 9.0};  // Second bin 
+//         case TrashType::PAPER:
+//             return {7.5, 9.0};  // Third bin 
+//         default:
+//             return {5.5, 5.5};  // Default fallback
 //     }
 // }
+
+// void GameEnvironment::moveCentralTurtleToBin(const Point& binPosition) {
+
 
