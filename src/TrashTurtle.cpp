@@ -210,10 +210,13 @@ void TrashTurtle::teleportToBinCenter() {
     if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
         auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
 
-        // Calculate the center of the bin based on the bin's position
+        // Use the bin's center directly as the target position
         double binCenterX = binCenter.x;
         double binCenterY = binCenter.y;
-        request->theta = 0.0;  // Assuming no rotation needed at the center
+
+        request->x = binCenterX;
+        request->y = binCenterY;
+        request->theta = 0.0;  // No rotation needed
 
         auto result = teleport_client_->async_send_request(request);
         if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
