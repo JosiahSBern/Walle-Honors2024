@@ -201,15 +201,23 @@ void TrashTurtle::setCurrentState(SortState newState) {
 }
 
 void TrashTurtle::teleportToBinCenter() {
+    // Get the bin position for the current trash type
+    Point binCenter = getBinPositionForTrashType();
+
     if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
         auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
-        request->x = targetPosition.x;
-        request->y = targetPosition.y;
+
+        // Calculate the center of the bin based on the bin's position
+        double binCenterX = binCenter.x + 1.0;  // Adjust the X position to the center of the bin (based on your bin width)
+        double binCenterY = binCenter.y - 1.5;  // Adjust the Y position to the center of the bin (based on your bin height)
+
+        request->x = binCenterX;
+        request->y = binCenterY;
         request->theta = 0.0;  // Assuming no rotation needed at the center
 
         auto result = teleport_client_->async_send_request(request);
         if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
-            RCLCPP_INFO(node_->get_logger(), "%s teleported to the bin center at (%.2f, %.2f).", name.c_str(), targetPosition.x, targetPosition.y);
+            RCLCPP_INFO(node_->get_logger(), "%s teleported to the bin center at (%.2f, %.2f).", name.c_str(), binCenterX, binCenterY);
         } else {
             RCLCPP_ERROR(node_->get_logger(), "Failed to teleport %s to the bin center.", name.c_str());
         }
@@ -217,6 +225,7 @@ void TrashTurtle::teleportToBinCenter() {
         RCLCPP_ERROR(node_->get_logger(), "Teleport service not available for %s.", name.c_str());
     }
 }
+
 
 bool TrashTurtle::isAtTarget() const {
     double distance = calculateDistance(position, targetPosition);
