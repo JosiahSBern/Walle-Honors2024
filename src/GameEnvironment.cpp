@@ -157,18 +157,18 @@ void GameEnvironment::updateTrashTurtles() {
 
 
 
-// Point GameEnvironment::getBinPositionForTrashType(TrashType type) {
-    switch (type) {
-        case TrashType::TRASH:
-            return {1.5, 9.0};  // First bin (green)
-        case TrashType::RECYCLING:
-            return {4.5, 9.0};  // Second bin (blue)
-        case TrashType::PAPER:
-            return {7.5, 9.0};  // Third bin (gray)
-        default:
-            return {5.5, 5.5};  // Default fallback
-    }
-}
+// // Point GameEnvironment::getBinPositionForTrashType(TrashType type) {
+//     switch (type) {
+//         case TrashType::TRASH:
+//             return {1.5, 9.0};  // First bin (green)
+//         case TrashType::RECYCLING:
+//             return {4.5, 9.0};  // Second bin (blue)
+//         case TrashType::PAPER:
+//             return {7.5, 9.0};  // Third bin (gray)
+//         default:
+//             return {5.5, 5.5};  // Default fallback
+//     }
+// }
 
 
 
