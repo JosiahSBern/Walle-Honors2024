@@ -83,17 +83,20 @@ void TrashTurtle::setPenColor(int r, int g, int b, int width) {
 
 Point TrashTurtle::getBinPositionForTrashType() const {
     // Define bin positions similar to your GameEnvironment
+Point TrashTurtle::getBinPositionForTrashType() const {
+    // Hardcoded bin center positions
     switch(type) {
         case TrashType::TRASH:
-            return {1.5, 7.0};  // First bin 
+            return {2.5, 7.0};  // Center of the first bin
         case TrashType::RECYCLING:
-            return {4.5, 7.0};  // Second bin 
+            return {5.5, 7.0};  // Center of the second bin
         case TrashType::PAPER:
-            return {7.5, 7.0};  // Third bin 
+            return {8.5, 7.0};  // Center of the third bin
         default:
-            return {5.5, 5.5};  
+            return {5.5, 5.5};  // Default fallback (not used in this case)
     }
 }
+
 
 
 void TrashTurtle::move(const Turtle& target, double follow_distance) {
@@ -208,11 +211,8 @@ void TrashTurtle::teleportToBinCenter() {
         auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
 
         // Calculate the center of the bin based on the bin's position
-        double binCenterX = binCenter.x + 1.0;  // Adjust the X position to the center of the bin (based on your bin width)
-        double binCenterY = binCenter.y - 1.5;  // Adjust the Y position to the center of the bin (based on your bin height)
-
-        request->x = binCenterX;
-        request->y = binCenterY;
+        double binCenterX = binCenter.x;
+        double binCenterY = binCenter.y;
         request->theta = 0.0;  // Assuming no rotation needed at the center
 
         auto result = teleport_client_->async_send_request(request);

@@ -40,6 +40,7 @@ public:
     void teleportToBinCenter() ;
     void stopAtTarget();
     void setCurrentState(SortState newState);
+   
 
 
 private:
