@@ -128,12 +128,19 @@ void GameEnvironment::updateTrashTurtles() {
 
             // Move TrashTurtle to follow turtle1 at the specified distance
             trashTurtle->move(*centralTurtle, follow_distance);
+            
+            // Stop the TrashTurtle when it reaches the target bin
+            trashTurtle->stopAtTarget();
         }
+
+        // Allow other ROS2 processes to run while still controlling the update loop
+        rclcpp::spin_some(node_);  // This processes any incoming ROS2 messages or services
 
         // Small delay to control the update rate
         rclcpp::sleep_for(std::chrono::milliseconds(100));
     }
 }
+
 
 
 // void GameEnvironment::autoSortTrash() {

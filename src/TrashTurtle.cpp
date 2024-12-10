@@ -96,12 +96,6 @@ Point TrashTurtle::getBinPositionForTrashType() const {
 }
 
 
-
-
-bool TrashTurtle::isAtTarget() const {
-    double distance = calculateDistance(position, targetPosition);
-    return distance <= targetRadius;  // Check if within radius
-}
 void TrashTurtle::move(const Turtle& target, double follow_distance) {
     // Get the target position and orientation
     Point targetPosition = target.getPosition();
@@ -262,3 +256,41 @@ SortState TrashTurtle::getCurrentState() const {
     return currentState_;
 }
 
+void TrashTurtle::stopAtTarget() {
+    // Check if we are within the target radius (center of the bin)
+    double distance = calculateDistance(position, targetPosition);
+    if (distance <= targetRadius) {
+        // Teleport the TrashTurtle to the exact position of the bin center
+        teleportToBinCenter();
+        stopMovement();  // Stop movement after reaching the bin
+        RCLCPP_INFO(node_->get_logger(), "%s has stopped at the target bin.", name.c_str());
+    }
+}
+
+void TrashTurtle::teleportToBinCenter() {
+    if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
+        auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
+        request->x = targetPosition.x;
+        request->y = targetPosition.y;
+        request->theta = 0.0;  // Assuming no rotation needed at the center
+
+        auto result = teleport_client_->async_send_request(request);
+        if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+            RCLCPP_INFO(node_->get_logger(), "%s teleported to the bin center at (%.2f, %.2f).", name.c_str(), targetPosition.x, targetPosition.y);
+        } else {
+            RCLCPP_ERROR(node_->get_logger(), "Failed to teleport %s to the bin center.", name.c_str());
+        }
+    } else {
+        RCLCPP_ERROR(node_->get_logger(), "Teleport service not available for %s.", name.c_str());
+    }
+}
+
+bool TrashTurtle::isAtTarget() const {
+    double distance = calculateDistance(position, targetPosition);
+    return distance <= targetRadius;  // Check if within radius
+}
+
+// Function to calculate distance
+double TrashTurtle::calculateDistance(const Point& p1, const Point& p2) const {
+    return std::sqrt(std::pow(p2.x - p1.x, 2) + std::pow(p2.y - p1.y, 2));
+}
