@@ -33,16 +33,16 @@ void TrashTurtle::setPenColorForTrashType() {
     int r, g, b;
     switch(type) {
         case TrashType::TRASH:
-            r = 255; g = 0; b = 0;  // Red for Trash
+            r = 0; g = 100; b = 0;  // Red for Trash
             break;
         case TrashType::RECYCLING:
-            r = 0; g = 255; b = 0;  // Green for Recycling
+            r = 0; g = 0; b = 255;  // Green for Recycling
             break;
         case TrashType::PAPER:
-            r = 0; g = 0; b = 255;  // Blue for Paper
+            r = 128; g = 128; b = 128;  // Blue for Paper
             break;
         default:
-            r = 255; g = 255; b = 255;  // Default to white
+            r = 255; g = 255;b = 255;  // Default to white
             break;
     }
     setPenColor(r, g, b, 2);  // Set the color and pen width
