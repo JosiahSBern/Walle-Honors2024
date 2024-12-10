@@ -236,17 +236,17 @@ void TrashTurtle::setTargetPosition(const Point& target) {
     targetPosition = target;
 }
 
-void TrashTurtle::setPenColor(int r, int g, int b, int width) {
-    auto set_pen_request = std::make_shared<turtlesim::srv::SetPen::Request>();
-    set_pen_request->r = r;
-    set_pen_request->g = g;
-    set_pen_request->b = b;
-    set_pen_request->width = width;
-    set_pen_request->off = 0;
+// void TrashTurtle::setPenColor(int r, int g, int b, int width) {
+//     auto set_pen_request = std::make_shared<turtlesim::srv::SetPen::Request>();
+//     set_pen_request->r = r;
+//     set_pen_request->g = g;
+//     set_pen_request->b = b;
+//     set_pen_request->width = width;
+//     set_pen_request->off = 0;
 
-    auto result = pen_client_->async_send_request(set_pen_request);
-    // Optionally, handle the response or future
-}
+//     auto result = pen_client_->async_send_request(set_pen_request);
+//     // Optionally, handle the response or future
+// }
 
 TrashType TrashTurtle::getTrashType() const {
     return type;
