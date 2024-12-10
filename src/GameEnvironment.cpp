@@ -116,16 +116,6 @@ void GameEnvironment::spawnTrashTurtles() {
     }
 }
 
-void GameEnvironment::updateCentralTurtlePosition() {
-    // Update the centralTurtle's position based on turtle1's current position
-    // For simplicity, assume position is updated via callbacks in the Turtle base class
-    // If not, implement logic to retrieve turtle1's position via topics or services
-
-    // Example: Subscribe to turtle1's pose and update centralTurtle's position
-    // This assumes that the Turtle class has a mechanism to receive and update its position
-    // Ensure that the Turtle class subscribes to turtle1's pose topic
-}
-
 void GameEnvironment::updateTrashTurtles() {
     double follow_distance = 1.0; // Desired distance to maintain
 
@@ -145,11 +135,41 @@ void GameEnvironment::updateTrashTurtles() {
 }
 
 
+// void GameEnvironment::autoSortTrash() {
+//     for (auto& turtle : trashTurtles) {
+//         // Check if the TrashTurtle is not sorted yet
+//         if (turtle->getCurrentState() != SortState::SORTED) {
+//             // Get the type of the TrashTurtle
+//             TrashType trashType = turtle->getTrashType();
+
+//             // Get the corresponding bin position based on trash type
+//             Point binPosition = getBinPositionForTrashType(trashType);
+
+//             // Move the robot to the bin
+//             moveCentralTurtleToBin(binPosition);
+
+//             // After moving to the bin, the robot should "sort" the trash
+//             turtle->sortIntoBin();
+//         }
+//     }
+// }
 
 
 
 
 
+Point GameEnvironment::getBinPositionForTrashType(TrashType type) {
+    switch (type) {
+        case TrashType::TRASH:
+            return {1.5, 9.0};  // First bin (green)
+        case TrashType::RECYCLING:
+            return {4.5, 9.0};  // Second bin (blue)
+        case TrashType::PAPER:
+            return {7.5, 9.0};  // Third bin (gray)
+        default:
+            return {5.5, 5.5};  // Default fallback
+    }
+}
 
 
 
@@ -200,3 +220,52 @@ void GameEnvironment::drawBins() {
                     i + 1, binPositions[i].x, binPositions[i].y, binBottomRight.x, binBottomRight.y, r, g, b);
     }
 }
+
+
+
+// void GameEnvironment::moveCentralTurtleToBin(const Point& binPosition) {
+//     // Check if the teleport service client is ready
+//     if (centralTurtle && teleport_client_->wait_for_service(std::chrono::seconds(1))) {
+//         // Get the current position of the central turtle
+//         Point currentPos = centralTurtle->getPosition();
+
+//         // Calculate the total distance to the target bin
+//         double dx = binPosition.x - currentPos.x;
+//         double dy = binPosition.y - currentPos.y;
+//         double totalDistance = std::sqrt(dx * dx + dy * dy);
+
+//         // Define the number of steps for the movement (more steps = slower)
+//         int numSteps = 10;
+//         double stepDistance = totalDistance / numSteps;
+
+//         // Move the turtle in small steps
+//         for (int i = 1; i <= numSteps; ++i) {
+//             // Calculate the intermediate position for this step
+//             double stepX = currentPos.x + (dx * i / numSteps);
+//             double stepY = currentPos.y + (dy * i / numSteps);
+
+//             // Create the teleport request for the current step
+//             auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
+//             request->x = stepX;
+//             request->y = stepY;
+//             request->theta = 0.0;  // Assuming no rotation needed, can be modified
+
+//             // Send the teleport request and wait for it to complete
+//             auto result = teleport_client_->async_send_request(request);
+//             if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+//                 RCLCPP_INFO(node_->get_logger(), "Central turtle moved to step %d: (%.2f, %.2f).", i, stepX, stepY);
+//             } else {
+//                 RCLCPP_ERROR(node_->get_logger(), "Failed to move central turtle to step %d.", i);
+//             }
+
+//             // Introduce a small delay to make the movement slower
+//             rclcpp::sleep_for(std::chrono::milliseconds(500));  // 500ms delay between each step
+//         }
+
+//         // Log the final destination
+//         RCLCPP_INFO(node_->get_logger(), "Central turtle reached bin at (%.2f, %.2f).", binPosition.x, binPosition.y);
+//     } else {
+//         RCLCPP_ERROR(node_->get_logger(), "Teleport service not available for central turtle.");
+//     }
+// }
+

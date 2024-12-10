@@ -88,11 +88,17 @@ void TrashTurtle::sortIntoBin() {
         currentState_ = SortState::SORTED;
         stopMovement();  // Stop the turtle's motion
         RCLCPP_INFO(node_->get_logger(), "%s has been sorted!", name.c_str());
+        setPenColor(0, 255, 0, 2);  // Green pen for sorted turtles
 
-        // Optional: Change pen color to indicate completion
-        setPenColor(0, 0, 0, 2);
+        // Optional: Display a success message for the player
+        displaySuccessMessage();
     }
 }
+
+void TrashTurtle::displaySuccessMessage() {
+    RCLCPP_INFO(node_->get_logger(), "%s is successfully sorted into the correct bin!", name.c_str());
+}
+
 
 void TrashTurtle::updateVelocityToTarget(const Point& target) {
     double distance = calculateDistance(position, target);
