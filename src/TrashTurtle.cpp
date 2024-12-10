@@ -294,3 +294,14 @@ bool TrashTurtle::isAtTarget() const {
 double TrashTurtle::calculateDistance(const Point& p1, const Point& p2) const {
     return std::sqrt(std::pow(p2.x - p1.x, 2) + std::pow(p2.y - p1.y, 2));
 }
+
+void TrashTurtle::stopAtTarget() {
+    // Check if we are within the target radius (center of the bin)
+    double distance = calculateDistance(position, targetPosition);
+    if (distance <= targetRadius) {
+        // Teleport the TrashTurtle to the exact position of the bin center
+        teleportToBinCenter();
+        stopMovement();  // Stop movement after reaching the bin
+        RCLCPP_INFO(node_->get_logger(), "%s has stopped at the target bin.", name.c_str());
+    }
+}

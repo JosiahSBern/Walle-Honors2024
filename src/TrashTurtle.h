@@ -37,7 +37,8 @@ public:
     Point getBinPositionForTrashType() const; // Get the corresponding bin position for the trash type
     SortState getCurrentState() const; // Get the current sorting state
     double calculateDistance(const Point& p1, const Point& p2) const;
-    void TrashTurtle::teleportToBinCenter() ;
+    void teleportToBinCenter() ;
+    void stopAtTarget();
 
 
 private:
