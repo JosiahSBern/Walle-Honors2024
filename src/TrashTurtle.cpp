@@ -195,9 +195,6 @@ void TrashTurtle::setCurrentState(SortState newState) {
         case SortState::SORTED:
             RCLCPP_INFO(node_->get_logger(), "%s has been sorted.", name.c_str());
             break;
-        case SortState::WAITING:
-            RCLCPP_INFO(node_->get_logger(), "%s is waiting.", name.c_str());
-            break;
     }
 }
 
