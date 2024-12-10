@@ -113,7 +113,7 @@ void GameEnvironment::spawnTrashTurtles() {
 
         trashTurtle->setPosition({xPos, yPos});
         trashTurtles.push_back(trashTurtle);
-        trashTurtles->setCurrentState(SortState::MOVING_TO_BIN);
+        trashTurtles[i]->setCurrentState(SortState::MOVING_TO_BIN);
     }
 }
 void GameEnvironment::updateTrashTurtles() {
