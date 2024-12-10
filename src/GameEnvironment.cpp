@@ -121,7 +121,6 @@ void GameEnvironment::updateTrashTurtles() {
     while (rclcpp::ok()) {
         for (auto& trashTurtle : trashTurtles) {
             // Get the real-time position of turtle1
-            while(trashTurtle->getCurrentState()== SortState::MOVING_TO_BIN)
             Point turtle1Position = centralTurtle->getPosition();
             double turtle1Orientation = centralTurtle->getOrientation();
 
