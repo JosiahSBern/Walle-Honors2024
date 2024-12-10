@@ -72,7 +72,7 @@ void GameEnvironment::spawnTrashTurtles() {
     const double bottomBoxTop = 3.0;
     const double bottomBoxBottom = 1.0;
 
-    const int numTurtles = 1;
+    const int numTurtles = 3;
     const double horizontalSpacing = (bottomBoxRight - bottomBoxLeft) / (numTurtles + 1);
 
     for (size_t i = 0; i < numTurtles; ++i) {
