@@ -95,9 +95,9 @@ void TrashTurtle::move(const Turtle& target, double follow_distance) {
 //     }
 // }
 
-void TrashTurtle::displaySuccessMessage() {
-    RCLCPP_INFO(node_->get_logger(), "%s is successfully sorted into the correct bin!", name.c_str());
-}
+// void TrashTurtle::displaySuccessMessage() {
+//     RCLCPP_INFO(node_->get_logger(), "%s is successfully sorted into the correct bin!", name.c_str());
+// }
 
 
 void TrashTurtle::updateVelocityToTarget(const Point& target) {

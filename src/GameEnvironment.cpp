@@ -5,16 +5,8 @@
 #include <memory>
 #include <cmath>
 #include <limits>
-<<<<<<< HEAD
-#include "GameEnvironment.h"
-#include "TeleopTurtle.h"
-#include "TrashTurtle.h"
-#include "TrashType.h"
-
-=======
 #include <rclcpp/rclcpp.hpp>
 #include "turtlesim/msg/pose.hpp"
->>>>>>> restore
 
 GameEnvironment::GameEnvironment(rclcpp::Node::SharedPtr node, const std::string& central_turtle_name)
     : Environment(node, central_turtle_name) 
@@ -49,26 +41,6 @@ void GameEnvironment::drawGame() {
     RCLCPP_INFO(node_->get_logger(), "Drawing game...");
     initializeEnvironment();
 
-<<<<<<< HEAD
-    // Draw static elements
-    drawWalls();
-    drawBins();
-
-    // Step 2: Remove `turtle1` and spawn the new TeleopTurtle
-    initializeEnvironment();
-
-    // Step 3: Spawn initial TrashTurtles
-    spawnTrashTurtles();
-
-    // Step 4: Start the update timer
-    timer_ = node_->create_wall_timer(
-        std::chrono::milliseconds(200),
-        [this]() {
-            RCLCPP_DEBUG(node_->get_logger(), "Updating TrashTurtles...");
-            updateTrashTurtles();
-        }
-    );
-=======
     //Draw static elements
     drawWalls();
     drawBins();
@@ -76,52 +48,10 @@ void GameEnvironment::drawGame() {
     //Spawn initial TrashTurtles
     spawnTrashTurtles();
     updateTrashTurtles(); 
->>>>>>> restore
 }
 
 
 void GameEnvironment::initializeEnvironment() {
-<<<<<<< HEAD
-    // Kill the default turtle1
-    if (!kill_client_->wait_for_service(std::chrono::seconds(10))) {
-        RCLCPP_ERROR(node_->get_logger(), "Kill service not available. Turtle1 might persist.");
-    } else {
-        auto kill_request = std::make_shared<turtlesim::srv::Kill::Request>();
-        kill_request->name = "turtle1";
-
-        auto kill_result = kill_client_->async_send_request(kill_request);
-        if (rclcpp::spin_until_future_complete(node_, kill_result) != rclcpp::FutureReturnCode::SUCCESS) {
-            RCLCPP_ERROR(node_->get_logger(), "Failed to kill turtle1.");
-        } else {
-            RCLCPP_INFO(node_->get_logger(), "Successfully removed turtle1.");
-        }
-    }
-
-    // Spawn a new TeleopTurtle in the center
-    if (!spawn_client_->wait_for_service(std::chrono::seconds(10))) {
-        RCLCPP_ERROR(node_->get_logger(), "Spawn service not available.");
-    } else {
-        auto spawn_request = std::make_shared<turtlesim::srv::Spawn::Request>();
-        spawn_request->x = 5.5;
-        spawn_request->y = 5.5;
-        spawn_request->theta = 0.0;
-        spawn_request->name = "teleop_turtle";
-
-        auto spawn_result = spawn_client_->async_send_request(spawn_request);
-        if (rclcpp::spin_until_future_complete(node_, spawn_result) != rclcpp::FutureReturnCode::SUCCESS) {
-            RCLCPP_ERROR(node_->get_logger(), "Failed to spawn teleop_turtle.");
-        } else {
-            RCLCPP_INFO(node_->get_logger(), "Successfully spawned teleop_turtle at (5.5, 5.5).");
-
-            // Instantiate the TeleopTurtle object
-            teleopTurtle = std::make_shared<TeleopTurtle>(node_, "teleop_turtle", 0.5);
-            teleopTurtle->setPosition({5.5, 5.5});
-        }
-    }
-}
-
-
-=======
     // Subscribe to /turtle1/pose to track central turtle's position
     auto pose_callback = [this](const turtlesim::msg::Pose::SharedPtr msg) {
         centralTurtle->setPosition({msg->x, msg->y});
@@ -134,7 +64,6 @@ void GameEnvironment::initializeEnvironment() {
 
 
 
->>>>>>> restore
 void GameEnvironment::spawnTrashTurtles() {
     RCLCPP_INFO(node_->get_logger(), "Spawning TrashTurtles...");
 
@@ -152,29 +81,6 @@ void GameEnvironment::spawnTrashTurtles() {
         double xPos = bottomBoxLeft + (i + 1) * horizontalSpacing;
         double yPos = (bottomBoxTop + bottomBoxBottom) / 2;
 
-<<<<<<< HEAD
-        auto spawn_request = std::make_shared<turtlesim::srv::Spawn::Request>();
-        spawn_request->x = xPos;
-        spawn_request->y = yPos;
-        spawn_request->theta = 0.0;  // Facing straight
-        spawn_request->name = name;
-
-        if (!spawn_client_->wait_for_service(std::chrono::seconds(10))) {
-            RCLCPP_ERROR(node_->get_logger(), "Spawn service not available.");
-            return;
-        }
-
-        auto spawn_result = spawn_client_->async_send_request(spawn_request);
-        if (rclcpp::spin_until_future_complete(node_, spawn_result) != rclcpp::FutureReturnCode::SUCCESS) {
-            RCLCPP_ERROR(node_->get_logger(), "Failed to spawn TrashTurtle: %s", name.c_str());
-            continue;
-        }
-
-        // Verify spawn success
-        RCLCPP_INFO(node_->get_logger(), "Spawned TrashTurtle: %s at (%f, %f)", name.c_str(), xPos, yPos);
-
-        // Add TrashTurtle instance to the list
-=======
         //Spawn the turtle in the simulation
         if (spawn_client_->wait_for_service(std::chrono::seconds(5))) {
             auto spawn_request = std::make_shared<turtlesim::srv::Spawn::Request>();
@@ -196,7 +102,6 @@ void GameEnvironment::spawnTrashTurtles() {
         }
 
         // Instantiate the TrashTurtle object
->>>>>>> restore
         auto trashTurtle = std::make_shared<TrashTurtle>(
             node_,
             name,
@@ -210,12 +115,6 @@ void GameEnvironment::spawnTrashTurtles() {
     }
 }
 
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> restore
 void GameEnvironment::updateTrashTurtles() {
     double follow_distance = 1.0; // Desired distance to maintain
 
@@ -298,14 +197,9 @@ void GameEnvironment::drawWalls() {
 }
 
 void GameEnvironment::drawBins() {
-<<<<<<< HEAD
-    const double binWidth = 2.5;
-    const double binHeight = 2.0;
-=======
     const double binWidth = 2.0;
     const double binHeight = 3;
     const int LINE_WIDTH = 4;
->>>>>>> restore
 
     RCLCPP_INFO(node_->get_logger(), "Drawing bins...");
     for (size_t i = 0; i < binPositions.size(); ++i) {

@@ -60,7 +60,7 @@ public:
 
     //State checking methods
     bool isAtTarget() const;
-    void sortIntoBin();
+    // void sortIntoBin();
 };
 
 #endif // TRASH_TURTLE_H
