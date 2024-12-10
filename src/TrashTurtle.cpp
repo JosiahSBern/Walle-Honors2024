@@ -98,6 +98,7 @@ Point TrashTurtle::getBinPositionForTrashType() const {
 
 void TrashTurtle::move(const Turtle& target, double follow_distance) {
     // Get the target position and orientation
+    if (trashTurtle->getCurrentState() == SortState::MOVING_TO_BIN){
     Point targetPosition = target.getPosition();
     double targetOrientation = target.getOrientation();
 
@@ -135,6 +136,7 @@ void TrashTurtle::move(const Turtle& target, double follow_distance) {
     } else {
         RCLCPP_ERROR(node_->get_logger(), "TeleportAbsolute service not available for %s.", name.c_str());
     }
+}
 }
 
 
