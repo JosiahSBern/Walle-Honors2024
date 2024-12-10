@@ -229,20 +229,6 @@ void TrashTurtle::updateVelocityToTarget(const Point& target) {
 // }
 // }
 
-Point TrashTurtle::getBinPositionForTrashType() const {
-    // Define bin positions similar to your GameEnvironment
-    switch(type) {
-        case TrashType::TRASH:
-            return {1.5, 9.0};  // First bin (green)
-        case TrashType::RECYCLING:
-            return {4.5, 9.0};  // Second bin (blue)
-        case TrashType::PAPER:
-            return {7.5, 9.0};  // Third bin (gray)
-        default:
-            // Default fallback
-            return {5.5, 5.5};
-    }
-}
 
 void TrashTurtle::setTargetPosition(const Point& target) {
     targetPosition = target;
