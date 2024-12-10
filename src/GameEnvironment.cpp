@@ -125,15 +125,23 @@ void GameEnvironment::updateTrashTurtles() {
 
     while (rclcpp::ok()) {
         for (auto& trashTurtle : trashTurtles) {
-            // Get the real-time position of turtle1
-            Point turtle1Position = centralTurtle->getPosition();
-            double turtle1Orientation = centralTurtle->getOrientation();
+            // Check if the TrashTurtle is still MOVING_TO_BIN
+            if (trashTurtle->getCurrentState() == SortState::MOVING_TO_BIN) {
+                // Get the real-time position of turtle1
+                Point turtle1Position = centralTurtle->getPosition();
+                double turtle1Orientation = centralTurtle->getOrientation();
 
-            // Move TrashTurtle to follow turtle1 at the specified distance
-            trashTurtle->move(*centralTurtle, follow_distance);
+                // Move TrashTurtle to follow turtle1 at the specified distance
+                trashTurtle->move(*centralTurtle, follow_distance);
 
-            // Stop the TrashTurtle when it reaches the target bin center
-            trashTurtle->stopAtTarget();
+                // Stop the TrashTurtle when it reaches the target bin center
+                trashTurtle->stopAtTarget();
+                
+                // Change state to SORTED once it's at the target
+                if (trashTurtle->isAtTarget()) {
+                    trashTurtle->setCurrentState(SortState::SORTED);
+                }
+            }
         }
 
         // Allow other ROS2 processes to run while still controlling the update loop
