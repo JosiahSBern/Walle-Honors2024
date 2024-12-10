@@ -39,6 +39,7 @@ public:
     double calculateDistance(const Point& p1, const Point& p2) const;
     void teleportToBinCenter() ;
     void stopAtTarget();
+    void setCurrentState(SortState newState);
 
 
 private:
@@ -49,7 +50,7 @@ private:
     std::shared_ptr<rclcpp::Client<turtlesim::srv::SetPen>> pen_client_; // Client to control pen color
     std::shared_ptr<rclcpp::Client<turtlesim::srv::TeleportAbsolute>> teleport_client_; // Teleport client
     std::shared_ptr<rclcpp::Publisher<geometry_msgs::msg::Twist>> twist_pub_; // Publisher for velocity commands
-    void setCurrentState(SortState newState);
+    
 };
 
 #endif // TRASHTURTLE_H
