@@ -256,16 +256,6 @@ SortState TrashTurtle::getCurrentState() const {
     return currentState_;
 }
 
-void TrashTurtle::stopAtTarget() {
-    // Check if we are within the target radius (center of the bin)
-    double distance = calculateDistance(position, targetPosition);
-    if (distance <= targetRadius) {
-        // Teleport the TrashTurtle to the exact position of the bin center
-        teleportToBinCenter();
-        stopMovement();  // Stop movement after reaching the bin
-        RCLCPP_INFO(node_->get_logger(), "%s has stopped at the target bin.", name.c_str());
-    }
-}
 
 void TrashTurtle::teleportToBinCenter() {
     if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
