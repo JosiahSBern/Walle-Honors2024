@@ -4,17 +4,31 @@
 #include <limits>
 #include "turtlesim/msg/pose.hpp"
 #include "turtlesim/srv/teleport_absolute.hpp"
+#include <random>  // For randomization of trash type
 
 TrashTurtle::TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius, TrashType type, const Point& target)
     : Turtle(node, name, radius) // Base class constructor must remain in initializer list
 {
-    this->type = type;
+    // Randomize the trash type if not provided
+    if (type == TrashType::NONE) {
+        // Randomly assign a trash type
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, 2);  // Randomize TrashType: 0, 1, or 2
+        this->type = static_cast<TrashType>(dis(gen));  // Randomize the trash type
+    } else {
+        this->type = type;
+    }
+
     this->targetPosition = target;
     this->targetRadius = 0.5;
     this->currentState_ = SortState::MOVING_TO_BIN;
     this->pen_client_ = this->node_->create_client<turtlesim::srv::SetPen>("/" + name + "/set_pen");
     this->teleport_client_ = this->node_->create_client<turtlesim::srv::TeleportAbsolute>("/" + name + "/teleport_absolute");
     this->twist_pub_ = this->node_->create_publisher<geometry_msgs::msg::Twist>("/" + name + "/cmd_vel", 10);
+
+    // Set the pen color based on the trash type
+    setPenColorForTrashType();
 
     // Subscribe to the turtle's pose topic to track its position and orientation
     auto pose_callback = [this](const turtlesim::msg::Pose::SharedPtr msg) {
@@ -25,7 +39,62 @@ TrashTurtle::TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& 
 
     this->node_->create_subscription<turtlesim::msg::Pose>("/" + name + "/pose", 10, pose_callback);
 }
- 
+
+void TrashTurtle::setPenColorForTrashType() {
+    int r, g, b;
+    switch(type) {
+        case TrashType::TRASH:
+            r = 255; g = 0; b = 0;  // Red for Trash
+            break;
+        case TrashType::RECYCLING:
+            r = 0; g = 255; b = 0;  // Green for Recycling
+            break;
+        case TrashType::PAPER:
+            r = 0; g = 0; b = 255;  // Blue for Paper
+            break;
+        default:
+            r = 255; g = 255; b = 255;  // Default to white
+            break;
+    }
+    setPenColor(r, g, b, 2);  // Set the color and pen width
+}
+
+void TrashTurtle::setPenColor(int r, int g, int b, int width) {
+    if (!pen_client_) {
+        RCLCPP_ERROR(node_->get_logger(), "Pen client not initialized for %s", name.c_str());
+        return;
+    }
+
+    if (!pen_client_->wait_for_service(std::chrono::seconds(5))) {
+        RCLCPP_ERROR(node_->get_logger(), "SetPen service not available for %s.", name.c_str());
+        return;
+    }
+
+    auto set_pen_request = std::make_shared<turtlesim::srv::SetPen::Request>();
+    set_pen_request->r = r;
+    set_pen_request->g = g;
+    set_pen_request->b = b;
+    set_pen_request->width = width;
+    set_pen_request->off = 0;  // Pen ON
+
+    auto result = pen_client_->async_send_request(set_pen_request);
+}
+
+Point TrashTurtle::getBinPositionForTrashType() const {
+    // Define bin positions similar to your GameEnvironment
+    switch(type) {
+        case TrashType::TRASH:
+            return {1.5, 9.0};  // First bin (green)
+        case TrashType::RECYCLING:
+            return {4.5, 9.0};  // Second bin (blue)
+        case TrashType::PAPER:
+            return {7.5, 9.0};  // Third bin (gray)
+        default:
+            return {5.5, 5.5};  // Default fallback
+    }
+}
+
+
 
 
 bool TrashTurtle::isAtTarget() const {
