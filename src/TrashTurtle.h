@@ -1,44 +1,66 @@
+// include/TrashTurtle.h
 #ifndef TRASH_TURTLE_H
 #define TRASH_TURTLE_H
 
 #include "Turtle.h"
 #include "Point.h"
+#include "TrashType.h"
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
-#include "turtlesim/srv/set_pen.hpp"
-#include "TrashType.h"
+#include <turtlesim/srv/set_pen.hpp>
+#include "turtlesim/srv/teleport_absolute.hpp"
+#include "turtlesim/msg/pose.hpp"
 
+enum class SortState {
+        MOVING_TO_BIN,
+        SORTING,
+        SORTED
+};
 
 class TrashTurtle : public Turtle {
 private:
-    TrashType type;                             
-    Point targetPosition;//Target position for the TrashTurtle
-    double targetRadius;//Radius within which the turtle considers itself at the target
-    double followDistanceThreshold_;//Distance threshold for following the leader turtle
-    bool followingLeader_;//Whether the TrashTurtle is currently following the leader
-    std::shared_ptr<Turtle> leaderTurtle;//Pointer to the leader Turtle
-    rclcpp::Client<turtlesim::srv::SetPen>::SharedPtr pen_client_;
+    //Trash-specific attributes
+    TrashType type;
+    Point targetPosition;
+    Point binPosition;
+    double orientation;
+    rclcpp::Client<turtlesim::srv::TeleportAbsolute>::SharedPtr teleport_client_;
 
+    //Navigation parameters
+    double targetRadius;
+    
+
+    //ROS2 Client for setting pen
+    rclcpp::Client<turtlesim::srv::SetPen>::SharedPtr pen_client_;
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub_;
+
+
+    //Helper methods
+    void updateVelocityToTarget(const Point& target);
+    void stopMovement();
+    Point getBinPositionForTrashType() const;
+
+    // State management
+    SortState currentState_;
 
 
 public:
-    void setPenColor(int r, int g, int b, int width);
-
-    void updateVelocityToTarget(const Point& target);//Updates velocity
-
-    void followLeader();//Logic for following the leader turtle
-
-    TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, 
+    TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name,
                 double radius, TrashType type, const Point& target);
 
-    void setLeaderTurtle(std::shared_ptr<Turtle> leader); //Assign the leader turtle
-    void moveToBin(); //Move to the assigned bin or follow the leader
-    void move() ;                                
-    void renderTurtle();// Render the TrashTurtle
-    bool isAtTarget() const;//Check if TrashTurtle is at its target
-    void setTargetPosition(const Point& target);//Set the target position
-    TrashType getTrashType() const; //Get the type of trash handled by this turtle
-    void stopMovement();
+    //Core movement and navigation methods
+    void move(const Turtle& target,double follow_distance);
+
+    // Setter and getter methods
+    void setTargetPosition(const Point& target);
+    void setPenColor(int r, int g, int b, int width);
+
+    TrashType getTrashType() const;
+    SortState getCurrentState() const;
+
+    //State checking methods
+    bool isAtTarget() const;
+    void sortIntoBin();
 };
 
 #endif // TRASH_TURTLE_H

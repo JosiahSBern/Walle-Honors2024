@@ -1,1 +1,10 @@
 .vscode/
+!/src/Environment.cpp
+!/src/Environment.h
+!/src/GameEnvironment.cpp
+!/src/GameEnvironment.h
+!/src/Turtle.cpp
+!/src/Turtle.h
+!/src/main.cpp
+!/src/TrashTurtle.cpp
+!/src/TrashTurtle.h
