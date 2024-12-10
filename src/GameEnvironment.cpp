@@ -157,7 +157,7 @@ void GameEnvironment::updateTrashTurtles() {
 
 
 
-Point GameEnvironment::getBinPositionForTrashType(TrashType type) {
+// Point GameEnvironment::getBinPositionForTrashType(TrashType type) {
     switch (type) {
         case TrashType::TRASH:
             return {1.5, 9.0};  // First bin (green)
