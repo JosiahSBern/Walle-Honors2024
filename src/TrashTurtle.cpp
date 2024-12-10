@@ -16,6 +16,17 @@ TrashTurtle::TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& 
     this->teleport_client_ = this->node_->create_client<turtlesim::srv::TeleportAbsolute>("/" + name + "/teleport_absolute");
     this->twist_pub_ = this->node_->create_publisher<geometry_msgs::msg::Twist>("/" + name + "/cmd_vel", 10);
 
+
+    if (type == TrashType::NONE) {
+        // Randomly assign a trash type
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, 2);  // Randomize TrashType: 0, 1, or 2
+        this->type = static_cast<TrashType>(dis(gen));  // Randomize the trash type
+    } else {
+        this->type = type;
+    }
+
     // Set the pen color based on the trash type
     setPenColorForTrashType();
 

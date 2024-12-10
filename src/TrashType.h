@@ -4,7 +4,8 @@
 enum class TrashType {
     TRASH,
     RECYCLING,
-    PAPER
+    PAPER,
+    NONE
 };
 
 #endif 
