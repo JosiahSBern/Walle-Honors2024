@@ -19,7 +19,16 @@ ROS2 Jazyy or later.
 turtlesim package installed:
   sudo apt install ros-jazzy-turtlesim
 
-### Installation
+## Installation
+###Building Process: 
+cd ~/ros2_ws # Source ROS2 Jazzy 
+source /opt/ros/jazzy/setup.bash 
+colcon build --packages-select robot_dog 
+source ~/ros2_ws/install/setup.bash
+
+~/ros2_ws/install/robot_dog/lib/robot_dog/robot_dog
+ros2 run turtlesim turtlesim_node
+
 
 ## How to Play
 Control the Teleop Turtle: Use your keyboard to move the Teleop Turtle around the environment.
