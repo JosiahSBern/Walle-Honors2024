@@ -34,6 +34,8 @@ public:
     void setPenColorForTrashType();
 
     Point getBinPositionForTrashType() const; // Get the corresponding bin position for the trash type
+    SortState getCurrentState() const; // Get the current sorting state
+
 
 private:
     TrashType type; // Type of trash (Trash, Recycling, Paper)

@@ -9,17 +9,6 @@
 TrashTurtle::TrashTurtle(std::shared_ptr<rclcpp::Node> node, const std::string& name, double radius, TrashType type, const Point& target)
     : Turtle(node, name, radius) // Base class constructor must remain in initializer list
 {
-    // Randomize the trash type if not provided
-    if (type == TrashType::NONE) {
-        // Randomly assign a trash type
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis(0, 2);  // Randomize TrashType: 0, 1, or 2
-        this->type = static_cast<TrashType>(dis(gen));  // Randomize the trash type
-    } else {
-        this->type = type;
-    }
-
     this->targetPosition = target;
     this->targetRadius = 0.5;
     this->currentState_ = SortState::MOVING_TO_BIN;
