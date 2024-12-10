@@ -85,13 +85,13 @@ Point TrashTurtle::getBinPositionForTrashType() const {
     // Define bin positions similar to your GameEnvironment
     switch(type) {
         case TrashType::TRASH:
-            return {1.5, 9.0};  // First bin (green)
+            return {1.5, 9.0};  // First bin 
         case TrashType::RECYCLING:
-            return {4.5, 9.0};  // Second bin (blue)
+            return {4.5, 9.0};  // Second bin 
         case TrashType::PAPER:
-            return {7.5, 9.0};  // Third bin (gray)
+            return {7.5, 9.0};  // Third bin 
         default:
-            return {5.5, 5.5};  // Default fallback
+            return {5.5, 5.5};  
     }
 }
 

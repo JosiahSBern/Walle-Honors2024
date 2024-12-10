@@ -73,7 +73,7 @@ void GameEnvironment::spawnTrashTurtles() {
     const double bottomBoxTop = 3.0;
     const double bottomBoxBottom = 1.0;
 
-    const int numTurtles = 3;
+    const int numTurtles = 4;
     const double horizontalSpacing = (bottomBoxRight - bottomBoxLeft) / (numTurtles + 1);
     for (size_t i = 0; i < numTurtles; ++i) {
         TrashType type = static_cast<TrashType>(i % 3);  //Cycle through trash types
@@ -208,19 +208,6 @@ void GameEnvironment::drawBins() {
 }
 
 
-
-// // Point GameEnvironment::getBinPositionForTrashType(TrashType type) {
-//     switch (type) {
-//         case TrashType::TRASH:
-//             return {1.5, 9.0};  // First bin
-//         case TrashType::RECYCLING:
-//             return {4.5, 9.0};  // Second bin 
-//         case TrashType::PAPER:
-//             return {7.5, 9.0};  // Third bin 
-//         default:
-//             return {5.5, 5.5};  // Default fallback
-//     }
-// }
 
 // void GameEnvironment::moveCentralTurtleToBin(const Point& binPosition) {
 
