@@ -21,7 +21,7 @@ turtlesim package installed:
 
 ### Installation
 
-###How to Play
+### How to Play
 Control the Teleop Turtle: Use your keyboard to move the Teleop Turtle around the environment.
 Sort Trash Turtles: Navigate to the Trash Turtles and guide them to their respective bins (Trash, Recycling, or Paper)
 
