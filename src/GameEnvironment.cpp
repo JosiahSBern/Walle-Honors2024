@@ -131,65 +131,66 @@ void GameEnvironment::spawnTrashTurtles() {
 void GameEnvironment::updateTrashTurtles() {
     double patrolRadius = 0.5;  // Radius for patrol movement
     double patrolAngle = 0.0;  // Current angle for circular patrol
-    double patrolSpeed = 0.05; // Slower speed for patrol angle increment
+    double patrolSpeed = 0.05; // Speed for patrol angle increment
+    double stepSize = 0.1;     // Small step size for smooth movement between bins
     double follow_distance = 1.0; // Distance for TrashTurtles to follow
     size_t currentTrashTurtleIndex = 0; // Index of the current TrashTurtle being processed
-    int patrolDelayMs = 500;   // Delay in milliseconds between patrol steps
+    Point currentBin = binPositions[0]; // Initialize to the first bin
 
     while (rclcpp::ok()) {
         // Ensure we have a valid TrashTurtle to process
         if (currentTrashTurtleIndex < trashTurtles.size()) {
             auto& trashTurtle = trashTurtles[currentTrashTurtleIndex];
             TrashType type = trashTurtle->getTrashType();
-
-            // Get the bin's top-left corner
             Point targetBin = binPositions[static_cast<size_t>(type)];
 
-            // Patrol around the top-left corner of the bin
-            patrolAngle += patrolSpeed; // Increment patrol angle more slowly
-            double patrolX = targetBin.x + patrolRadius * std::cos(patrolAngle);
-            double patrolY = targetBin.y + patrolRadius * std::sin(patrolAngle);
+            // Smoothly move turtle1 towards the target bin
+            Point turtle1Position = centralTurtle->getPosition();
+            double dx = targetBin.x - turtle1Position.x;
+            double dy = targetBin.y - turtle1Position.y;
+            double distance = std::sqrt(dx * dx + dy * dy);
 
-            // Teleport turtle1 to the patrol point
-            if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
-                auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
-                request->x = patrolX;
-                request->y = patrolY;
-                request->theta = patrolAngle;
+            if (distance > stepSize) {
+                // Calculate the next position for smooth movement
+                double stepX = turtle1Position.x + stepSize * (dx / distance);
+                double stepY = turtle1Position.y + stepSize * (dy / distance);
 
-                auto result = teleport_client_->async_send_request(request);
-                if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
-                    RCLCPP_INFO(node_->get_logger(), "Turtle1 patrolling slowly at (%.2f, %.2f) around bin for TrashType %d.",
-                                patrolX, patrolY, static_cast<int>(type));
-                } else {
-                    RCLCPP_ERROR(node_->get_logger(), "Failed to patrol Turtle1.");
+                // Teleport turtle1 to the next step
+                if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
+                    auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
+                    request->x = stepX;
+                    request->y = stepY;
+                    request->theta = std::atan2(dy, dx); // Set orientation towards the target bin
+
+                    auto result = teleport_client_->async_send_request(request);
+                    if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+                        RCLCPP_INFO(node_->get_logger(), "Turtle1 moving smoothly to bin for TrashType %d.", static_cast<int>(type));
+                    } else {
+                        RCLCPP_ERROR(node_->get_logger(), "Failed to move Turtle1 smoothly.");
+                    }
                 }
-            }
-
-            // Check if the current TrashTurtle has been sorted
-            if (trashTurtle->getCurrentState() == SortState::SORTED) {
-                RCLCPP_INFO(node_->get_logger(), "TrashTurtle %s sorted. Moving to the next turtle.",
-                            trashTurtle->getName().c_str());
+            } else {
+                // Turtle1 reached the bin
+                RCLCPP_INFO(node_->get_logger(), "Turtle1 reached the bin for TrashType %d.", static_cast<int>(type));
+                currentBin = targetBin;
                 currentTrashTurtleIndex++;
             }
 
-            // Update TrashTurtles' movement
-            for (auto& turtle : trashTurtles) {
-                if (turtle->getCurrentState() == SortState::MOVING_TO_BIN) {
-                    turtle->move(*centralTurtle, follow_distance);
+            // Handle TrashTurtle state updates
+            if (trashTurtle->getCurrentState() == SortState::MOVING_TO_BIN) {
+                trashTurtle->move(*centralTurtle, follow_distance);
 
-                    // Stop the TrashTurtle when it reaches the target bin center
-                    if (turtle->isAtTarget()) {
-                        turtle->setCurrentState(SortState::SORTED);
-                        turtle->stopAtTarget();
-                    }
+                // Stop the TrashTurtle when it reaches the target bin center
+                if (trashTurtle->isAtTarget()) {
+                    trashTurtle->setCurrentState(SortState::SORTED);
+                    trashTurtle->stopAtTarget();
                 }
             }
         }
 
-        // Slow down the loop to make the patrol visually slower
+        // Allow other ROS2 processes to run
         rclcpp::spin_some(node_);
-        rclcpp::sleep_for(std::chrono::milliseconds(patrolDelayMs)); // Slower update rate
+        rclcpp::sleep_for(std::chrono::milliseconds(100)); // Control update rate
     }
 }
 
