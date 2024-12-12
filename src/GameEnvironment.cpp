@@ -144,24 +144,52 @@ void GameEnvironment::updateTrashTurtles() {
             // Get the bin's top-left corner
             Point targetBin = binPositions[static_cast<size_t>(type)];
 
-            // Patrol around the top-left corner of the bin
-            patrolAngle += patrolSpeed;
-            double patrolX = targetBin.x + patrolRadius * std::cos(patrolAngle);
-            double patrolY = targetBin.y + patrolRadius * std::sin(patrolAngle);
+            // Move Turtle1 toward the bin
+            Point turtle1Position = centralTurtle->getPosition();
+            double dx = targetBin.x - turtle1Position.x;
+            double dy = targetBin.y - turtle1Position.y;
+            double distance = std::sqrt(dx * dx + dy * dy);
 
-            // Teleport turtle1 to the patrol point
-            if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
-                auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
-                request->x = patrolX;
-                request->y = patrolY;
-                request->theta = patrolAngle;
+            if (distance > follow_distance) {
+                // Move Turtle1 in steps towards the bin
+                double stepX = turtle1Position.x + 0.1 * (dx / distance);
+                double stepY = turtle1Position.y + 0.1 * (dy / distance);
 
-                auto result = teleport_client_->async_send_request(request);
-                if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
-                    RCLCPP_INFO(node_->get_logger(), "Turtle1 patrolling at (%.2f, %.2f) around bin for TrashType %d.",
-                                patrolX, patrolY, static_cast<int>(type));
-                } else {
-                    RCLCPP_ERROR(node_->get_logger(), "Failed to patrol Turtle1.");
+                if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
+                    auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
+                    request->x = stepX;
+                    request->y = stepY;
+                    request->theta = std::atan2(dy, dx);
+
+                    auto result = teleport_client_->async_send_request(request);
+                    if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+                        RCLCPP_INFO(node_->get_logger(), "Turtle1 moving towards the bin at (%.2f, %.2f).", stepX, stepY);
+                    } else {
+                        RCLCPP_ERROR(node_->get_logger(), "Failed to move Turtle1.");
+                    }
+                }
+
+                // Add delay for traveling to bins
+                rclcpp::sleep_for(std::chrono::milliseconds(300)); // Slow down only the traveling movement
+            } else {
+                // Patrol around the bin
+                patrolAngle += patrolSpeed;
+                double patrolX = targetBin.x + patrolRadius * std::cos(patrolAngle);
+                double patrolY = targetBin.y + patrolRadius * std::sin(patrolAngle);
+
+                if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
+                    auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
+                    request->x = patrolX;
+                    request->y = patrolY;
+                    request->theta = patrolAngle;
+
+                    auto result = teleport_client_->async_send_request(request);
+                    if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+                        RCLCPP_INFO(node_->get_logger(), "Turtle1 patrolling at (%.2f, %.2f) around bin for TrashType %d.",
+                                    patrolX, patrolY, static_cast<int>(type));
+                    } else {
+                        RCLCPP_ERROR(node_->get_logger(), "Failed to patrol Turtle1.");
+                    }
                 }
             }
 
@@ -188,9 +216,10 @@ void GameEnvironment::updateTrashTurtles() {
 
         // Allow other ROS2 processes to run
         rclcpp::spin_some(node_);
-        rclcpp::sleep_for(std::chrono::milliseconds(300)); // Increased delay for better visibility
+        rclcpp::sleep_for(std::chrono::milliseconds(100)); // Keep patrol loop fast
     }
 }
+
 
 
 
