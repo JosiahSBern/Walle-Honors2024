@@ -49,3 +49,20 @@ void Turtle::setOrientation(double theta) {
 turtlesim::msg::Pose Turtle::getPose() const {
     return pose;
 }
+void Turtle::teleportToPosition(double x, double y, double theta) {
+    if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
+        auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
+        request->x = x;
+        request->y = y;
+        request->theta = theta;
+
+        auto result = teleport_client_->async_send_request(request);
+        if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+            RCLCPP_INFO(node_->get_logger(), "Turtle teleported to position (%.2f, %.2f) with theta %.2f.", x, y, theta);
+        } else {
+            RCLCPP_ERROR(node_->get_logger(), "Failed to teleport Turtle.");
+        }
+    } else {
+        RCLCPP_ERROR(node_->get_logger(), "TeleportAbsolute service not available.");
+    }
+}

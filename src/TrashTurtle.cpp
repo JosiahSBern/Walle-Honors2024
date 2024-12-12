@@ -96,19 +96,6 @@ Point TrashTurtle::getBinPositionForTrashType() const {
     }
 }
 
-    // Hardcoded bin center positions
-    switch(type) {
-        case TrashType::TRASH:
-            return {2.5, 7.0};  // Center of the first bin
-        case TrashType::RECYCLING:
-            return {5.5, 7.0};  // Center of the second bin
-        case TrashType::PAPER:
-            return {8.5, 7.0};  // Center of the third bin
-        default:
-            return {5.5, 5.5};  // Default fallback (not used in this case)
-    }
-}
-
 
 void TrashTurtle::setTargetPosition(const Point& target) {
     this->targetPosition = getBinPositionForTrashType();  // Always set the middle of the bin

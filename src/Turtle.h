@@ -39,6 +39,7 @@ public:
 
     turtlesim::msg::Pose getPose() const; // Getter for the full Pose
     void updatePose(); 
+    void teleportToPosition(double x, double y, double theta) 
 };
 
 #endif
