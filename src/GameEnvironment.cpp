@@ -128,7 +128,6 @@ void GameEnvironment::spawnTrashTurtles() {
 
 
 
-
 void GameEnvironment::updateTrashTurtles() {
     double patrolRadius = 0.5; // Radius for patrol movement
     double patrolAngle = 0.0; // Current angle for circular patrol
@@ -189,9 +188,11 @@ void GameEnvironment::updateTrashTurtles() {
 
         // Allow other ROS2 processes to run
         rclcpp::spin_some(node_);
-        rclcpp::sleep_for(std::chrono::milliseconds(100)); // Control update rate
+        rclcpp::sleep_for(std::chrono::milliseconds(300)); // Increased delay for better visibility
     }
 }
+
+
 
 
 
