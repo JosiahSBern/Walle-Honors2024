@@ -128,6 +128,8 @@ void GameEnvironment::spawnTrashTurtles() {
 
 
 
+
+
 void GameEnvironment::updateTrashTurtles() {
     double patrolRadius = 0.5;  // Radius for patrol movement
     double patrolAngle = 0.0;  // Current angle for circular patrol
@@ -138,6 +140,22 @@ void GameEnvironment::updateTrashTurtles() {
     Point currentBin = binPositions[0]; // Initialize to the first bin
 
     while (rclcpp::ok()) {
+        // Check if all TrashTurtles are sorted
+        bool allSorted = true;
+        for (const auto& trashTurtle : trashTurtles) {
+            if (trashTurtle->getCurrentState() != SortState::SORTED) {
+                allSorted = false;
+                break;
+            }
+        }
+
+        // If all TrashTurtles are sorted, end the program
+        if (allSorted) {
+            RCLCPP_INFO(node_->get_logger(), "All TrashTurtles are sorted. Ending the game!");
+            rclcpp::shutdown();
+            return; // Exit the function to ensure clean termination
+        }
+
         // Ensure we have a valid TrashTurtle to process
         if (currentTrashTurtleIndex < trashTurtles.size()) {
             auto& trashTurtle = trashTurtles[currentTrashTurtleIndex];
@@ -184,6 +202,7 @@ void GameEnvironment::updateTrashTurtles() {
                 if (trashTurtle->isAtTarget()) {
                     trashTurtle->setCurrentState(SortState::SORTED);
                     trashTurtle->stopAtTarget();
+                    trashTurtle->teleportToBinCenter();
                 }
             }
         }
@@ -194,24 +213,6 @@ void GameEnvironment::updateTrashTurtles() {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-void GameEnvironment::handleSorting() {
-    for (auto& turtle : trashTurtles) {
-        if (turtle->isAtTarget()) {
-            RCLCPP_INFO(node_->get_logger(), "TrashTurtle %s is sorted into the correct bin.", turtle->getName().c_str());
-        }
-    }
-}
 
 void GameEnvironment::drawWalls() {
     const double WALL_LEFT = 1.0;
