@@ -226,7 +226,7 @@ void GameEnvironment::drawBins() {
         double centerX = (topLeft.x + bottomRight.x) / 2.0;
         double centerY = (topLeft.y + bottomRight.y) / 2.0;
 
-        // Update the center as the target bin position for TrashTurtles
+        // Store the center as the target bin position for TrashTurtles
         binPositions[i] = {centerX, centerY};
 
         // Set bin colors dynamically based on the type
@@ -241,33 +241,11 @@ void GameEnvironment::drawBins() {
         // Draw the bin as a rectangle with the specified color
         drawRectangle(topLeft, bottomRight, r, g, b, LINE_WIDTH);
 
-        RCLCPP_INFO(node_->get_logger(), "Bin %zu drawn: TopLeft (%.2f, %.2f), BottomRight (%.2f, %.2f), Color (%d, %d, %d)",
+        RCLCPP_INFO(node_->get_logger(),
+                    "Bin %zu drawn: TopLeft (%.2f, %.2f), BottomRight (%.2f, %.2f), Color (%d, %d, %d)",
                     i + 1, topLeft.x, topLeft.y, bottomRight.x, bottomRight.y, r, g, b);
     }
 }
-
-    const double binWidth = 2.0;
-    const double binHeight = 3.0;
-    const int LINE_WIDTH = 4;
-
-    RCLCPP_INFO(node_->get_logger(), "Drawing bins...");
-    for (size_t i = 0; i < binPositions.size(); ++i) {
-        Point topLeft = binPositions[i];
-        Point bottomRight = {binPositions[i].x + binWidth, binPositions[i].y - binHeight};
-
-        // Calculate the bin center dynamically
-        double centerX = (topLeft.x + bottomRight.x) / 2.0;
-        double centerY = (topLeft.y + bottomRight.y) / 2.0;
-
-        // Store the center as the target bin position for TrashTurtles
-        binPositions[i] = {centerX, centerY};
-
-        // Draw the bin as a rectangle
-        drawRectangle(topLeft, bottomRight, 0, 255, 255, LINE_WIDTH);  // Cyan for bins
-        RCLCPP_INFO(node_->get_logger(), "Bin %zu drawn: TopLeft (%.2f, %.2f), BottomRight (%.2f, %.2f)",
-                    i + 1, topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
-    }
-
 
 
 
