@@ -132,6 +132,9 @@ void GameEnvironment::spawnTrashTurtles() {
 void GameEnvironment::updateTrashTurtles() {
     double stepSize = 0.1;         // Small step size for smooth movement
     double followDistance = 1.0;  // Distance for TrashTurtle to follow
+    double patrolRadius = 0.5;    // Radius for turtle1's patrol around the bin
+    double patrolAngle = 0.0;     // Current angle for circular patrol
+    double patrolSpeed = 0.05;    // Speed for patrol angle increment
     size_t currentTrashTurtleIndex = 0;  // Index of the current TrashTurtle being processed
     bool movingToTrashTurtle = true;     // Whether turtle1 is moving to the TrashTurtle's position
 
@@ -218,6 +221,24 @@ void GameEnvironment::updateTrashTurtles() {
                             RCLCPP_INFO(node_->get_logger(), "Turtle1 moving towards the bin.");
                         }
                     }
+                } else {
+                    // Step 3: Patrol around the bin until TrashTurtle is sorted
+                    patrolAngle += patrolSpeed;  // Increment patrol angle
+                    double patrolX = targetBin.x + patrolRadius * std::cos(patrolAngle);
+                    double patrolY = targetBin.y + patrolRadius * std::sin(patrolAngle);
+
+                    // Teleport turtle1 in a circular pattern around the bin
+                    if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
+                        auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
+                        request->x = patrolX;
+                        request->y = patrolY;
+                        request->theta = patrolAngle;
+
+                        auto result = teleport_client_->async_send_request(request);
+                        if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+                            RCLCPP_INFO(node_->get_logger(), "Turtle1 patrolling around the bin.");
+                        }
+                    }
                 }
 
                 // Move TrashTurtle towards the bin, following turtle1
@@ -246,6 +267,7 @@ void GameEnvironment::updateTrashTurtles() {
         rclcpp::sleep_for(std::chrono::milliseconds(100));  // Control update rate
     }
 }
+
 
 
 
