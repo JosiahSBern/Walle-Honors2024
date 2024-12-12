@@ -129,11 +129,12 @@ void GameEnvironment::spawnTrashTurtles() {
 
 
 void GameEnvironment::updateTrashTurtles() {
-    double patrolRadius = 0.5; // Radius for patrol movement
-    double patrolAngle = 0.0; // Current angle for circular patrol
-    double patrolSpeed = 0.1; // Speed for patrol angle increment
+    double patrolRadius = 0.5;  // Radius for patrol movement
+    double patrolAngle = 0.0;  // Current angle for circular patrol
+    double patrolSpeed = 0.05; // Slower speed for patrol angle increment
     double follow_distance = 1.0; // Distance for TrashTurtles to follow
     size_t currentTrashTurtleIndex = 0; // Index of the current TrashTurtle being processed
+    int patrolDelayMs = 500;   // Delay in milliseconds between patrol steps
 
     while (rclcpp::ok()) {
         // Ensure we have a valid TrashTurtle to process
@@ -145,7 +146,7 @@ void GameEnvironment::updateTrashTurtles() {
             Point targetBin = binPositions[static_cast<size_t>(type)];
 
             // Patrol around the top-left corner of the bin
-            patrolAngle += patrolSpeed;
+            patrolAngle += patrolSpeed; // Increment patrol angle more slowly
             double patrolX = targetBin.x + patrolRadius * std::cos(patrolAngle);
             double patrolY = targetBin.y + patrolRadius * std::sin(patrolAngle);
 
@@ -158,7 +159,7 @@ void GameEnvironment::updateTrashTurtles() {
 
                 auto result = teleport_client_->async_send_request(request);
                 if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
-                    RCLCPP_INFO(node_->get_logger(), "Turtle1 patrolling at (%.2f, %.2f) around bin for TrashType %d.",
+                    RCLCPP_INFO(node_->get_logger(), "Turtle1 patrolling slowly at (%.2f, %.2f) around bin for TrashType %d.",
                                 patrolX, patrolY, static_cast<int>(type));
                 } else {
                     RCLCPP_ERROR(node_->get_logger(), "Failed to patrol Turtle1.");
@@ -186,11 +187,12 @@ void GameEnvironment::updateTrashTurtles() {
             }
         }
 
-        // Allow other ROS2 processes to run
+        // Slow down the loop to make the patrol visually slower
         rclcpp::spin_some(node_);
-        rclcpp::sleep_for(std::chrono::milliseconds(100)); // Control update rate
+        rclcpp::sleep_for(std::chrono::milliseconds(patrolDelayMs)); // Slower update rate
     }
 }
+
 
 
 
