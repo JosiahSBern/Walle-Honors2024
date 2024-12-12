@@ -53,6 +53,7 @@ void GameEnvironment::drawGame() {
     RCLCPP_INFO(node_->get_logger(), "Use the arrow keys to move the central turtle.");
     RCLCPP_INFO(node_->get_logger(), "Your goal: Help the TrashTurtles reach their designated bins.");
     RCLCPP_INFO(node_->get_logger(), "Trash Types: Green (Trash), Blue (Recycling), Gray (Paper).");
+     RCLCPP_INFO(node_->get_logger(), "Press Enter to start.");
     std::cin.get();
 
     moveTurtleToBins();
