@@ -170,7 +170,7 @@ void GameEnvironment::updateTrashTurtles() {
                 }
 
                 // Add delay for traveling to bins
-                rclcpp::sleep_for(std::chrono::milliseconds(300)); // Slow down only the traveling movement
+                rclcpp::sleep_for(std::chrono::milliseconds(100)); // Slow down only the traveling movement
             } else {
                 // Patrol around the bin
                 patrolAngle += patrolSpeed;
