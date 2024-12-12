@@ -59,15 +59,58 @@ void GameEnvironment::drawGame() {
 }
 
 
-void GameEnvironment::initializeEnvironment() {
-    auto pose_callback = [this](const turtlesim::msg::Pose::SharedPtr msg) {
-        centralTurtle->setPosition({msg->x, msg->y});
-        centralTurtle->setOrientation(msg->theta);  // Update turtle1's orientation
-        RCLCPP_INFO(node_->get_logger(), "Turtle1 Pose Updated: x=%.2f, y=%.2f, theta=%.2f", msg->x, msg->y, msg->theta);
-    };
+void GameEnvironment::updateTrashTurtles() {
+    std::vector<TrashType> visitedTrashTypes; // To keep track of visited types
+    double follow_distance = 1.0; // Distance for TrashTurtles to follow
 
-    node_->create_subscription<turtlesim::msg::Pose>("/turtle1/pose", 10, pose_callback);
+    while (rclcpp::ok()) {
+        // Iterate through TrashTurtles to determine target bins
+        for (auto& trashTurtle : trashTurtles) {
+            TrashType type = trashTurtle->getTrashType();
+
+            // Check if we need to teleport turtle1 to this type's bin
+            if (std::find(visitedTrashTypes.begin(), visitedTrashTypes.end(), type) == visitedTrashTypes.end()) {
+                Point binCenter = trashTurtle->getBinPositionForTrashType();
+
+                // Teleport turtle1 to the bin center
+                if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
+                    auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
+                    request->x = binCenter.x;
+                    request->y = binCenter.y;
+                    request->theta = 0.0;
+
+                    auto result = teleport_client_->async_send_request(request);
+                    if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+                        RCLCPP_INFO(node_->get_logger(), "Turtle1 teleported to bin for TrashType %d at (%.2f, %.2f).", 
+                                    static_cast<int>(type), binCenter.x, binCenter.y);
+                        visitedTrashTypes.push_back(type); // Mark this type as visited
+                    } else {
+                        RCLCPP_ERROR(node_->get_logger(), "Failed to teleport Turtle1 to bin for TrashType %d.", 
+                                     static_cast<int>(type));
+                    }
+                } else {
+                    RCLCPP_ERROR(node_->get_logger(), "TeleportAbsolute service not available for Turtle1.");
+                }
+            }
+
+            // Handle TrashTurtle movement and state updates
+            if (trashTurtle->getCurrentState() == SortState::MOVING_TO_BIN) {
+                trashTurtle->move(*centralTurtle, follow_distance);
+
+                // Stop the TrashTurtle when it reaches the target bin center
+                if (trashTurtle->isAtTarget()) {
+                    trashTurtle->setCurrentState(SortState::SORTED);
+                    trashTurtle->stopAtTarget();
+                }
+            }
+        }
+
+        // Allow other ROS2 processes to run
+        rclcpp::spin_some(node_);
+        rclcpp::sleep_for(std::chrono::milliseconds(100)); // Control update rate
+    }
 }
+
 
 
 

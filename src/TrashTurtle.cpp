@@ -97,6 +97,9 @@ Point TrashTurtle::getBinPositionForTrashType() const {
 }
 
 
+void TrashTurtle::setTargetPosition(const Point& target) {
+    this->targetPosition = getBinPositionForTrashType();  // Always set the middle of the bin
+}
 
 void TrashTurtle::move(const Turtle& target, double follow_distance) {
     // Get the target position and orientation
@@ -169,9 +172,6 @@ void TrashTurtle::updateVelocityToTarget(const Point& target) {
 
 
 
-void TrashTurtle::setTargetPosition(const Point& target) {
-    targetPosition = target;
-}
 
 
 TrashType TrashTurtle::getTrashType() const {
