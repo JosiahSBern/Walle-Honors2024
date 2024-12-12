@@ -83,6 +83,19 @@ void TrashTurtle::setPenColor(int r, int g, int b, int width) {
 
     // Define bin positions similar to your GameEnvironment
 Point TrashTurtle::getBinPositionForTrashType() const {
+    // Dynamically use the calculated bin centers from GameEnvironment
+    switch (type) {
+        case TrashType::TRASH:
+            return {2.5 + 1.0, 9.0 - 1.5};  // Adjust for dynamic bin center
+        case TrashType::RECYCLING:
+            return {5.5 + 1.0, 9.0 - 1.5};
+        case TrashType::PAPER:
+            return {8.5 + 1.0, 9.0 - 1.5};
+        default:
+            return {5.5, 5.5};  // Default fallback
+    }
+}
+
     // Hardcoded bin center positions
     switch(type) {
         case TrashType::TRASH:

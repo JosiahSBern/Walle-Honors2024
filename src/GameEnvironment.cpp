@@ -130,11 +130,8 @@ void GameEnvironment::spawnTrashTurtles() {
 
 
 void GameEnvironment::updateTrashTurtles() {
-    double stepSize = 0.1;         // Small step size for smooth movement
+    double stepSize = 0.2;         // Larger step size for faster movement
     double followDistance = 1.0;  // Distance for TrashTurtle to follow
-    double patrolRadius = 0.5;    // Radius for turtle1's patrol around the bin
-    double patrolAngle = 0.0;     // Current angle for circular patrol
-    double patrolSpeed = 0.05;    // Speed for patrol angle increment
     size_t currentTrashTurtleIndex = 0;  // Index of the current TrashTurtle being processed
     bool movingToTrashTurtle = true;     // Whether turtle1 is moving to the TrashTurtle's position
 
@@ -160,7 +157,7 @@ void GameEnvironment::updateTrashTurtles() {
             auto& trashTurtle = trashTurtles[currentTrashTurtleIndex];
 
             if (movingToTrashTurtle) {
-                // Step 1: Move turtle1 to the TrashTurtle's current position
+                // Move turtle1 to the TrashTurtle's position
                 Point turtle1Position = centralTurtle->getPosition();
                 Point trashTurtlePosition = trashTurtle->getPosition();
                 double dx = trashTurtlePosition.x - turtle1Position.x;
@@ -168,88 +165,31 @@ void GameEnvironment::updateTrashTurtles() {
                 double distance = std::sqrt(dx * dx + dy * dy);
 
                 if (distance > stepSize) {
-                    // Calculate the next step for smooth movement
-                    double stepX = turtle1Position.x + stepSize * (dx / distance);
-                    double stepY = turtle1Position.y + stepSize * (dy / distance);
-
-                    // Teleport turtle1 to the next step
-                    if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
-                        auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
-                        request->x = stepX;
-                        request->y = stepY;
-                        request->theta = std::atan2(dy, dx);
-
-                        auto result = teleport_client_->async_send_request(request);
-                        if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
-                            RCLCPP_INFO(node_->get_logger(), "Turtle1 moving towards TrashTurtle %s.", trashTurtle->getName().c_str());
-                        } else {
-                            RCLCPP_ERROR(node_->get_logger(), "Failed to move Turtle1 smoothly.");
-                        }
-                    }
-                    rclcpp::sleep_for(std::chrono::milliseconds(100));  // Slow down for visibility
-                    continue;
+                    // Teleport turtle1 to the TrashTurtle
+                    centralTurtle->teleportToPosition(trashTurtlePosition.x, trashTurtlePosition.y, std::atan2(dy, dx));
+                    RCLCPP_INFO(node_->get_logger(), "Turtle1 moved to TrashTurtle %s.", trashTurtle->getName().c_str());
                 }
 
-                // Turtle1 reached the TrashTurtle's position
-                RCLCPP_INFO(node_->get_logger(), "Turtle1 reached TrashTurtle %s.", trashTurtle->getName().c_str());
                 movingToTrashTurtle = false;  // Switch to moving both turtles to the bin
             } else {
-                // Step 2: Move both turtle1 and TrashTurtle towards the bin
+                // Move both turtle1 and TrashTurtle to the bin
                 TrashType type = trashTurtle->getTrashType();
                 Point targetBin = binPositions[static_cast<size_t>(type)];
                 Point turtle1Position = centralTurtle->getPosition();
                 Point trashTurtlePosition = trashTurtle->getPosition();
 
-                // Smoothly move turtle1 towards the bin
-                double dx1 = targetBin.x - turtle1Position.x;
-                double dy1 = targetBin.y - turtle1Position.y;
-                double distance1 = std::sqrt(dx1 * dx1 + dy1 * dy1);
-
-                if (distance1 > stepSize) {
-                    double stepX = turtle1Position.x + stepSize * (dx1 / distance1);
-                    double stepY = turtle1Position.y + stepSize * (dy1 / distance1);
-
-                    // Teleport turtle1 to the next step
-                    if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
-                        auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
-                        request->x = stepX;
-                        request->y = stepY;
-                        request->theta = std::atan2(dy1, dx1);
-
-                        auto result = teleport_client_->async_send_request(request);
-                        if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
-                            RCLCPP_INFO(node_->get_logger(), "Turtle1 moving towards the bin.");
-                        }
-                    }
-                } else {
-                    // Step 3: Patrol around the bin until TrashTurtle is sorted
-                    patrolAngle += patrolSpeed;  // Increment patrol angle
-                    double patrolX = targetBin.x + patrolRadius * std::cos(patrolAngle);
-                    double patrolY = targetBin.y + patrolRadius * std::sin(patrolAngle);
-
-                    // Teleport turtle1 in a circular pattern around the bin
-                    if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
-                        auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
-                        request->x = patrolX;
-                        request->y = patrolY;
-                        request->theta = patrolAngle;
-
-                        auto result = teleport_client_->async_send_request(request);
-                        if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
-                            RCLCPP_INFO(node_->get_logger(), "Turtle1 patrolling around the bin.");
-                        }
-                    }
-                }
+                // Teleport turtle1 directly to the center of the bin
+                centralTurtle->teleportToPosition(targetBin.x, targetBin.y, 0.0);
 
                 // Move TrashTurtle towards the bin, following turtle1
                 trashTurtle->move(*centralTurtle, followDistance);
 
                 // Check if TrashTurtle reached the bin
-                double dx2 = targetBin.x - trashTurtlePosition.x;
-                double dy2 = targetBin.y - trashTurtlePosition.y;
-                double distance2 = std::sqrt(dx2 * dx2 + dy2 * dy2);
+                double dx = targetBin.x - trashTurtlePosition.x;
+                double dy = targetBin.y - trashTurtlePosition.y;
+                double distance = std::sqrt(dx * dx + dy * dy);
 
-                if (distance2 <= stepSize) {
+                if (distance <= stepSize) {
                     // Finalize sorting for the current TrashTurtle
                     trashTurtle->setCurrentState(SortState::SORTED);
                     trashTurtle->stopAtTarget();
@@ -257,14 +197,12 @@ void GameEnvironment::updateTrashTurtles() {
                     movingToTrashTurtle = true;  // Reset for the next TrashTurtle
                     currentTrashTurtleIndex++;
                 }
-
-                rclcpp::sleep_for(std::chrono::milliseconds(100));  // Slow down for visibility
             }
         }
 
         // Allow other ROS2 processes to run
         rclcpp::spin_some(node_);
-        rclcpp::sleep_for(std::chrono::milliseconds(100));  // Control update rate
+        rclcpp::sleep_for(std::chrono::milliseconds(50));  // Faster update rate
     }
 }
 
@@ -289,27 +227,28 @@ void GameEnvironment::drawWalls() {
 
 void GameEnvironment::drawBins() {
     const double binWidth = 2.0;
-    const double binHeight = 3;
+    const double binHeight = 3.0;
     const int LINE_WIDTH = 4;
 
     RCLCPP_INFO(node_->get_logger(), "Drawing bins...");
     for (size_t i = 0; i < binPositions.size(); ++i) {
-        Point binBottomRight = {binPositions[i].x + binWidth, binPositions[i].y - binHeight};
+        Point topLeft = binPositions[i];
+        Point bottomRight = {binPositions[i].x + binWidth, binPositions[i].y - binHeight};
 
-        // Set the pen color and draw the bin
-        int r, g, b;
-        switch (i) {
-            case 0: r = 0; g = 100; b = 0; break;       // Green (Trash)
-            case 1: r = 0; g = 0; b = 255; break;       // Blue (Recycling)
-            case 2: r = 128; g = 128; b = 128; break;   // Gray (Paper)
-            default: r = g = b = 0;                    // Default Black
-        }
+        // Calculate the bin center dynamically
+        double centerX = (topLeft.x + bottomRight.x) / 2.0;
+        double centerY = (topLeft.y + bottomRight.y) / 2.0;
 
-        drawRectangle(binPositions[i], binBottomRight, r, g, b,LINE_WIDTH);
-        RCLCPP_INFO(node_->get_logger(), "Bin %zu drawn: TopLeft (%.2f, %.2f), BottomRight (%.2f, %.2f), Color (%d, %d, %d)",
-                    i + 1, binPositions[i].x, binPositions[i].y, binBottomRight.x, binBottomRight.y, r, g, b);
+        // Store the center as the target bin position for TrashTurtles
+        binPositions[i] = {centerX, centerY};
+
+        // Draw the bin as a rectangle
+        drawRectangle(topLeft, bottomRight, 0, 255, 255, LINE_WIDTH);  // Cyan for bins
+        RCLCPP_INFO(node_->get_logger(), "Bin %zu drawn: TopLeft (%.2f, %.2f), BottomRight (%.2f, %.2f)",
+                    i + 1, topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
     }
 }
+
 
 
 
