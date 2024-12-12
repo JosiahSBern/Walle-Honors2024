@@ -55,8 +55,6 @@ void GameEnvironment::drawGame() {
     RCLCPP_INFO(node_->get_logger(), "Trash Types: Green (Trash), Blue (Recycling), Gray (Paper).");
      RCLCPP_INFO(node_->get_logger(), "Press Enter to start.");
     std::cin.get();
-
-    moveTurtleToBins();
     updateTrashTurtles(); 
 }
 
