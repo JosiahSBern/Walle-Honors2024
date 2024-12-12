@@ -7,7 +7,7 @@
 #include <geometry_msgs/msg/twist.hpp>
 #include <cmath>
 #include "turtlesim/msg/pose.hpp"
-
+#include "turtlesim/srv/teleport_absolute.hpp"
 
 class Turtle {
 protected:
@@ -20,6 +20,8 @@ protected:
     std::shared_ptr<rclcpp::Node> node_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr twist_pub_;
     rclcpp::Subscription<turtlesim::msg::Pose>::SharedPtr pose_sub_;
+    rclcpp::Client<turtlesim::srv::TeleportAbsolute>::SharedPtr teleport_client_;  // Teleport service client
+
 
 public:
     double calculateDistance(const Point& p1, const Point& p2) const;
