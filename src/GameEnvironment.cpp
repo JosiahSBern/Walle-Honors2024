@@ -133,6 +133,7 @@ void GameEnvironment::updateTrashTurtles() {
     double stepSize = 0.1;         // Small step size for smooth movement
     double followDistance = 1.0;  // Distance for TrashTurtle to follow
     size_t currentTrashTurtleIndex = 0;  // Index of the current TrashTurtle being processed
+    bool movingToTrashTurtle = true;     // Whether turtle1 is moving to the TrashTurtle's position
 
     while (rclcpp::ok()) {
         // Check if all TrashTurtles are sorted
@@ -155,59 +156,89 @@ void GameEnvironment::updateTrashTurtles() {
         if (currentTrashTurtleIndex < trashTurtles.size()) {
             auto& trashTurtle = trashTurtles[currentTrashTurtleIndex];
 
-            // Step 1: Move turtle1 to the TrashTurtle's current position
-            Point turtle1Position = centralTurtle->getPosition();
-            Point trashTurtlePosition = trashTurtle->getPosition();
-            double dx = trashTurtlePosition.x - turtle1Position.x;
-            double dy = trashTurtlePosition.y - turtle1Position.y;
-            double distance = std::sqrt(dx * dx + dy * dy);
+            if (movingToTrashTurtle) {
+                // Step 1: Move turtle1 to the TrashTurtle's current position
+                Point turtle1Position = centralTurtle->getPosition();
+                Point trashTurtlePosition = trashTurtle->getPosition();
+                double dx = trashTurtlePosition.x - turtle1Position.x;
+                double dy = trashTurtlePosition.y - turtle1Position.y;
+                double distance = std::sqrt(dx * dx + dy * dy);
 
-            if (distance > stepSize) {
-                // Calculate the next step for smooth movement
-                double stepX = turtle1Position.x + stepSize * (dx / distance);
-                double stepY = turtle1Position.y + stepSize * (dy / distance);
+                if (distance > stepSize) {
+                    // Calculate the next step for smooth movement
+                    double stepX = turtle1Position.x + stepSize * (dx / distance);
+                    double stepY = turtle1Position.y + stepSize * (dy / distance);
 
-                // Teleport turtle1 to the next step
-                if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
-                    auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
-                    request->x = stepX;
-                    request->y = stepY;
-                    request->theta = std::atan2(dy, dx);
+                    // Teleport turtle1 to the next step
+                    if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
+                        auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
+                        request->x = stepX;
+                        request->y = stepY;
+                        request->theta = std::atan2(dy, dx);
 
-                    auto result = teleport_client_->async_send_request(request);
-                    if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
-                        RCLCPP_INFO(node_->get_logger(), "Turtle1 moving towards TrashTurtle %s.", trashTurtle->getName().c_str());
-                    } else {
-                        RCLCPP_ERROR(node_->get_logger(), "Failed to move Turtle1 smoothly.");
+                        auto result = teleport_client_->async_send_request(request);
+                        if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+                            RCLCPP_INFO(node_->get_logger(), "Turtle1 moving towards TrashTurtle %s.", trashTurtle->getName().c_str());
+                        } else {
+                            RCLCPP_ERROR(node_->get_logger(), "Failed to move Turtle1 smoothly.");
+                        }
+                    }
+                    rclcpp::sleep_for(std::chrono::milliseconds(100));  // Slow down for visibility
+                    continue;
+                }
+
+                // Turtle1 reached the TrashTurtle's position
+                RCLCPP_INFO(node_->get_logger(), "Turtle1 reached TrashTurtle %s.", trashTurtle->getName().c_str());
+                movingToTrashTurtle = false;  // Switch to moving both turtles to the bin
+            } else {
+                // Step 2: Move both turtle1 and TrashTurtle towards the bin
+                TrashType type = trashTurtle->getTrashType();
+                Point targetBin = binPositions[static_cast<size_t>(type)];
+                Point turtle1Position = centralTurtle->getPosition();
+                Point trashTurtlePosition = trashTurtle->getPosition();
+
+                // Smoothly move turtle1 towards the bin
+                double dx1 = targetBin.x - turtle1Position.x;
+                double dy1 = targetBin.y - turtle1Position.y;
+                double distance1 = std::sqrt(dx1 * dx1 + dy1 * dy1);
+
+                if (distance1 > stepSize) {
+                    double stepX = turtle1Position.x + stepSize * (dx1 / distance1);
+                    double stepY = turtle1Position.y + stepSize * (dy1 / distance1);
+
+                    // Teleport turtle1 to the next step
+                    if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
+                        auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
+                        request->x = stepX;
+                        request->y = stepY;
+                        request->theta = std::atan2(dy1, dx1);
+
+                        auto result = teleport_client_->async_send_request(request);
+                        if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+                            RCLCPP_INFO(node_->get_logger(), "Turtle1 moving towards the bin.");
+                        }
                     }
                 }
-                rclcpp::sleep_for(std::chrono::milliseconds(100));  // Slow down for visibility
-                continue;
-            }
 
-            // Step 2: Move TrashTurtle to its designated bin following turtle1
-            TrashType type = trashTurtle->getTrashType();
-            Point targetBin = binPositions[static_cast<size_t>(type)];
-            dx = targetBin.x - trashTurtlePosition.x;
-            dy = targetBin.y - trashTurtlePosition.y;
-            distance = std::sqrt(dx * dx + dy * dy);
-
-            if (distance > stepSize) {
-                // Move TrashTurtle one step closer to the bin
+                // Move TrashTurtle towards the bin, following turtle1
                 trashTurtle->move(*centralTurtle, followDistance);
+
+                // Check if TrashTurtle reached the bin
+                double dx2 = targetBin.x - trashTurtlePosition.x;
+                double dy2 = targetBin.y - trashTurtlePosition.y;
+                double distance2 = std::sqrt(dx2 * dx2 + dy2 * dy2);
+
+                if (distance2 <= stepSize) {
+                    // Finalize sorting for the current TrashTurtle
+                    trashTurtle->setCurrentState(SortState::SORTED);
+                    trashTurtle->stopAtTarget();
+                    RCLCPP_INFO(node_->get_logger(), "TrashTurtle %s has been sorted.", trashTurtle->getName().c_str());
+                    movingToTrashTurtle = true;  // Reset for the next TrashTurtle
+                    currentTrashTurtleIndex++;
+                }
+
                 rclcpp::sleep_for(std::chrono::milliseconds(100));  // Slow down for visibility
-                continue;
             }
-
-            // Step 3: Finalize sorting for the current TrashTurtle
-            if (trashTurtle->getCurrentState() == SortState::MOVING_TO_BIN) {
-                trashTurtle->setCurrentState(SortState::SORTED);
-                trashTurtle->stopAtTarget();
-                RCLCPP_INFO(node_->get_logger(), "TrashTurtle %s has been sorted.", trashTurtle->getName().c_str());
-            }
-
-            // Move to the next TrashTurtle
-            currentTrashTurtleIndex++;
         }
 
         // Allow other ROS2 processes to run
