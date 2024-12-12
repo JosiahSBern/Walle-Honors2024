@@ -49,6 +49,13 @@ void GameEnvironment::drawGame() {
 
     //Spawn initial TrashTurtles
     spawnTrashTurtles();
+    RCLCPP_INFO(node_->get_logger(), "Welcome to the Trash Sorting Game!");
+    RCLCPP_INFO(node_->get_logger(), "Use the arrow keys to move the central turtle.");
+    RCLCPP_INFO(node_->get_logger(), "Your goal: Help the TrashTurtles reach their designated bins.");
+    RCLCPP_INFO(node_->get_logger(), "Trash Types: Green (Trash), Blue (Recycling), Gray (Paper).");
+    std::cin.get();s
+
+    moveTurtleToBins();
     updateTrashTurtles(); 
 }
 
@@ -209,6 +216,34 @@ void GameEnvironment::drawBins() {
 
 
 
-// void GameEnvironment::moveCentralTurtleToBin(const Point& binPosition) {
+void GameEnvironment::moveTurtleToBins() {
+    RCLCPP_INFO(node_->get_logger(), "Turtle1 starting to visit all bins...");
+
+    for (const auto& binPosition : binPositions) {
+        RCLCPP_INFO(node_->get_logger(), "Moving Turtle1 to bin at (%.2f, %.2f)...", binPosition.x, binPosition.y);
+
+        // Teleport turtle1 to the bin position
+        if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
+            auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
+            request->x = binPosition.x;
+            request->y = binPosition.y;
+            request->theta = 0.0;  // Set orientation (optional)
+
+            auto result = teleport_client_->async_send_request(request);
+            if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+                RCLCPP_INFO(node_->get_logger(), "Turtle1 successfully moved to bin at (%.2f, %.2f).", binPosition.x, binPosition.y);
+            } else {
+                RCLCPP_ERROR(node_->get_logger(), "Failed to move Turtle1 to bin at (%.2f, %.2f).", binPosition.x, binPosition.y);
+            }
+        } else {
+            RCLCPP_ERROR(node_->get_logger(), "TeleportAbsolute service not available for Turtle1.");
+        }
+
+        // Add a small delay for better visibility
+        rclcpp::sleep_for(std::chrono::seconds(1));
+    }
+
+    RCLCPP_INFO(node_->get_logger(), "Turtle1 has visited all bins.");
+}
 
 

@@ -42,6 +42,7 @@ public:
     void initializeEnvironment(); 
     void updateCentralTurtlePosition();
     void handleSorting();
+    void moveTurtleToBins();
 };
 
 #endif 
