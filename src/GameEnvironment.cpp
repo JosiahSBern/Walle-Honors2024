@@ -125,36 +125,63 @@ void GameEnvironment::spawnTrashTurtles() {
     }
 }
 void GameEnvironment::updateTrashTurtles() {
-    double follow_distance = 1.0; // Desired distance to maintain
+    size_t currentBinIndex = 0;  // Track the current bin turtle1 is moving to
+    bool movingToBin = true;     // Flag to indicate if turtle1 is moving to a bin
+    double follow_distance = 1.0; // Distance for TrashTurtles to follow
 
     while (rclcpp::ok()) {
-        for (auto& trashTurtle : trashTurtles) {
-            // Check if the TrashTurtle is still MOVING_TO_BIN
-            if (trashTurtle->getCurrentState() == SortState::MOVING_TO_BIN) {
-                // Get the real-time position of turtle1
-                Point turtle1Position = centralTurtle->getPosition();
-                double turtle1Orientation = centralTurtle->getOrientation();
+        // Handle turtle1 movement to bins
+        if (movingToBin && currentBinIndex < binPositions.size()) {
+            Point targetBin = binPositions[currentBinIndex];
 
-                // Move TrashTurtle to follow turtle1 at the specified distance
+            // Teleport turtle1 to the target bin
+            if (teleport_client_->wait_for_service(std::chrono::seconds(1))) {
+                auto request = std::make_shared<turtlesim::srv::TeleportAbsolute::Request>();
+                request->x = targetBin.x;
+                request->y = targetBin.y;
+                request->theta = 0.0;  // Orientation (optional)
+
+                auto result = teleport_client_->async_send_request(request);
+                if (rclcpp::spin_until_future_complete(node_, result) == rclcpp::FutureReturnCode::SUCCESS) {
+                    RCLCPP_INFO(node_->get_logger(), "Turtle1 teleported to bin at (%.2f, %.2f).", targetBin.x, targetBin.y);
+
+                    // Wait for a short delay before moving to the next bin
+                    rclcpp::sleep_for(std::chrono::seconds(1));
+                    currentBinIndex++;
+                } else {
+                    RCLCPP_ERROR(node_->get_logger(), "Failed to teleport Turtle1 to bin at (%.2f, %.2f).", targetBin.x, targetBin.y);
+                }
+            } else {
+                RCLCPP_ERROR(node_->get_logger(), "TeleportAbsolute service not available for Turtle1.");
+            }
+
+            // Stop moving to bins when all bins are visited
+            if (currentBinIndex >= binPositions.size()) {
+                movingToBin = false;
+                RCLCPP_INFO(node_->get_logger(), "Turtle1 has visited all bins.");
+            }
+        }
+
+        // Update TrashTurtles logic
+        for (auto& trashTurtle : trashTurtles) {
+            if (trashTurtle->getCurrentState() == SortState::MOVING_TO_BIN) {
+                // Move TrashTurtle towards the bin
                 trashTurtle->move(*centralTurtle, follow_distance);
 
                 // Stop the TrashTurtle when it reaches the target bin center
-                trashTurtle->stopAtTarget();
-                
-                // Change state to SORTED once it's at the target
                 if (trashTurtle->isAtTarget()) {
                     trashTurtle->setCurrentState(SortState::SORTED);
+                    trashTurtle->stopAtTarget();
                 }
             }
         }
 
-        // Allow other ROS2 processes to run while still controlling the update loop
-        rclcpp::spin_some(node_);  // This processes any incoming ROS2 messages or services
-
-        // Small delay to control the update rate
-        rclcpp::sleep_for(std::chrono::milliseconds(100));
+        // Allow other ROS2 processes to run
+        rclcpp::spin_some(node_);
+        rclcpp::sleep_for(std::chrono::milliseconds(100));  // Control update rate
     }
 }
+
 
 
 
