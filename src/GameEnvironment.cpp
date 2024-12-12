@@ -267,7 +267,7 @@ void GameEnvironment::drawBins() {
         RCLCPP_INFO(node_->get_logger(), "Bin %zu drawn: TopLeft (%.2f, %.2f), BottomRight (%.2f, %.2f)",
                     i + 1, topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
     }
-}
+
 
 
 
