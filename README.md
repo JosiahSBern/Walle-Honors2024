@@ -15,7 +15,9 @@ The player must guide Trash Turtles to their respective bins as quickly and effi
   A scalable project that can evolve into a real environemt
 ### Prerequisites
 Ubtuntu Envrionemnt
+
 ROS2 Jazyy or later.
+
 turtlesim package installed:
   sudo apt install ros-jazzy-turtlesim
 
