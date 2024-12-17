@@ -20,7 +20,7 @@ turtlesim package installed:
   sudo apt install ros-jazzy-turtlesim
 
 ## Installation
-###Building Process: 
+### Building Process: 
 cd ~/ros2_ws # Source ROS2 Jazzy 
 source /opt/ros/jazzy/setup.bash 
 colcon build --packages-select robot_dog 
