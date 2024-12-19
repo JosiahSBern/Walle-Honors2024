@@ -23,13 +23,16 @@ turtlesim package installed:
 
 ## Installation
 ### Building Process: 
-cd ~/ros2_ws # Source ROS2 Jazzy 
+#### Download ROS2
+https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Configuring-ROS2-Environment.html
+sudo apt install ros-jazzy-turtlesim
+
 source /opt/ros/jazzy/setup.bash 
 colcon build --packages-select robot_dog 
 source ~/ros2_ws/install/setup.bash
 
 ~/ros2_ws/install/robot_dog/lib/robot_dog/robot_dog
-ros2 run turtlesim turtlesim_node
+ros2 run robot_dog robot_dog
 
 
 ## How to Play
