@@ -36,6 +36,9 @@ https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Configuring-ROS2-Envi
 Control the Teleop Turtle: Use your keyboard to move the Teleop Turtle around the environment.
 Sort Trash Turtles: Navigate to the Trash Turtles and guide them to their respective bins (Trash, Recycling, or Paper)
 
+## Video+Demo
+https://www.youtube.com/watch?v=d_ylgOlla1Y
+
 ## Next Steps
  Adding better fuctionaity
  Boundaries
